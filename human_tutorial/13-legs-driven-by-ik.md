@@ -116,13 +116,13 @@ This step's first version left the feet, the toes and the knee poles **unkeyed**
 
 The squat's own measurements did not change (ankle drift 0.092 mm, reach 0.03 mm). Playing the loop live confirmed it: on later passes the squat's hips matched the clean squat at every frame, including the bottom (0.39 m), with the ankle fixed.
 
-**Why it matters beyond Blender:** a game engine has the same problem. When Babylon.js switches from one animation to another, a bone the new animation does not touch keeps whatever the old one left. Every exported animation must therefore carry the whole set ([Step 19](README.md)).
+**Why it matters beyond Blender:** a game engine has the same problem. When Babylon.js switches from one animation to another, a bone the new animation does not touch keeps whatever the old one left. Every exported animation must therefore carry the whole set ([Step 19](19-export-for-babylon.md): all eight animations carry the same 165 channels).
 
 **We found this because the person following the tutorial played the animations in a loop.** Each action had passed all its own checks.
 
 ## Closing an open question from Step 11
 
-[Step 11](11-finger-controls.md) asked whether a **keyed slider** really drives the finger bones. We tested it with a two-key action: with `fist` keyed 0 to 1, the index bone went 0, 40 and 80 degrees at frames 1, 6 and 11 (the thumb opposition 0, 17.5 and 35), and the right hand matched. Keyframing sliders works. Baking the drivers for export is still untested ([Step 19](README.md)).
+[Step 11](11-finger-controls.md) asked whether a **keyed slider** really drives the finger bones. We tested it with a two-key action: with `fist` keyed 0 to 1, the index bone went 0, 40 and 80 degrees at frames 1, 6 and 11 (the thumb opposition 0, 17.5 and 35), and the right hand matched. Keyframing sliders works. Baking the drivers for export worked ([Step 19](19-export-for-babylon.md)).
 
 ## The same technique, other exercises
 
@@ -158,7 +158,7 @@ Everything above can be turned into a checklist that every exercise has to pass:
 - **The saved `.blend` has no action assigned**, so the rig opens in the T-pose and the earlier test scripts still work. Assign it with `rig.animation_data.action = bpy.data.actions["Squat"]`.
 - **The balance test uses the body alone.** A held kettlebell or a mace moves the centre of mass, so those exercises need the prop included.
 - **The squat is symmetrical,** with the feet straight. Real squatters often turn the toes out a little.
-- **Nothing is exported yet.** The IK must be baked onto the deform bones first ([Step 19](README.md)).
+- **Export:** the IK is baked by the exporter ([Step 19](19-export-for-babylon.md)).
 - **The loop has no toes or heel lift,** which a deeper or faster squat would show.
 
 ---

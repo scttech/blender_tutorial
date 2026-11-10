@@ -72,7 +72,7 @@ The two props fit almost the same position (their radii differ by 1 mm), so we u
 - **Parent to bone:** Blender positions bone children relative to the bone's *tail*, not its head. The script compensates, so the props stay where they were built.
 
 **Caveats**
-- **Export:** glTF will not export the prop bones if we export deform bones only, and then the props would not move with them. We must keep the prop bones, or bake the prop motion onto the objects ([Step 19](README.md)).
+- **Export:** glTF will not export the prop bones if we export deform bones only, and then the props would not move with them. [Step 19](19-export-for-babylon.md) marks the prop bones as deform for the export only.
 - **Reach:** a standing character cannot reach a prop on the floor. A deadlift or a kettlebell swing needs the hips and spine to move, which the movement tutorials ([Steps 13 to 16](README.md)) will do.
 - **A kettlebell held low at the hips** overlaps the thighs slightly. There is no collision between the props and the body.
 - **The mace swing** needs the grip to slide along the shaft and the hands to change roles. We only built a fixed two-hand hold.

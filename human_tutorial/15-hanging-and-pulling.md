@@ -188,7 +188,7 @@ These come from [Step 17](README.md)'s recipe.
 - **The shoulders do not shrug** (the clavicles are not keyed), so the shoulder blades do not move.
 - **The hand closure is fixed** at the measured full fist. A thicker bar would need re-measuring.
 - **The bar frame stands 17 cm in front of the origin** in every scene, so it may be in the way of other exercises: hide it.
-- **Nothing is exported yet.** The IK, the drivers and the prop bones must be baked ([Step 19](README.md)).
+- **Export:** the IK, the drivers and the prop bones are baked into the GLB and checked ([Step 19](19-export-for-babylon.md)).
 
 ---
 

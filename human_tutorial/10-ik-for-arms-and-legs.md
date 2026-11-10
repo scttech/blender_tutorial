@@ -100,7 +100,7 @@ For animating, the usual answer is an **IK/FK switch**: a slider that sets the c
 - **Controls versus deform bones:** the 8 controls have *Deform* turned off, so they are left out of the skin weights and the export. They sit in their own `Controls` bone collection.
 
 **Caveats**
-- **IK is solved only inside Blender.** glTF has no IK, so before exporting for the web we **bake** the animation onto the deform bones ([Step 19](README.md)).
+- **IK is solved only inside Blender.** glTF has no IK, so before exporting for the web we **bake** the animation onto the deform bones ([Step 19](19-export-for-babylon.md)).
 - **The hands keep their rest orientation** unless a `grab` slider snaps them to a grip ([Step 12](12-props.md)).
 - **No heel roll.** In the lunge the rear heel stays flat instead of lifting. A foot-roll control would fix it.
 - **The elbow moved 1.5 cm,** so the [Step 5](05-plan-the-bone-layout.md) elbow position is now x = 0.49, y = 0.075.

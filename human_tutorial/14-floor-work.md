@@ -168,7 +168,7 @@ These come from [Step 17](README.md)'s recipe.
 - **The sit-up arms are crossed on the chest** and nothing else is built (hands behind the head, arms forward).
 - **No weight shift or breathing,** and the push-up's body stays perfectly stiff.
 - **The actions are stored, not assigned:** `Squat`, `Pushup` and `Situp` each sit on a fake user. Assign one with `rig.animation_data.action = bpy.data.actions["Pushup"]`.
-- **Nothing is exported yet.** The IK, the drivers and the prop bones must be baked ([Step 19](README.md)).
+- **Export:** the IK, the drivers and the prop bones are baked into the GLB and checked ([Step 19](19-export-for-babylon.md)).
 
 ---
 

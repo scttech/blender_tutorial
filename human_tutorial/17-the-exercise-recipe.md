@@ -156,7 +156,7 @@ The goblet squat and the barbarian squat are the same new idea: **a prop that ri
 - **Regression:** a bug that comes back. Each check is a bug we have already had, written down so it cannot return unnoticed.
 
 **Caveats**
-- **Nothing is exported yet.** The IK, the drivers and the prop bones must be baked ([Step 19](README.md)).
+- **Export:** the IK, the drivers and the prop bones are baked into the GLB and checked ([Step 19](19-export-for-babylon.md)).
 - **The skin check covers the body only;** the closed fists stretch x8.5 in every grip ([Step 15](15-hanging-and-pulling.md)).
 
 ---

@@ -138,7 +138,7 @@ We exported the `web` set as a GLB and read it back ([`cat_tutorial/tools/inspec
 | metal / rough | JPEG, 512² | 0.035 MB |
 | emission | JPEG, 512² | 0.033 MB |
 
-The file has one mesh, one skin, and the emissive texture. **It also showed a problem for [Step 19](README.md): the skin has 74 joints.** The default export keeps every bone, including the controls, the grip bones and the prop bones. A game file needs the 52 deform bones plus whatever the props need.
+The file has one mesh, one skin, and the emissive texture. **It also showed a problem for [Step 19](19-export-for-babylon.md): the skin has 74 joints.** The default export keeps every bone, including the controls, the grip bones and the prop bones. A game file needs the 52 deform bones plus whatever the props need.
 
 ## Not done (and not tested)
 
@@ -164,4 +164,4 @@ The file has one mesh, one skin, and the emissive texture. **It also showed a pr
 
 ---
 
-[← Previous: The exercise recipe](17-the-exercise-recipe.md) · [Contents](README.md) · Next: Export for Babylon.js (not written yet)
+[← Previous: The exercise recipe](17-the-exercise-recipe.md) · [Contents](README.md) · [Next: Export for Babylon.js →](19-export-for-babylon.md)
