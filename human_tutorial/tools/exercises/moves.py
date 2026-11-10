@@ -46,3 +46,23 @@ def hip_abduction(u, angle=40.0):
     return {"Hips": {"move": (dx, 0, 0)}, "Foot_IK.L": {"at": tuple(ankle), "wrot": (0, -angle * u, 0)}, "Knee_Pole.L": {"at": (ankle.x + 0.05, -0.55, 0.55)},
             "Foot_IK.R": {"at": (-A0.x + dx * 0, A0.y, A0.z), "wrot": (0, 0, 0)},
             "Hand_IK.R": {"at": (-0.52, -0.05, 1.12), "wrot": (0, 0, 0), "props": {"fist": 0.0}}, "Elbow_Pole.R": {"at": (-0.40, 0.55, 1.0)}}
+
+
+def jump_squat(t, air=0.0, depth=0.58, back=0.14):
+    """the squat's body (t = 0 standing .. 1 bottom) plus `air` metres of jump: the hips and both feet rise together, so the legs keep their length"""
+    p = squat_body(t, depth, back, 1.0); b = rig.data.bones; A0 = b["Foot_IK.L"].head_local
+    p["Hips"] = {"move": (0, back * t, -depth * t + air)}
+    p["Foot_IK.L"] = {"at": (A0.x, A0.y, A0.z + air), "wrot": (0, 0, 0)}; p["Knee_Pole.L"] = {"at": (0.134, -0.55, 0.55 + air)}
+    return p
+
+def single_leg(u, lift=0.10, sway=0.0):
+    """balance on the right leg: the LEFT foot a few centimetres off the floor (u: 0 both feet down, 1 lifted), the hips 4.5 cm over the standing foot; the right hand rests on a rail
+    52 cm out (not modelled), as in the hip abduction. sway: a small side-to-side drift of the hips (m)"""
+    b = rig.data.bones; A0 = b["Foot_IK.L"].head_local; dx = -0.045 * u + sway
+    return {"Hips": {"move": (dx, 0, 0)}, "Foot_IK.L": {"at": (A0.x + dx * 0.5, A0.y + 0.04 * u, A0.z + lift * u), "wrot": (0, 0, 0)}, "Knee_Pole.L": {"at": (A0.x + 0.05, -0.55, 0.55)},
+            "Foot_IK.R": {"at": (-A0.x, A0.y, A0.z), "wrot": (0, 0, 0)},
+            "Hand_IK.R": {"at": (-0.52, -0.05, 1.12), "wrot": (0, 0, 0), "props": {"fist": 0.0}}, "Elbow_Pole.R": {"at": (-0.40, 0.55, 1.0)}}
+
+def bird_dog_base(hip_y=0.30, hip_z=0.50):
+    """on hands and knees: the torso level (the pelvis pitched forward 90 degrees about the hips), the head looking down and ahead"""
+    return {"Hips": {"move": (0, hip_y - 0.06, hip_z - 0.97), "rot": (90, 0, 0)}, "Neck": {"rot": (-12, 0, 0)}, "Head": {"rot": (-22, 0, 0)}}

@@ -1,0 +1,7 @@
+# Russian twist (bodyweight): seated, torso leaned back, feet planted, hands together in front of the chest; rotate the torso side to side.
+# The kettlebell version with the prop replaced by clasped hands.
+name = "RussianTwist"
+extends = "KettlebellRussianTwist"
+
+[poses.hold]
+post = [ { fn = "ride_arms", args = { style = "hands_together" } } ]

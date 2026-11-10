@@ -1,0 +1,16 @@
+# Single-leg balance: stand tall near a wall, lift one foot a few inches off the floor and hold, keeping the hips level; the hips drift a few mm as you balance.
+# The right hand rests on a rail 52 cm out (not modelled); the left arm hangs at the side.
+name = "SingleLegBalance"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 19, 3], pose = "bal", set = { u = "=(1-cos(pi*(f-1)/18))/2", sway = 0 } },
+            { frames = [25, 73, 6], pose = "bal", set = { u = 1, sway = "=0.006*sin(2*pi*(f-25)/24)" } },
+            { frames = [76, 94, 3], pose = "bal", set = { u = "=(1+cos(pi*(f-76)/18))/2", sway = 0 } }]       # 0.6 s up, hold 1.6 s, 0.6 s down
+
+[params]
+u = 0
+sway = 0
+
+[poses.bal]
+generator = "single_leg"
+args = { u = "=u", sway = "=sway" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides", sides = "L" } } ]

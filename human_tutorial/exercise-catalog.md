@@ -8,9 +8,9 @@ The name, category and equipment come from the app. **The status column is our j
 
 | Status | Count | Meaning |
 |---|---|---|
-| **Built** | 36 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
+| **Built** | 44 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
 | **Variant** | 0 | an existing table with changed numbers or one changed grab; no new technique |
-| **New** | 29 | a new table, using techniques and props we already have |
+| **New** | 21 | a new table, using techniques and props we already have |
 | **Fixture** | 13 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
 | **One hand** | 7 | needs a one-handed grip on the prop: the grab sliders drive BOTH hands, so a single-arm press, row, clean or snatch needs a per-hand grab added to the rig first |
 | **Dumbbell** | 18 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
@@ -68,10 +68,10 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Inverted Row | Bodyweight | Fixture |
 | T-Bar Row | Machine | Machine |
 | Good Morning | Barbell | Barbell |
-| Superman | Bodyweight | New |
+| Superman | Bodyweight | Built |
 | Kettlebell Deadlift | Kettlebell | Built |
 | Kettlebell Row | Kettlebell | One hand |
-| Chin Tuck | Bodyweight | New |
+| Chin Tuck | Bodyweight | Built |
 | Child's Pose | Bodyweight | New |
 
 ## Shoulders (19)
@@ -142,12 +142,12 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Pistol Squat | Bodyweight | New |
 | Goblet Squat | Kettlebell | Built |
 | Kettlebell Lunge | Kettlebell | Built |
-| Heel Drop | Bodyweight | New |
-| Jump Squat | Bodyweight | New |
+| Heel Drop | Bodyweight | Built |
+| Jump Squat | Bodyweight | Built |
 | Skater Hop | Bodyweight | New |
 | Sit-to-Stand | Bodyweight | Fixture |
 | Standing Hip Abduction | Bodyweight | Built |
-| Single-Leg Balance | Bodyweight | New |
+| Single-Leg Balance | Bodyweight | Built |
 | Tandem Walk | Bodyweight | Technique |
 | Hip Flexor Stretch | Bodyweight | New |
 | Hamstring Stretch | Bodyweight | New |
@@ -156,13 +156,13 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 
 | Exercise | Equipment | Status |
 |---|---|---|
-| Mountain Climber | Bodyweight | New |
+| Mountain Climber | Bodyweight | Built |
 | Plank | Bodyweight | Built |
 | Sit-Up | Bodyweight | Built |
 | Mace Russian Twist | Mace | Built |
 | Crunch | Bodyweight | Built |
 | Bicycle Crunch | Bodyweight | Built |
-| Russian Twist | Bodyweight | New |
+| Russian Twist | Bodyweight | Built |
 | Leg Raise | Bodyweight | Built |
 | Hanging Leg Raise | Bodyweight | Built |
 | Side Plank | Bodyweight | New |
@@ -172,7 +172,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Flutter Kicks | Bodyweight | Built |
 | Kettlebell Farmer's Carry | Kettlebell | Technique |
 | Kettlebell Russian Twist | Kettlebell | Built |
-| Bird Dog | Bodyweight | New |
+| Bird Dog | Bodyweight | Built |
 | Pelvic Floor Contraction (Kegel) | Bodyweight | New |
 | Pallof Press | Band | Small prop |
 | Standing Torso Twist | Bodyweight | Built |

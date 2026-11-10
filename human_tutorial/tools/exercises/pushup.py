@@ -45,3 +45,32 @@ def contact_extra():
         return {"ball_y": P["Toes.L"].head.y, "ball_z": P["Toes.L"].head.z, "wrist_y": P["Hand.L"].head.y, "wrist_z": P["Hand.L"].head.z}
     return extra
 
+
+
+def mountain_climber(a, b, phi=PHI_UP, reach=0.45, rise=0.10, belly=0.0):
+    """a high plank (the push-up's top position) with the knees driven toward the chest. a: how far the LEFT knee is drawn in (0..1), b: the right. The drawn-in foot slides
+    `reach` metres along the floor toward the hands and rises `rise`, so the knee comes forward under the chest and the foot stays just off the floor (a foot moved along the BODY
+    instead folded the shin through the floor). belly: moves the knee pole toward the belly (+, down) or away (-)"""
+    pose = pushup_pose(phi); M = rigid(_B0, (0, Y_PIVOT, Z_PIVOT), phi)
+    for side, amt in (("L", a), ("R", b)):
+        sx = 1.0 if side == "L" else -1.0
+        A = Vector((sx * _A0.x, _A0.y, _A0.z)); KP = Vector((sx * _KP0.x, _KP0.y, _KP0.z))
+        ankle = M(A) + Vector((0, -reach * amt, rise * amt)); hip = M(_H0 + Vector((sx * 0.095, 0, 0)))
+        pose[f"Foot_IK.{side}"] = {"at": tuple(ankle), "wrot": (phi, 0, 0)}
+        # the knee points FORWARD (toward the hands) from the middle of the folded leg: with the hip nearly above the ankle, a pole below the belly is ambiguous and the knee dips through the floor
+        w = min(1.0, amt / 0.25); fwd_pole = (hip + ankle) / 2 + Vector((0, -0.5, 0.0))        # blended in over the first quarter of the drive, so it never snaps
+        pose[f"Knee_Pole.{side}"] = {"at": tuple(M(KP) * (1 - w) + fwd_pole * w)}
+        pose[f"Toes.{side}"] = {"rot": (-phi, 0, 0)}
+    return pose
+
+def superman_pose(u, arm_lift=0.16, leg_lift=0.14, reach=0.48):
+    """lying face down (the push-up's pose turned all the way to flat), arms extended overhead. u: 0 = everything on the floor, 1 = the arms, chest and legs lifted"""
+    phi = 88.5; M = rigid(_B0, (0, Y_PIVOT, Z_PIVOT), phi)       # 90 is flat, but sank the chest 7 mm: the push-up's bottom is 88
+    pose = pushup_pose(phi); lift = Vector((0, 0, 1.0))
+    hand = M(Vector((0.12, _S0.y, _S0.z + reach))) + lift * (arm_lift * u)           # overhead = along the body, beyond the shoulder (rest +z), then lifted
+    pose["Hand_IK.L"] = {"at": tuple(hand), "wrot": (0, 0, -90), "props": {"fist": 0.0}}
+    pose["Foot_IK.L"] = {"at": tuple(M(_A0) + lift * (leg_lift * u)), "wrot": (phi, 0, 0)}
+    pose["Knee_Pole.L"] = {"at": tuple(M(_KP0) + lift * (leg_lift * u))}
+    for k, (s, n, h) in enumerate((("Spine", -10, 0), ("Spine1", -8, 0), ("Spine2", -6, 0))): pose[s] = {"rot": (n * u, 0, 0)}
+    pose["Neck"] = {"rot": (-18 - 10 * u, 0, 0)}; pose["Head"] = {"rot": (-28 - 6 * u, 0, 0)}
+    return pose

@@ -1,0 +1,17 @@
+# Chin tuck: standing tall, draw the chin straight back as if making a double chin, eyes level; hold briefly and release.
+# The neck extends and the head flexes by the same angle, so the eyes stay level while the head slides back about 4 cm.
+name = "ChinTuck"
+python = ["moves.py", "poselib.py"]
+timeline = [[1, "rest"], [19, "tuck"], [49, "tuck"], [67, "rest"]]      # 0.6 s in, 1.0 s hold, 0.6 s out
+
+[params]
+angle = 18.0
+
+[poses.rest]
+generator = "squat_body"
+args = { t = 0 }
+post = [ { fn = "ride_arms", args = { style = "arms_sides" } } ]
+[poses.tuck]
+extends = "rest"
+Neck = { rot = ["=-angle", 0, 0] }
+Head = { rot = ["=angle", 0, 0] }

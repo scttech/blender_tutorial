@@ -104,7 +104,7 @@ def dead_bug_limbs(pose, a=0.0, b=0.0):
         beta = math.radians(78 * ext_arm); d = Vector((0, math.sin(beta), math.cos(beta)))                    # the arm: up (0) to nearly along the floor over the head (78)
         wrist = S + d * 0.52
         rot = Vector((1, 0, 0)).rotation_difference(d if side == "L" else Vector((0, d.y, d.z))).to_euler('XYZ')
-        gam, kap = math.radians(85 * ext_leg), math.radians(90 * (1 - ext_leg))                                # the leg: thigh angle from the ceiling, knee bend
+        gam, kap = math.radians(15 + 70 * ext_leg), math.radians(75 * (1 - ext_leg))       # the table-top thigh is 15 degrees short of vertical: a full 90 degree hip bend turned the texture white                                # the leg: thigh angle from the ceiling, knee bend
         t = Vector((0, -math.sin(gam), math.cos(gam))); s = Vector((0, -math.sin(gam + kap), math.cos(gam + kap)))
         knee = T + t * 0.42; ankle = knee + s * 0.45
         n = (t - s); n = n.normalized() if n.length > 0.05 else Vector((0, -0.2, 1.0)).normalized()
@@ -112,18 +112,18 @@ def dead_bug_limbs(pose, a=0.0, b=0.0):
         out[f"Elbow_Pole.{side}"] = {"at": tuple(S + Vector((0.5 if side == "L" else -0.5, -0.1, 0.1)))}
         out[f"Foot_IK.{side}"] = {"at": tuple(ankle), "wrot": (-math.degrees(gam) + math.degrees(kap) * 0, 0, 0)}
         out[f"Knee_Pole.{side}"] = {"at": tuple(knee + n * 0.5)}
-    return out
+    return _floor_fix(pose, out)
 
 
 # ------------------------------------------------------------------ lying and standing limbs (hooks and helpers)
-def _leg(T, gam, kap, side, length=(0.42, 0.45)):
+def _leg(T, gam, kap, side, length=(0.42, 0.45), foot=None):
     """a leg as two hinges about the hip joint T (lying on the back): the thigh at gam degrees from the ceiling toward the feet, the knee bent by kap degrees
     (the shin then points toward the feet). Returns the Foot_IK and Knee_Pole entries"""
     g, k = math.radians(gam), math.radians(kap)
     t = Vector((0, -math.sin(g), math.cos(g))); s = Vector((0, -math.sin(g + k), math.cos(g + k)))
     knee = T + t * length[0]; ankle = knee + s * length[1]
     n = t - s; n = n.normalized() if n.length > 0.05 else Vector((0, -0.2, 1.0)).normalized()
-    return {f"Foot_IK.{side}": {"at": tuple(ankle), "wrot": (-(gam + kap), 0, 0)}, f"Knee_Pole.{side}": {"at": tuple(knee + n * 0.5)}}
+    return {f"Foot_IK.{side}": {"at": tuple(ankle), "wrot": (-(gam + kap) if foot is None else foot, 0, 0)}, f"Knee_Pole.{side}": {"at": tuple(knee + n * 0.5)}}
 
 def _floor_fix(pose, out):
     """the lying body was settled on the floor with its feet planted and knees bent; straight raised legs put the thighs a few mm lower. Lift the pelvis by whatever
@@ -133,12 +133,12 @@ def _floor_fix(pose, out):
         mv = pose["Hips"]["move"]; out["Hips"] = {"move": (mv[0], mv[1], mv[2] - lo)}
     return out
 
-def lying_legs(pose, gl, kl, gr, kr):
+def lying_legs(pose, gl, kl, gr, kr, foot=None):
     """a POST HOOK for exercises lying on the back: place both legs. gl, kl: the LEFT thigh angle from the ceiling (0 = vertical, 85 = nearly flat, toward the feet)
-    and knee bend; gr, kr: the right leg. A straight leg is kap = 0; the ankle is then 0.87 m from the hip, which is the leg's full length, so use 0.5 degrees of knee bend
+    and knee bend; gr, kr: the right leg. foot: None keeps each foot square to its shin; a number holds both feet at that angle (degrees about X, negative = toes up) the whole time. A straight leg is kap = 0; the ankle is then 0.87 m from the hip, which is the leg's full length, so use 0.5 degrees of knee bend
     for a leg that must look straight but stay inside the knee limit"""
     _apply_pose(pose); P = pose_bones(); out = {}
-    out.update(_leg(P["Thigh.L"].head.copy(), gl, kl, "L")); out.update(_leg(P["Thigh.R"].head.copy(), gr, kr, "R"))
+    out.update(_leg(P["Thigh.L"].head.copy(), gl, kl, "L", foot=foot)); out.update(_leg(P["Thigh.R"].head.copy(), gr, kr, "R", foot=foot))
     return _floor_fix(pose, out)
 
 def arms_toward(pose, u, up=0.14):
@@ -151,3 +151,39 @@ def arms_toward(pose, u, up=0.14):
         out[f"Hand_IK.{side}"] = {"at": tuple(S + d * 0.52), "wrot": tuple(math.degrees(x) for x in rot), "props": {"fist": 0.0}}
         out[f"Elbow_Pole.{side}"] = {"at": tuple(S + Vector((0.5 if side == "L" else -0.5, 0.0, 0.3)))}
     return out
+
+
+def bird_dog_limbs(pose, a, arm=0.50, thigh=0.42, shin=0.45, arm_deg=90.0, rest_deg=20.0, leg_deg=90.0):
+    """a POST HOOK for the bird dog (on hands and knees). a in -1..1: a > 0 extends the LEFT arm forward and the RIGHT leg back until each is level with the back; a < 0 the other pair.
+    The planted hands are flat under the shoulders, the planted knees on the floor with the shins flat behind. Each limb is a hinge about its shoulder or hip, so the hand and
+    ankle ride an arc"""
+    _apply_pose(pose); P = pose_bones(); out = {}
+    for side in "LR":
+        e_arm = max(0.0, a) if side == "L" else max(0.0, -a); e_leg = max(0.0, -a) if side == "L" else max(0.0, a)
+        S = P[f"UpperArm.{side}"].head.copy(); T = P[f"Thigh.{side}"].head.copy()
+        beta = math.radians(arm_deg * e_arm); L0 = S.z - 0.045; L = L0 + (arm - L0) * math.sin(beta)       # planted: the wrist 4.5 cm up; extended: `arm` metres out
+        hand = S + Vector((0, -math.sin(beta), -math.cos(beta))) * L
+        gam = math.radians(rest_deg + (leg_deg - rest_deg) * e_leg); knee = T + Vector((0, math.sin(gam), -math.cos(gam))) * thigh; ankle = knee + Vector((0, 1, 0)) * shin; ankle.z = max(ankle.z, 0.10)       # the sole is 10 cm below the ankle
+        out[f"Hand_IK.{side}"] = {"at": tuple(hand), "wrot": (0, 0, -90), "props": {"fist": 0.0}}
+        out[f"Elbow_Pole.{side}"] = {"at": tuple(S + Vector((0.5 if side == "L" else -0.5, 0.2, 0.1)))}
+        out[f"Foot_IK.{side}"] = {"at": tuple(ankle), "wrot": (0, 0, 0)}
+        out[f"Knee_Pole.{side}"] = {"at": tuple(knee + Vector((0, -0.5, 0.2)))}
+    return out
+
+
+def halo_hold(pose, t, direction=1, r=0.26, zc=1.66, yc=0.02, chest=(0.0, -0.209, 1.452)):
+    """a POST HOOK for the kettlebell halo. The bell is held by the horns (the sides of the handle, grab_kb_goblet). t in 0..1 is one trip: from the chest (bell hanging below the
+    hands) up in front of the face while the bell turns over (bell pointing up), once around the head at wrist radius r (direction +1 = toward the character's left first, -1 = right),
+    then back down to the chest and the bell turns back, with a short pause. The hands' midpoint W is placed; the bell's origin is then W minus where the grips sit in the bell's frame."""
+    UP, CIRC, DOWN = 18 / 96, 54 / 96, 18 / 96
+    ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, x)))
+    front = Vector((0.0, yc - r, zc)); chest = Vector(chest)
+    if t < UP: u = ease(t / UP); W = chest + (front - chest) * u; phi = 180 * u
+    elif t < UP + CIRC:
+        psi = direction * 2 * math.pi * (t - UP) / CIRC; W = Vector((r * math.sin(psi), yc - r * math.cos(psi), zc)); phi = 180.0
+    elif t < UP + CIRC + DOWN: u = ease((t - UP - CIRC) / DOWN); W = front + (chest - front) * u; phi = 180 * (1 - u)
+    else: W = chest; phi = 0.0
+    a = math.radians(phi); m = Vector((0, 0.091, 0.212))                          # the wrists' midpoint in the bell's own frame (see build_prop_rig: KBGoblet_Grip)
+    off = Vector((0, m.y * math.cos(a) - m.z * math.sin(a), m.y * math.sin(a) + m.z * math.cos(a)))
+    h = phi / 180.0
+    return ride_prop(pose, "Kettlebell", at=tuple(W - off), rot=(phi, 0, 0), grab="grab_kb_goblet", pole=(0.40, -0.05, 1.15 + 0.45 * h))

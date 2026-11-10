@@ -1,0 +1,12 @@
+# Mountain climber: from a high plank, drive the knees alternately toward the chest at a brisk pace, the hips low and the core braced.
+# One cycle (left in, right in) is 0.8 s; keyed every 2 frames so the feet travel along their arc.
+name = "MountainClimber"
+python = "pushup.py"
+timeline = [{ frames = [1, 25, 2], pose = "climb" }]
+
+[params]
+phi = 74.5          # the plank angle: a little lower than the push-up's top so the arms stay under the shoulders
+
+[poses.climb]
+generator = "mountain_climber"
+args = { a = "=(1+sin(2*pi*(f-1)/24))/2", b = "=(1-sin(2*pi*(f-1)/24))/2", phi = "=phi" }

@@ -1,0 +1,20 @@
+# Jump squat: squat down, explode upward and land softly back into the squat, then stand. Hands behind the head.
+# t = squat depth (0 standing, 1 bottom), air = height of the jump. Phases: down (frames 1-13), drive up (13-19), airborne (19-31), land and absorb (31-41).
+name = "JumpSquat"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 13, 2], pose = "jump", set = { t = "=(1-cos(pi*(f-1)/12))/2", air = 0 } },
+            { frames = [15, 19, 2], pose = "jump", set = { t = "=(1+cos(pi*(f-13)/6))/2", air = 0 } },
+            { frames = [21, 31, 2], pose = "jump", set = { t = 0, air = "=h*sin(pi*(f-19)/12)" } },
+            { frames = [33, 41, 2], pose = "jump", set = { t = "=0.7*sin(pi*(f-31)/10)", air = 0 } },
+            { frame = 45, pose = "jump", set = { t = 0, air = 0 } }]
+
+[params]
+t = 0
+air = 0
+h = 0.30            # the jump's height (m)
+depth = 0.58
+
+[poses.jump]
+generator = "jump_squat"
+args = { t = "=t", air = "=air", depth = "=depth" }
+post = [ { fn = "ride_arms", args = { style = "behind_head" } } ]

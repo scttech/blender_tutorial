@@ -14,4 +14,4 @@ Spine = { rot = [16, "=tw*sin(2*pi*(f-1)/60)", 0] }
 Spine1 = { rot = [13, "=tw*sin(2*pi*(f-1)/60)", 0] }
 Spine2 = { rot = [10, "=tw*sin(2*pi*(f-1)/60)", 0] }
 post = [ { fn = "ride_arms", args = { style = "behind_head" } },
-         { fn = "lying_legs", args = { gl = "=75-100*(1+sin(2*pi*(f-1)/60))/2", kl = "=100*(1+sin(2*pi*(f-1)/60))/2", gr = "=75-100*(1-sin(2*pi*(f-1)/60))/2", kr = "=100*(1-sin(2*pi*(f-1)/60))/2" } } ]
+         { fn = "lying_legs", args = { gl = "=75-60*(1+sin(2*pi*(f-1)/60))/2", kl = "=100*(1+sin(2*pi*(f-1)/60))/2", gr = "=75-60*(1-sin(2*pi*(f-1)/60))/2", kr = "=100*(1-sin(2*pi*(f-1)/60))/2" } } ]

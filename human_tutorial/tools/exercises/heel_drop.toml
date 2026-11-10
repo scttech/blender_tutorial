@@ -1,0 +1,7 @@
+# Heel drop: rise onto the toes, then drop the heels to the floor for a firm, controlled jolt up through the legs. Knees soft; arms hang at the sides
+# (a wall or counter is for balance, not modelled). The rise is slow (0.6 s) and the drop takes 3 frames.
+name = "HeelDrop"
+extends = "CalfRaise"
+timeline = [{ frames = [1, 19, 3], pose = "raise", set = { u = "=(1-cos(pi*(f-1)/18))/2" } },
+            { frame = 25, pose = "raise", set = { u = 1 } }, { frame = 26, pose = "raise", set = { u = 0.75 } }, { frame = 27, pose = "raise", set = { u = 0.3 } },
+            { frame = 28, pose = "raise", set = { u = 0 } }, { frame = 31, pose = "raise", set = { u = 0 } }, { frame = 40, pose = "raise", set = { u = 0 } }]

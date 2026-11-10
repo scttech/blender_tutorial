@@ -1,14 +1,18 @@
-# Kettlebell halo: the bell held upside down by the horns at chest height, circled around the head close to the neck, then back.
-# The bell keeps its orientation (it translates around the head). Body upright and still.
+# Kettlebell halo: hold the bell by the horns (the sides of the handle) at the chest with the bell hanging down, raise it past the face while it turns over (bell pointing
+# up), circle the head once, bring it back down to the centre of the chest and turn it over again, then reverse: the same trip around the head the other way.
+# One trip is 96 frames (3.2 s): 18 up, 54 around, 18 down, 6 pause. Keyed every frame: with keys every 3 frames the hands were out of reach between keys at the corners of the path.
 name = "KettlebellHalo"
 python = ["moves.py", "poselib.py"]
-timeline = [{ frames = [1, 61, 3], pose = "halo" }]
+timeline = [{ frames = [1, 97, 1], pose = "halo", set = { t = "=(f-1)/96", dir = 1 } },
+            { frames = [98, 193, 1], pose = "halo", set = { t = "=(f-97)/96", dir = -1 } }]
 
 [params]
-r = 0.26            # radius of the circle (m), centred on the head
-cz = 1.92           # height of the bell's top (origin of the bone with the bell upside down: the horns are 0.3 below it)
+t = 0
+dir = 1
+r = 0.26            # how far the hands (wrists) orbit from the head's centre (m)
+zc = 1.66           # the hands' height while circling the head
 
 [poses.halo]
 generator = "squat_body"
 args = { t = 0 }
-post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = ["=r*sin(2*pi*(f-1)/60)", "=0.02-r*cos(2*pi*(f-1)/60)", "=cz"], rot = [180, 0, 0], grab = "grab_kettlebell", pole = [0.40, 0.10, 1.25] } } ]
+post = [ { fn = "halo_hold", args = { t = "=t", direction = "=dir", r = "=r", zc = "=zc" } } ]

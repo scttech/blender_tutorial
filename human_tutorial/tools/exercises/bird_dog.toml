@@ -1,0 +1,14 @@
+# Bird dog: on hands and knees, extend the opposite arm and leg until they are level with the back, hold briefly, return, and swap sides.
+# The hands are flat under the shoulders and the shins flat behind the planted knees; each extending limb swings about its shoulder or hip.
+name = "BirdDog"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 121, 4], pose = "dog" }]       # 4.0 s: left arm and right leg, then the other pair; keyed every 4 frames
+
+[params]
+hip_y = 0.30
+hip_z = 0.53
+
+[poses.dog]
+generator = "bird_dog_base"
+args = { hip_y = "=hip_y", hip_z = "=hip_z" }
+post = [ { fn = "bird_dog_limbs", args = { a = "=sin(2*pi*(f-1)/120)", arm_deg = 90, leg_deg = 65 } } ]

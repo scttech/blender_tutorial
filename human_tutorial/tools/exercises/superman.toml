@@ -1,0 +1,12 @@
+# Superman: lie face down, arms extended overhead. Lift the arms, chest and legs off the floor together, squeeze, and lower with control.
+name = "Superman"
+python = "pushup.py"
+timeline = [{ frames = [1, 25, 4], pose = "lift", set = { u = "=(1-cos(pi*(f-1)/24))/2" } },
+            { frames = [37, 73, 4], pose = "lift", set = { u = "=(1+cos(pi*(f-37)/36))/2" } }]      # 0.8 s up, 0.4 s hold, 1.2 s down
+
+[params]
+u = 0
+
+[poses.lift]
+generator = "superman_pose"
+args = { u = "=u" }
