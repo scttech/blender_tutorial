@@ -27,7 +27,7 @@ from mathutils import Vector, Euler
 
 rig, body, scene = bpy.data.objects["Rig"], bpy.data.objects["Body"], bpy.context.scene
 FPS = 30
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet", "grab_mace_swap")
 
 def mirror_name(n): return n[:-2] + ".R" if n.endswith(".L") else n
 def rest_head(bone): return rig.data.bones[bone].head_local.copy()
@@ -95,7 +95,7 @@ def write(chan, value):
     elif kind == "rot": pb.rotation_mode = 'XYZ'; pb.rotation_euler = Euler([math.radians(a) for a in value])
     elif kind == "wrot":                              # world rotation -> the bone's own axes:  R_local = R_rest^-1 * R_world * R_rest
         R = rig.data.bones[bone].matrix_local.to_3x3(); Rw = Euler([math.radians(a) for a in value]).to_matrix()
-        pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R.inverted() @ Rw @ R).to_euler('XYZ')
+        pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R.inverted() @ Rw @ R).to_euler('XYZ', pb.rotation_euler)      # compat: the set of Euler angles nearest the previous key, so the hand does not flip between equivalent sets
     else: pb[name] = value
 
 def insert(chan, frame):

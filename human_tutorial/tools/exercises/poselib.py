@@ -14,7 +14,7 @@ from mathutils import Vector, Euler
 STYLES = {
     # fist on the side of the hip, elbow out and a little back (Step 17 lunge)
     # hands cupped behind the head, elbows wide (a crunch); rides on the head
-    "behind_head": dict(frame="Head", hand=(0.10, 0.05, 1.74), rot=(180, -110, 0), pole=(0.70, 0.0, 1.70), fist=0.3),
+    "behind_head": dict(frame="Head", hand=(0.115, 0.145, 1.75), rot=(180, -110, 0), pole=(0.70, 0.0, 1.70), fist=0.3),
     # hands together in front of the chest, fingers up, palms facing, elbows down and out (a prayer or diamond hold); rides on the chest
     "hands_together": dict(frame="Spine2", hand=(0.045, -0.20, 1.33), rot=(180, -90, 0), pole=(0.38, -0.08, 1.10), fist=0.0),
     # arms hanging straight down at the sides, hands by the thighs, palms in; rides on the hips (so the arms stay at the sides as the hips drop)
@@ -30,6 +30,11 @@ def _apply_pose(spec):
         for c, v in flat.items(): write(c, v)
     rig.update_tag(); bpy.context.view_layer.update()
 
+_PREV_EULER = {}
+def reset_poselib():
+    """forget the previous keys' Euler angles; the compiler calls this before each exercise"""
+    _PREV_EULER.clear()
+
 def _targets(P, st, side="L"):
     """where the hand and elbow pole go for style `st` on `side`, given the posed rig P: (hand position, hand rotation in degrees, pole position or None, fist).
     The right side is the mirror image of the left AT REST (x flips; the rotation becomes (x, -y, -z)), then ridden on the body like the left, so a twisting or leaning
@@ -40,7 +45,11 @@ def _targets(P, st, side="L"):
     head_now, head_rest = P[st["frame"]].head.copy(), B.head_local.copy()
     place = lambda r: head_now + D @ ((Vector(r) if side == "L" else mir(r)) - head_rest)
     rx, ry, rz = st["rot"]; R = D @ Euler([math.radians(a) for a in (rx, ry * sgn, rz * sgn)], 'XYZ').to_matrix()
-    return place(st["hand"]), Vector(math.degrees(a) for a in R.to_euler('XYZ')), (place(st["pole"]) if st.get("pole") else None), st["fist"]
+    # a rotation matrix has several equivalent sets of Euler angles, and converting it back can jump between them from one key to the next (the hand flickers). Pick the set
+    # closest to the previous key's, remembered per hand and style
+    key = (st["frame"], side, tuple(st["rot"])); prev = _PREV_EULER.get(key)
+    e = R.to_euler('XYZ', prev) if prev is not None else R.to_euler('XYZ'); _PREV_EULER[key] = e
+    return place(st["hand"]), Vector(math.degrees(a) for a in e), (place(st["pole"]) if st.get("pole") else None), st["fist"]
 
 def _arms_entry(hand, rot, pole, fist, side="L"):
     out = {f"Hand_IK.{side}": {"at": tuple(hand), "wrot": tuple(rot), "props": {"fist": fist}}}

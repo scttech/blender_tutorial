@@ -185,4 +185,5 @@ def compile_file(path, G=None, library_dir=None):
         for s in [spec] + chain:
             for py in ([s["python"]] if isinstance(s.get("python"), str) else s.get("python", [])):
                 if not G.get("_loaded_" + py): exec(open(os.path.join(folder, py)).read(), G); G["_loaded_" + py] = True
+    if G is not None and callable(G.get("reset_poselib")): G["reset_poselib"]()
     return compile_exercise(spec, library, G)

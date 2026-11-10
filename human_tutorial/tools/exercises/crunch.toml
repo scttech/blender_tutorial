@@ -5,6 +5,7 @@ python = ["situp.py", "poselib.py"]
 timeline = [[1, "flat"], [24, "curl"], [36, "curl"], [72, "flat"]]
 
 [params]
+rest = 0.4         # how far the head is already lifted when 'flat': the hands cradle it, so it never rests on the floor (and the hands are not squashed under it)
 curl = 30.0        # degrees of spine flexion at the top, shared across the three spine bones and the neck
 
 [poses.hands]
@@ -12,7 +13,7 @@ post = [ { fn = "ride_arms", args = { style = "behind_head" } } ]
 [poses.flat]
 extends = "hands"
 generator = "curl_body"
-args = { t = 0 }
+args = { t = "=rest", top = 90, spine = ["=curl*0.4", "=curl*0.33", "=curl*0.27"], neck = "=curl*0.25", head = "=curl*0.2" }
 [poses.curl]
 extends = "hands"
 generator = "curl_body"

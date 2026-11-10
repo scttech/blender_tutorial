@@ -33,7 +33,7 @@ EXERCISES = [
     dict(name="Lunge", file="lunge.toml", keys=[1, 25, 33, 57], extra=None, checks=["ankles", "balance"], clearance=[],
          notes="a static lunge (split squat): the feet stay put. A walking lunge needs the feet keyed from step to step"),
     dict(name="Kbswing", module="kbswing", table="KBSWING", keys=[1, 27, 53], extra=("bell_extra", None), checks=["ankles", "balance"],
-         clearance=[("bell_clear_mm", 20)], notes="balance uses the body only: the bell's weight is not included"),
+         clearance=[("bell_clear_mm", 20), ("arm_clear_mm", 5)], notes="balance uses the body only: the bell's weight is not included"),
     dict(name="Mace10to2", file="mace_10_to_2.toml", keys=[1, 16, 31, 46, 61], extra=("mace_extra", None), checks=["ankles", "balance"],
          clearance=[("clear_head_mm", 20)], loop_key="head_x", notes="balance uses the body only: the mace's weight is not included"),
     dict(name="HalfSquat", file="half_squat.toml", keys=[1, 25, 33, 61], extra=None, checks=["ankles", "balance"], clearance=[],

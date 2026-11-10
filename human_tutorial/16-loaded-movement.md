@@ -2,6 +2,8 @@
 
 > **Correction (later):** a real mace 10-to-2 is done with the head of the mace swinging *behind* the back (hanging down behind you, then up behind each shoulder to 10 and 2 o'clock), not held in front of the chest as this step built it. The action in the Blender file is now the behind-the-back version (`tools/exercises/mace_10_to_2.toml`); the front-of-chest swing described below is kept as `MACE_10_TO_2` in `mace.py`. The measurements below are for the front version.
 
+> **Correction (later):** the kettlebell swing in the Blender file now swings the bell back only to -14 degrees (this step used -48). A new measurement, `arm_clear_mm`, showed the arms passing 37 mm into the hips at -48; at -14 they stay 24 mm clear. The hands now hang in front of the knees at the bottom instead of between them.
+
 **Goal:** the last technique: exercises where **the prop leads and the hands follow**. In [Step 15](15-hanging-and-pulling.md) the bar was fixed and the body moved. Here the prop *moves*, on a path we choose, and the body is choreographed around it. We teach it with two exercises that show different things:
 
 | | What it teaches | Exercises it covers |

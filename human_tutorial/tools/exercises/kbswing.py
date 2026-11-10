@@ -20,7 +20,7 @@ STANCE = globals().get("STANCE", 0.34)          # feet this far either side of t
 POLE_OUT = globals().get("POLE_OUT", 0.08)        # how far the knee poles sit outside the feet: pushes the knees out
 RW = 0.49                     # shoulder-to-wrist distance on the arc: a little under the 0.53 m arm, so the arms stay just off straight
 BOTTOM, END, HINGE, KNEE, BACK = 27, 53, 62.0, 32.0, 0.28      # the bell is lowest at frame 27; the loop ends at 53; extra hinge (degrees), extra knee bend (degrees), hips back (m)
-ALPHA_TOP, ALPHA_BOTTOM = 80.0, -48.0                         # arm angle at the top (almost horizontal) and at the bottom (swung back between the legs)
+ALPHA_TOP, ALPHA_BOTTOM = 80.0, -14.0                         # arm angle at the top (almost horizontal) and at the bottom (the bell swung back just behind the legs: the arms stay clear of the hips, which -48 did by 37 mm)
 HIPS_DONE = 48                                                # on the way up the hips have finished extending at this frame, five frames BEFORE the bell tops out
 DOWN_START, DOWN_DONE = globals().get("DOWN_START", 3), globals().get("DOWN_DONE", 21)   # down: the hips hinge between these frames, EARLY, so they are back before the bell passes under them
 UP_POWER = globals().get("UP_POWER", 1.6)                     # up: >1 keeps the hips back a little longer, then snaps them forward
@@ -79,6 +79,22 @@ def swing_pose(alpha, phi, kappa, dy):
 # keyed every 2 frames: a pendulum arc and the hip hinge are curved, and a few widely spaced keys would cut straight across them
 KBSWING = [(f, swing_pose(**swing_params(f))) for f in range(1, END + 1, 2)]
 
+_PELVIS = None
+def _arm_clearance(P, v, radius=0.04):
+    """how far the pelvis and thighs are from the arms (mm, minus the arm's radius): negative means an arm is inside the hips. Measured from the pelvis, lower-spine and thigh
+    vertices to the segments shoulder-elbow-wrist of both arms"""
+    global _PELVIS
+    if _PELVIS is None:
+        names = {g.index: g.name for g in body.vertex_groups}
+        dom = [names[max(vx.groups, key=lambda g: g.weight).group] if vx.groups else "" for vx in body.data.vertices]
+        _PELVIS = np.array([d in ("Hips", "Spine") or d.startswith("Thigh") for d in dom])
+    pts = v[_PELVIS]; best = 1e9
+    for s in "LR":
+        for a, b in ((P[f"UpperArm.{s}"].head, P[f"ForeArm.{s}"].head), (P[f"ForeArm.{s}"].head, P[f"ForeArm.{s}"].tail)):
+            a, b = np.array(a), np.array(b); ab = b - a; t = np.clip(((pts - a) @ ab) / (ab @ ab), 0, 1)
+            best = min(best, float(np.linalg.norm(pts - (a + np.outer(t, ab)), axis=1).min()))
+    return 1000 * (best - radius)
+
 def bell_extra():
     """per-frame measurements for measure(): the bell's clearance from the body, where it is, how far the hips have hinged, the arm angle"""
     reg = regions(); bell = bpy.data.objects["Kettlebell"]
@@ -87,7 +103,8 @@ def bell_extra():
         centre = M @ Vector((0, 0, 0.10))                                          # the bell's round body is a sphere of radius 0.10
         up = P["Hips"].matrix.to_3x3().col[1]                                      # the pelvis' up direction
         S = (P["UpperArm.L"].head + P["UpperArm.R"].head) / 2; W = (P["ForeArm.L"].tail + P["ForeArm.R"].tail) / 2; d = W - S
-        return {"bell_clear_mm": 1000 * float(np.linalg.norm(v[reg != "hands"] - np.array(centre), axis=1).min() - 0.10),
+        arm_pen = _arm_clearance(P, v)
+        return {"bell_clear_mm": 1000 * float(np.linalg.norm(v[reg != "hands"] - np.array(centre), axis=1).min() - 0.10), "arm_clear_mm": arm_pen,
                 "bell_y": centre.y, "bell_z": centre.z, "hinge_deg": math.degrees(math.atan2(-up.y, up.z)),
                 "arm_deg": math.degrees(math.atan2(-d.y, -d.z))}
     return extra
