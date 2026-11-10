@@ -149,7 +149,7 @@ Adding two actions and new sliders meant every action had to be rebuilt, and the
 | | Result |
 |---|---|
 | Actions | Squat, Pushup, Situp, Pullup, Chinup |
-| Curves per action | **115** (every control, so no action leaks into another) |
+| Curves per action | **115** (every control, so no action leaks into another; 117 after [Step 16](16-loaded-movement.md) adds a slider) |
 | Order test, worst difference of any bone | **0.0000 mm** |
 
 To add an exercise, write its table in `tools/exercises/` and add one line to the list in that script.
@@ -192,4 +192,4 @@ These come from [Step 17](README.md)'s recipe.
 
 ---
 
-[← Previous: Floor work](14-floor-work.md) · [Contents](README.md) · Next: Loaded movement, kettlebell and mace (not written yet)
+[← Previous: Floor work](14-floor-work.md) · [Contents](README.md) · [Next: Loaded movement →](16-loaded-movement.md)

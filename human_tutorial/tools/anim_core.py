@@ -27,7 +27,7 @@ from mathutils import Vector, Euler
 
 rig, body, scene = bpy.data.objects["Rig"], bpy.data.objects["Body"], bpy.context.scene
 FPS = 30
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing")
 
 def mirror_name(n): return n[:-2] + ".R" if n.endswith(".L") else n
 def rest_head(bone): return rig.data.bones[bone].head_local.copy()

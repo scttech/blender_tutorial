@@ -9,12 +9,14 @@ leaks into the next is a bug; see Step 13).
 """
 import bpy
 HOME = "/Users/chris/blender_tutorial/human_tutorial"
-# (action name, module in tools/exercises, table name, keys to mark on the charts, extra measurements or None)
-EXERCISES = [("Squat",  "squat",  "SQUAT",  [1, 25, 33, 61],  None),
-             ("Pushup", "pushup", "PUSHUP", [1, 31, 37, 67],  None),
-             ("Situp",  "situp",  "SITUP",  [1, 34, 40, 79],  None),
-             ("Pullup", "pullup", "PULLUP", [1, 46, 52, 100], "BarOver_Grip"),
-             ("Chinup", "pullup", "CHINUP", [1, 46, 52, 100], "BarUnder_Grip")]
+# (action name, module in tools/exercises, table name, keys to mark on the charts, extra measurements: None or (function in that module, argument))
+EXERCISES = [("Squat",  "squat",  "SQUAT",   [1, 25, 33, 61],  None),
+             ("Pushup", "pushup", "PUSHUP",  [1, 31, 37, 67],  None),
+             ("Situp",  "situp",  "SITUP",   [1, 34, 40, 79],  None),
+             ("Pullup", "pullup", "PULLUP",  [1, 46, 52, 100], ("bar_extra", "BarOver_Grip")),
+             ("Chinup", "pullup", "CHINUP",  [1, 46, 52, 100], ("bar_extra", "BarUnder_Grip")),
+             ("Kbswing", "kbswing", "KBSWING", [1, 27, 53], ("bell_extra", None)),
+             ("Mace10to2", "mace", "MACE_10_TO_2", [1, 16, 31], ("mace_extra", None))]
 rig, scene = bpy.data.objects["Rig"], bpy.context.scene
 r = lambda x, n=3: round(float(x), n)
 
@@ -23,7 +25,7 @@ for name, mod, table, keys, grip in EXERCISES:
     exec(open(f"{HOME}/tools/anim_core.py").read(), G); G["clear_pose"]()
     exec(open(f"{HOME}/tools/exercises/{mod}.py").read(), G)
     G["build_action"](name, G[table])
-    D = G["measure"](name, extra=G["bar_extra"](grip) if grip else None); D["keys"] = keys
+    D = G["measure"](name, extra=(G[grip[0]](grip[1]) if grip[1] is not None else G[grip[0]]()) if grip else None); D["keys"] = keys
     if name == "Squat":
         scene.frame_set(1); v, _ = G["mesh_state"](); sole = v[v[:, 2] < 0.02]; D["support"] = [float(sole[:, 1].min()), float(sole[:, 1].max())]
     G["save"](D, f"{HOME}/exports/{name.lower()}_measure.json")

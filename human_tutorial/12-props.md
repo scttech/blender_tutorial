@@ -9,7 +9,7 @@
 | Prop meshes | `Kettlebell` and `Mace`, low-poly, with simple metal materials |
 | Prop control bones | `Kettlebell` and `Mace`: move these to move the prop (the meshes are parented to them) |
 | Grip bones | `KB_Grip.L/R` and `Mace_Grip.L/R`: children of the prop bones. Each is the exact frame of the hand that holds it |
-| Grab sliders | `grab_kettlebell` and `grab_mace` on each `Hand_IK` (0 to 1). [Step 15](15-hanging-and-pulling.md) adds a pull-up bar with `grab_bar_over` and `grab_bar_under` |
+| Grab sliders | `grab_kettlebell` and `grab_mace` on each `Hand_IK` (0 to 1). [Step 15](15-hanging-and-pulling.md) adds a pull-up bar with `grab_bar_over` and `grab_bar_under`, and [Step 16](16-loaded-movement.md) a deadlift-style `grab_kb_swing` for the kettlebell swing |
 | Constraints | a **Copy Transforms** on each `Hand_IK` per grip. Their influences are driven by the sliders with **normalized weights**, so partial grabs blend properly (a bug found in Step 15: stacked constraints do not average on their own) |
 
 At 0 a hand is free. At 1 its IK target snaps to the grip bone **and the fingers close around the handle**, because the same slider also drives the finger bones from [Step 11](11-finger-controls.md). One slider both attaches and grips.

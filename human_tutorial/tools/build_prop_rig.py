@@ -6,8 +6,8 @@ Safe to re-run.
   1. MEASURE the grip. In the hand's own coordinates, find where a handle should sit in the palm and how far the fingers and
      thumb should close, so the finger bones wrap the handle (each runs one finger-radius outside its surface).
   2. Add prop control bones  Kettlebell, Mace, PullupBar  (props are parented to them) and grip bones  KB_Grip.L/R, Mace_Grip.L/R,
-     BarOver_Grip.L/R, BarUnder_Grip.L/R  (children of the prop bones; each is the exact frame of the hand that holds it).
-  3. On Hand_IK.L / R: sliders  grab_kettlebell, grab_mace, grab_bar_over, grab_bar_under  (0 to 1) and a Copy Transforms per grip
+     BarOver_Grip.L/R, BarUnder_Grip.L/R, KBSwing_Grip.L/R  (children of the prop bones; each is the exact frame of the hand that holds it).
+  3. On Hand_IK.L / R: sliders  grab_kettlebell, grab_mace, grab_bar_over, grab_bar_under, grab_kb_swing  (0 to 1) and a Copy Transforms per grip
      whose influence is the slider.
   4. Re-run build_finger_controls.py so the same slider also closes the hand to the measured grip.
 
@@ -23,7 +23,7 @@ KB_R, MACE_R, BAR_R, FINGER_R, THUMB_R = 0.0175, 0.0165, 0.016, 0.0095, 0.012
 BAR_Z = 2.30
 kb_mesh = bpy.data.objects["Kettlebell"]
 KB_GRIP_Z = max(v.co.z for v in kb_mesh.data.vertices) - KB_R                  # centre line of the handle's top bar
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing")
 
 if rig.animation_data:
     for fc in list(rig.animation_data.drivers):
@@ -109,6 +109,10 @@ GRIPS = {   # bone: (prop, handle centre in prop space, fingers direction, palm 
     "BarOver_Grip.R":  ("PullupBar", Vector((-0.28, 0, BAR_Z)), Vector((0, 0, 1)), Vector((0, -1, 0)), Vector((1, 0, 0))),
     "BarUnder_Grip.L": ("PullupBar", Vector(( 0.20, 0, BAR_Z)), Vector((0, 0, 1)), Vector((0,  1, 0)), Vector((1, 0, 0))),
     "BarUnder_Grip.R": ("PullupBar", Vector((-0.20, 0, BAR_Z)), Vector((0, 0, 1)), Vector((0,  1, 0)), Vector((1, 0, 0))),
+    # the kettlebell SWING grip (Step 16): arms hanging, so the fingers point DOWN and the palms face the body (+Y), the way a deadlift
+    # is held. The handle bar runs along X as before.
+    "KBSwing_Grip.L": ("Kettlebell", Vector(( 0.045, 0, KB_GRIP_Z)), Vector((0, 0, -1)), Vector((0, 1, 0)), Vector((1, 0, 0))),
+    "KBSwing_Grip.R": ("Kettlebell", Vector((-0.045, 0, KB_GRIP_Z)), Vector((0, 0, -1)), Vector((0, 1, 0)), Vector((1, 0, 0))),
 }
 PROP_BONES = {"Kettlebell": KB_HEAD, "Mace": MACE_HEAD, "PullupBar": BAR_HEAD}
 NEW = list(PROP_BONES) + list(GRIPS)
@@ -152,7 +156,8 @@ for prop, head in PROP_BONES.items():
 # the blend we want, the slider values are first turned into weights  w_k = s_k * min(1, S) / S  (S = the sum of the sliders; what is
 # left over, 1 - min(1, S), stays with the animated hand), and constraint k then gets  w_k / (1 - the weights of the later constraints).
 GRAB_ORDER = (("grab_kettlebell", "KB_Grip", "Grab_Kettlebell"), ("grab_mace", "Mace_Grip", "Grab_Mace"),
-              ("grab_bar_over", "BarOver_Grip", "Grab_BarOver"), ("grab_bar_under", "BarUnder_Grip", "Grab_BarUnder"))
+              ("grab_bar_over", "BarOver_Grip", "Grab_BarOver"), ("grab_bar_under", "BarUnder_Grip", "Grab_BarUnder"),
+              ("grab_kb_swing", "KBSwing_Grip", "Grab_KBSwing"))
 bpy.ops.object.mode_set(mode='POSE')
 for s in "LR":
     hc = rig.pose.bones[f"Hand_IK.{s}"]
@@ -175,6 +180,7 @@ bpy.ops.object.mode_set(mode='OBJECT')
 GRABS = {"grab_kettlebell": {"fist": kb_fit[1], "thumb": thumb_best["kettlebell"][1], "oppose": thumb_best["kettlebell"][2]},
          "grab_mace":       {"fist": mace_fit[1], "thumb": thumb_best["mace"][1], "oppose": thumb_best["mace"][2]},
          "grab_bar_over":   {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]},
-         "grab_bar_under":  {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]}}
+         "grab_bar_under":  {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]},
+         "grab_kb_swing":   {"fist": kb_fit[1], "thumb": thumb_best["kettlebell"][1], "oppose": thumb_best["kettlebell"][2]}}
 exec(open("/Users/chris/blender_tutorial/human_tutorial/tools/build_finger_controls.py").read(), {"GRABS": GRABS})
 print("grab sliders drive the fingers:", {k: {a: round(b, 2) for a, b in v.items()} for k, v in GRABS.items()})
