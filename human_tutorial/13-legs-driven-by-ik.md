@@ -138,4 +138,4 @@ Everything above can be turned into a checklist that every planted-feet exercise
 
 ---
 
-[← Previous: Props](12-props.md) · [Contents](README.md) · Next: Floor work, push-up and sit-up (not written yet)
+[← Previous: Props](12-props.md) · [Contents](README.md) · [Next: Floor work →](14-floor-work.md)

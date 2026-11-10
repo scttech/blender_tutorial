@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" width="760" height="640" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 606" width="760" height="606" role="img" aria-labelledby="t d">
 <title id="t">Squat: measured motion</title>
-<desc id="d">Three plots over 61 frames. Top: the hips lower and rise. Middle: the knee bends and straightens. Bottom: the centre of mass stays inside the shaded band under the foot.</desc>
+<desc id="d">3 plots over 61 frames: Hip height (m); Knee bend (degrees); Centre of mass, front to back (cm). Dotted lines mark the keyframes.</desc>
 <style>text{font:12px sans-serif;fill:#222}.t{font:600 14px sans-serif}.g{stroke:#ccc;stroke-width:1}.k{stroke:#999;stroke-dasharray:3 3}.l{fill:none;stroke:#1f6feb;stroke-width:2.2}.b{fill:#d8e8ff}</style>
-<rect width="760" height="640" fill="#fff"/>
+<rect width="760" height="606" fill="#fff"/>
 <text class="t" x="78" y="26">Squat: 61 frames at 30 fps</text>
 <text class="t" x="78" y="40">Hip height (m)</text>
 <rect x="78" y="48" width="658" height="150" fill="none" class="g"/>
@@ -24,16 +24,16 @@
 <text x="72" y="246.3448275862069" text-anchor="end">137.56</text>
 <text class="t" x="78" y="408">Centre of mass, front to back (cm)</text>
 <rect x="78" y="416" width="658" height="150" fill="none" class="g"/>
-<rect class="b" x="78" y="426.34482758620686" width="658" height="129.31034482758628"/><text x="84" y="440.34482758620686">sole of the shoe</text>
+<rect class="b" x="78" y="525.8122095995948" width="658" height="12.14079922003964"/><text x="84" y="539.8122095995948">sole of the shoe</text>
 <line class="k" x1="78.0" x2="78.0" y1="416" y2="566"/>
 <line class="k" x1="341.2" x2="341.2" y1="416" y2="566"/>
 <line class="k" x1="428.93333333333334" x2="428.93333333333334" y1="416" y2="566"/>
 <line class="k" x1="736.0" x2="736.0" y1="416" y2="566"/>
-<polyline class="l" points="78.0,486.9 89.0,488.7 99.9,490.5 110.9,492.1 121.9,493.3 132.8,494.2 143.8,494.8 154.8,495.2 165.7,495.2 176.7,495.1 187.7,494.7 198.6,494.1 209.6,493.3 220.6,492.4 231.5,491.4 242.5,490.2 253.5,489.0 264.4,487.7 275.4,486.5 286.4,485.2 297.3,484.1 308.3,483.0 319.3,482.2 330.2,481.7 341.2,481.5 352.2,481.5 363.1,481.5 374.1,481.5 385.1,481.5 396.0,481.5 407.0,481.5 418.0,481.5 428.9,481.5 439.9,481.6 450.9,482.0 461.8,482.6 472.8,483.4 483.8,484.4 494.7,485.4 505.7,486.5 516.7,487.5 527.6,488.6 538.6,489.7 549.6,490.7 560.5,491.7 571.5,492.5 582.5,493.3 593.4,494.0 604.4,494.6 615.4,495.0 626.3,495.2 637.3,495.2 648.3,495.1 659.2,494.8 670.2,494.3 681.2,493.6 692.1,492.6 703.1,491.5 714.1,490.0 725.0,488.4 736.0,486.9"/>
-<text x="72" y="559.6551724137931" text-anchor="end">-11.23</text>
-<text x="72" y="430.34482758620686" text-anchor="end">11.85</text>
+<polyline class="l" points="78.0,476.9 89.0,494.1 99.9,511.5 110.9,525.8 121.9,537.2 132.8,545.7 143.8,551.5 154.8,554.8 165.7,555.7 176.7,554.2 187.7,550.6 198.6,545.0 209.6,537.7 220.6,529.0 231.5,519.1 242.5,508.4 253.5,496.9 264.4,485.1 275.4,473.2 286.4,461.5 297.3,450.6 308.3,440.9 319.3,433.2 330.2,428.1 341.2,426.3 352.2,426.3 363.1,426.3 374.1,426.3 385.1,426.3 396.0,426.3 407.0,426.3 418.0,426.3 428.9,426.3 439.9,427.7 450.9,431.5 461.8,437.3 472.8,444.8 483.8,453.6 494.7,463.1 505.7,473.2 516.7,483.4 527.6,493.6 538.6,503.5 549.6,513.1 560.5,522.0 571.5,530.3 582.5,537.7 593.4,544.0 604.4,549.2 615.4,552.9 626.3,555.1 637.3,555.7 648.3,554.5 659.2,551.5 670.2,546.7 681.2,539.9 692.1,531.0 703.1,520.1 714.1,506.8 725.0,491.3 736.0,476.9"/>
+<text x="72" y="559.6551724137931" text-anchor="end">-0.45</text>
+<text x="72" y="430.34482758620686" text-anchor="end">2.01</text>
 <text x="78.0" y="584" text-anchor="middle">1</text>
 <text x="341.2" y="584" text-anchor="middle">25</text>
 <text x="428.93333333333334" y="584" text-anchor="middle">33</text>
 <text x="736.0" y="584" text-anchor="middle">61</text>
-<text x="407.0" y="632" text-anchor="middle">frame</text></svg>
+<text x="407.0" y="600" text-anchor="middle">frame</text></svg>

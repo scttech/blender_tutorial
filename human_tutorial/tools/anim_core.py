@@ -8,6 +8,8 @@ keeps its previous value (rest at the first key). Pose entries, per bone:
     "at":   (x, y, z)       absolute world position of a control's head, metres      (Hand_IK, Foot_IK, props)
     "rot":  (rx, ry, rz)    degrees on the bone's own axes. The conventions of Steps 6-7 apply: elbow flexion -X, knee flexion +X,
                             spine/neck flexion +X, wrist/finger flexion +X.
+    "wrot": (rx, ry, rz)    degrees about the WORLD axes, for a control bone whose parent is not posed (Foot_IK, Hand_IK). Use this to
+                            orient a hand or foot in the world ("palm flat on the floor") without thinking in bone axes.
     "props": {name: value}  custom properties (the finger and grab sliders on the Hand_IK bones)
 Write the LEFT bone (".L") and the table is mirrored to the right when mirror=True: positions flip x, "rot" becomes (x, -y, -z),
 slider values are copied.
@@ -52,25 +54,29 @@ def expand(keys, mirror):
                 if "move" in spec: flat[(b, "move", None)] = (spec["move"][0] * s, spec["move"][1], spec["move"][2])
                 if "at" in spec:   flat[(b, "at", None)] = (spec["at"][0] * s, spec["at"][1], spec["at"][2])
                 if "rot" in spec:  x, y, z = spec["rot"]; flat[(b, "rot", None)] = (x, y * s, z * s)
+                if "wrot" in spec: x, y, z = spec["wrot"]; flat[(b, "wrot", None)] = (x, y * s, z * s)
                 for k, v in spec.get("props", {}).items(): flat[(b, "prop", k)] = v
         chans.append((frame, flat))
     return chans
 
 def rest_value(chan):
     bone, kind, name = chan
-    return {"move": (0, 0, 0), "at": (0, 0, 0), "rot": (0, 0, 0), "prop": 0.0}[kind]
+    return {"move": (0, 0, 0), "at": (0, 0, 0), "rot": (0, 0, 0), "wrot": (0, 0, 0), "prop": 0.0}[kind]
 
 def write(chan, value):
     bone, kind, name = chan; pb = rig.pose.bones[bone]
     if kind == "move": pb.location = to_local(bone, Vector(value))
     elif kind == "at": pb.location = to_local(bone, Vector(value) - rest_head(bone))
     elif kind == "rot": pb.rotation_mode = 'XYZ'; pb.rotation_euler = Euler([math.radians(a) for a in value])
+    elif kind == "wrot":                              # world rotation -> the bone's own axes:  R_local = R_rest^-1 * R_world * R_rest
+        R = rig.data.bones[bone].matrix_local.to_3x3(); Rw = Euler([math.radians(a) for a in value]).to_matrix()
+        pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R.inverted() @ Rw @ R).to_euler('XYZ')
     else: pb[name] = value
 
 def insert(chan, frame):
     bone, kind, name = chan; pb = rig.pose.bones[bone]
     if kind in ("move", "at"): pb.keyframe_insert("location", frame=frame)
-    elif kind == "rot": pb.keyframe_insert("rotation_euler", frame=frame)
+    elif kind in ("rot", "wrot"): pb.keyframe_insert("rotation_euler", frame=frame)
     else: pb.keyframe_insert(f'["{name}"]', frame=frame)
 
 def clear_pose():
@@ -105,7 +111,40 @@ def build_action(name, keys, mirror=True, loop=True, fps=FPS):
     scene.render.fps = fps; scene.render.fps_base = 1.0; scene.frame_start, scene.frame_end = f0, f1; scene.frame_set(f0)
     return action
 
+# ------------------------------------------------------------------ rigid motion about a contact point
+def rigid(pivot_rest, pivot_target, phi_deg):
+    """The map a stiff body makes when it pivots about a contact point: the pivot goes from its rest position to its target, and the
+    body turns phi degrees about the world X axis through it. Returns f(point) -> point. Push-up: the toes are the pivot."""
+    R = Euler((math.radians(phi_deg), 0, 0)).to_matrix(); b0, bt = Vector(pivot_rest), Vector(pivot_target)
+    return lambda p: bt + R @ (Vector(p) - b0)
+
 # ------------------------------------------------------------------ measuring
+_REGION = None
+def regions():
+    """which part of the body each vertex mostly belongs to: hands, feet or body (from its strongest vertex group)"""
+    global _REGION
+    if _REGION is None:
+        names = {g.index: g.name for g in body.vertex_groups}; out = []
+        for v in body.data.vertices:
+            n = names[max(v.groups, key=lambda g: g.weight).group] if v.groups else ""
+            out.append("hands" if n.startswith(("Hand.", "Index", "Middle", "Ring", "Pinky", "Thumb")) else "feet" if n.startswith(("Foot.", "Toes.")) else "body")
+        _REGION = np.array(out)
+    return _REGION
+
+_MASKS = None
+def torso_masks():
+    """chest (spine 1-2, clavicles, neck) and head vertices, for clearance measurements in floor work"""
+    global _MASKS
+    if _MASKS is None:
+        names = {g.index: g.name for g in body.vertex_groups}
+        dom = np.array([names[max(v.groups, key=lambda g: g.weight).group] if v.groups else "" for v in body.data.vertices])
+        _MASKS = (np.array([d.startswith(("Spine1", "Spine2", "Clavicle", "Neck")) for d in dom]), np.array([d.startswith("Head") for d in dom]))
+    return _MASKS
+
+def floor_report(v):
+    """lowest point of each region, and how many of its vertices are within 1 cm of the floor (z = 0)"""
+    reg = regions(); return {r: (float(v[reg == r, 2].min()), int((v[reg == r, 2] < 0.01).sum())) for r in ("hands", "feet", "body")}
+
 def mesh_state():
     """(vertex positions, centre of mass) of the deformed Body. The centre is the volume centroid of the closed mesh."""
     ev = body.evaluated_get(bpy.context.evaluated_depsgraph_get()); me = ev.to_mesh()
@@ -124,11 +163,18 @@ def measure(action_name, frames=None, extra=None):
     act = bpy.data.actions[action_name]; rig.animation_data_create(); rig.animation_data.action = act
     f0, f1 = int(act.frame_start), int(act.frame_end); frames = frames or list(range(f0, f1 + 1))
     D = {"frame": frames, "hips_z": [], "hips_y": [], "knee_deg": [], "thigh_deg": [], "lean_deg": [], "com_y": [], "com_x": [],
-         "ankle_drift_mm": [], "reach_err_mm": [], "foot_rot_deg": []}
+         "ankle_drift_mm": [], "reach_err_mm": [], "foot_rot_deg": [], "elbow_deg": [], "straight_deg": [],
+         "min_z_hands": [], "min_z_feet": [], "min_z_body": [], "min_z_chest": [], "min_z_head": [], "contacts_hands": [], "contacts_feet": [], "contacts_body": []}
     scene.frame_set(frames[0]); P = pose_bones(); ankle0 = {s: P[f"Shin.{s}"].tail.copy() for s in "LR"}
     foot0 = {s: P[f"Foot.{s}"].matrix.to_quaternion() for s in "LR"}
     for f in frames:
-        scene.frame_set(f); P = pose_bones(); _, com = mesh_state()
+        scene.frame_set(f); P = pose_bones(); verts, com = mesh_state(); fl = floor_report(verts)
+        for r in ("hands", "feet", "body"): D[f"min_z_{r}"].append(fl[r][0]); D[f"contacts_{r}"].append(fl[r][1])
+        chest, head = torso_masks(); D["min_z_chest"].append(float(verts[chest, 2].min())); D["min_z_head"].append(float(verts[head, 2].min()))
+        ua = (P["UpperArm.L"].tail - P["UpperArm.L"].head).normalized(); fa = (P["ForeArm.L"].tail - P["ForeArm.L"].head).normalized()
+        D["elbow_deg"].append(math.degrees(ua.angle(fa)))
+        ank = (P["Shin.L"].tail + P["Shin.R"].tail) / 2                                  # how straight is the body from neck to ankles?
+        D["straight_deg"].append(math.degrees((P["Hips"].head - P["Neck"].head).angle(ank - P["Hips"].head)))
         th = (P["Thigh.L"].tail - P["Thigh.L"].head).normalized(); sh = (P["Shin.L"].tail - P["Shin.L"].head).normalized()
         D["hips_z"].append(P["Hips"].head.z); D["hips_y"].append(P["Hips"].head.y)
         D["knee_deg"].append(math.degrees(th.angle(sh)))
