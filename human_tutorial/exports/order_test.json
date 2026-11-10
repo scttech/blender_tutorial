@@ -1,1 +1,1 @@
-{"worst_mm": 0.0, "actions": ["Squat", "Pushup", "Situp", "Pullup", "Chinup", "Lunge", "Kbswing", "Mace10to2"], "curves": {"Squat": 117, "Pushup": 117, "Situp": 117, "Pullup": 117, "Chinup": 117, "Lunge": 117, "Kbswing": 117, "Mace10to2": 117}}
+{"worst_mm": 0.0, "actions": ["Squat", "Pushup", "Situp", "Pullup", "Chinup", "Lunge", "Kbswing", "Mace10to2", "HalfSquat"], "curves": {"Squat": 117, "Pushup": 117, "Situp": 117, "Pullup": 117, "Chinup": 117, "Lunge": 117, "Kbswing": 117, "Mace10to2": 117, "HalfSquat": 117}}

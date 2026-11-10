@@ -1,0 +1,29 @@
+# The bodyweight squat, as text. Same motion as squat.py (Step 13); check_dsl_equivalence.py proves they build the same action.
+# The feet do not move: the Foot_IK controls stay at rest, the knees bend because the hips drop. 30 fps, 2.0 s loop.
+name = "Squat"
+# (timeline is above the [tables] on purpose: in TOML a key written after a [table] heading belongs to that table)
+timeline = [[1, "stand"], [25, "bottom"], [33, "bottom"], [61, "stand"]]    # 0.8 s down, 0.27 s pause, 0.93 s up
+
+[params]
+depth = 0.58        # how far the hips drop (m). 0.58 puts the thighs just below parallel
+sit_back = 0.14     # how far the hips move back at the bottom (m)
+
+[poses.stand]
+Hips = { move = [0, 0, 0] }
+Spine = { rot = [0, 0, 0] }
+Spine1 = { rot = [0, 0, 0] }
+Spine2 = { rot = [0, 0, 0] }
+Neck = { rot = [0, 0, 0] }
+Head = { rot = [0, 0, 0] }
+"Hand_IK.L" = { at = [0.12, -0.40, 1.30] }
+
+[poses.bottom]
+extends = "stand"
+Hips = { move = [0, "=sit_back", "=-depth"] }
+Spine = { rot = [14, 0, 0] }        # 30 degrees of forward lean in all
+Spine1 = { rot = [10, 0, 0] }
+Spine2 = { rot = [6, 0, 0] }
+Neck = { rot = [-8, 0, 0] }         # keep the eyes forward
+Head = { rot = [-14, 0, 0] }
+"Hand_IK.L" = { at = [0.12, -0.42, 0.88] }
+

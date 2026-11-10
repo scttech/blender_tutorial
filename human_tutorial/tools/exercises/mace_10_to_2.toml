@@ -1,0 +1,15 @@
+# The steel mace 10-to-2, as text. Same motion as mace.py (Step 16). The geometry (the pivot between the hands, the grip
+# bones) stays in Python as the generator `mace_pose`; the text says how far and how fast it swings.
+name = "Mace10to2"
+python = "mace.py"
+# (timeline is above the [tables] on purpose: in TOML a key written after a [table] heading belongs to that table)
+timeline = [{ frames = [1, 31, 3], pose = "swing_pose" }]
+
+[params]
+swing = 60          # degrees either side of vertical: +60 = 10 o'clock, -60 = 2 o'clock
+period = 30         # frames for one full left-right-left cycle
+
+[poses.swing_pose]
+generator = "mace_pose"
+args = { gamma = "=swing*cos(2*pi*(f-1)/period)" }     # a cosine keyed every 3 frames: with only the extremes, the hands' midpoint would rise mid-swing
+

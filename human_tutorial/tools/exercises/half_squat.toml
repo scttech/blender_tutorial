@@ -1,0 +1,15 @@
+# A half squat: the squat with a shallower drop. Everything not written here comes from squat.toml.
+name = "HalfSquat"
+extends = "Squat"
+
+[params]
+depth = 0.30
+sit_back = 0.07
+
+[poses.bottom]
+Spine = { rot = [8, 0, 0] }
+Spine1 = { rot = [6, 0, 0] }
+Spine2 = { rot = [4, 0, 0] }
+Neck = { rot = [-5, 0, 0] }
+Head = { rot = [-8, 0, 0] }
+"Hand_IK.L" = { at = [0.12, -0.41, 1.12] }       # the hands ride higher: the shoulders do not drop as far

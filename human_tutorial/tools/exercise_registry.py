@@ -5,6 +5,7 @@ python3 tools/check_actions.py. Fields:
   name        the Blender action's name (and the exports/<name>_measure.json file, lower case)
   module      the file in tools/exercises/ that defines the table
   table       the name of the table (a list of (frame, pose)) inside that module
+  file        INSTEAD of module and table: a .toml text description in tools/exercises/ (see exercise_dsl.py)
   keys        the keyframes to mark on charts
   extra       None, or (function in the module, argument): extra per-frame measurements for measure()
   checks      which of the OPTIONAL checks apply:
@@ -18,7 +19,7 @@ Every exercise also gets these checks automatically: hands reach their targets, 
 no joint sits at its IK limit, the skin does not stretch past x3, and it plays identically after any other action.
 """
 EXERCISES = [
-    dict(name="Squat", module="squat", table="SQUAT", keys=[1, 25, 33, 61], extra=None, checks=["ankles", "balance"], clearance=[],
+    dict(name="Squat", file="squat.toml", keys=[1, 25, 33, 61], extra=None, checks=["ankles", "balance"], clearance=[],
          notes="balance uses the body only; the arms are held forward"),
     dict(name="Pushup", module="pushup", table="PUSHUP", keys=[1, 31, 37, 67], extra=("contact_extra", None), checks=["contacts"], clearance=[],
          notes="the ankles travel on an arc by design, so the contacts (ball of the foot, wrist) are checked instead"),
@@ -32,6 +33,8 @@ EXERCISES = [
          notes="a static lunge (split squat): the feet stay put. A walking lunge needs the feet keyed from step to step"),
     dict(name="Kbswing", module="kbswing", table="KBSWING", keys=[1, 27, 53], extra=("bell_extra", None), checks=["ankles", "balance"],
          clearance=[("bell_clear_mm", 20)], notes="balance uses the body only: the bell's weight is not included"),
-    dict(name="Mace10to2", module="mace", table="MACE_10_TO_2", keys=[1, 16, 31], extra=("mace_extra", None), checks=["ankles", "balance"],
+    dict(name="Mace10to2", file="mace_10_to_2.toml", keys=[1, 16, 31], extra=("mace_extra", None), checks=["ankles", "balance"],
          clearance=[("clear_shaft_mm", 20), ("clear_head_mm", 50)], loop_key="head_x", notes="balance uses the body only: the mace's weight is not included"),
+    dict(name="HalfSquat", file="half_squat.toml", keys=[1, 25, 33, 61], extra=None, checks=["ankles", "balance"], clearance=[],
+         notes="written as text, extending squat.toml: a demonstration of exercise_dsl.py, not an exercise from the app"),
 ]

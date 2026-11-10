@@ -3,7 +3,7 @@
     exec(open(".../build_all_actions.py").read(), {})
 
 Run this after changing anything that all actions share (anim_core.py, the controls, the sliders, the props). To add an exercise,
-write its table in tools/exercises/ and add one entry to tools/exercise_registry.py. For each one it prints the numbers every exercise is checked on,
+write its table in tools/exercises/ (Python) or as a .toml file (see exercise_dsl.py) and add one entry to tools/exercise_registry.py. For each one it prints the numbers every exercise is checked on,
 then plays every action after every other and confirms each is identical to the same action played from a clean pose (an action that
 leaks into the next is a bug; see Step 13).
 """
@@ -14,11 +14,15 @@ rig, scene = bpy.data.objects["Rig"], bpy.context.scene
 r = lambda x, n=3: round(float(x), n)
 
 for ex in EXERCISES:
-    name, mod, table, keys, grip = ex["name"], ex["module"], ex["table"], ex["keys"], ex["extra"]
+    name, keys, grip = ex["name"], ex["keys"], ex["extra"]
     G = {"bpy": bpy}
     exec(open(f"{HOME}/tools/anim_core.py").read(), G); G["clear_pose"]()
-    exec(open(f"{HOME}/tools/exercises/{mod}.py").read(), G)
-    G["build_action"](name, G[table])
+    if ex.get("file"):                                                      # an exercise written as text (tools/exercise_dsl.py)
+        D_ = {}; exec(open(f"{HOME}/tools/exercise_dsl.py").read(), D_)
+        table_keys = D_["compile_file"](f"{HOME}/tools/exercises/{ex['file']}", G)
+    else:
+        exec(open(f"{HOME}/tools/exercises/{ex['module']}.py").read(), G); table_keys = G[ex["table"]]
+    G["build_action"](name, table_keys)
     D = G["measure"](name, extra=(G[grip[0]](grip[1]) if grip[1] is not None else G[grip[0]]()) if grip else None); D["keys"] = keys
     scene.frame_set(1); v, _ = G["mesh_state"](); sole = v[v[:, 2] < 0.02]                  # the soles on the floor at the first frame = the base of support
     D["support"] = [float(sole[:, 1].min()), float(sole[:, 1].max())] if len(sole) else None     # (none for an exercise that starts off the floor)
