@@ -41,22 +41,33 @@ Read straight from the `.glb` header with `../cat_tutorial/tools/inspect_glb.py`
 11. [Finger controls](11-finger-controls.md): sliders for a fist, each finger and the thumb, driven by formulas, with the limits of a fused hand shown
 12. [Props](12-props.md): a kettlebell and a steel mace the hands grip and move with, and a measured fit of hand to handle
 
-### Part 4: Exercises
-13. Squat
-14. Lunge
-15. Push-up
-16. Sit-up
-17. Pull-up and chin-up (hand grip differs, overhand versus underhand)
-18. Kettlebell: swing, goblet squat, clean
-19. Steel mace: 360, 10-to-2, and the barbarian squat
+### Part 4: Movement techniques
+Not one tutorial per exercise. Many exercises share the same body mechanics, so each tutorial teaches a *technique*, and the exercises that use it are built afterwards from a recipe.
 
-### Part 5: Using the model elsewhere
-20. Shrink the textures for the web
-21. Export for Babylon.js
-22. The Blender file
+13. [Legs driven by IK](13-legs-driven-by-ik.md): a keyframe-table workflow, planted feet, balance and a clean loop, taught with the **squat** (also: lunge, goblet squat, deadlift hinge)
+14. Floor work: rotating the whole body about planted hands and feet (**push-up**, **sit-up**)
+15. Hanging and pulling: hands fixed to a bar while the body moves, an IK/FK switch, and the grip swap (**pull-up**, **chin-up**)
+16. Loaded movement: the prop leads and the hands follow, keyed grabs and momentum arcs (**kettlebell swing and clean**, **mace 360**, **10-to-2**, **barbarian squat**)
+
+### Part 5: The exercise library
+17. The exercise recipe: the keyframe-table format, a checklist of measured checks every exercise must pass, and which technique each exercise uses. After this, each exercise is built from a table, not written up as its own tutorial.
+
+| Exercise | Technique | Built in |
+|---|---|---|
+| Squat | legs driven by IK | Step 13 |
+| Lunge, goblet squat, deadlift | legs driven by IK, plus a prop for the last two | after Step 17 |
+| Push-up, sit-up | floor work | after Step 14 |
+| Pull-up, chin-up | hanging and pulling | after Step 15 |
+| Kettlebell swing, clean | loaded movement | after Step 16 |
+| Mace 360, 10-to-2, barbarian squat | loaded movement | after Step 16 |
+
+### Part 6: Using the model elsewhere
+18. Shrink the textures for the web
+19. Export for Babylon.js: bake the IK and the finger drivers, keep the prop bones
+20. The Blender file
 
 ## Files
 
 - Images live in `blender-human-tutorial-images/`.
 - `exports/` will hold the exported `.glb` files.
-- `tools/decimate_body.py` builds the low-poly `Body` from the hidden `Body_HighPoly` reference ([Step 3](03-reduce-the-polygon-count.md)). `tools/clean_body.py` runs the Step 4 checks and fixes. `tools/rig_landmarks.py` holds the bone layout as data ([Step 5](05-plan-the-bone-layout.md)). `tools/build_armature.py` builds the armature from it ([Step 6](06-build-the-body-armature.md)). `tools/bind_and_weight.py` binds the mesh and makes the weights export-ready ([Step 8](08-parent-and-weight.md)). `tools/build_controls.py` adds the IK controls ([Step 10](10-ik-for-arms-and-legs.md)). The pipeline order is `build_armature.py` (with `HANDS = True`), then `bind_and_weight.py`, then `build_controls.py`. `tools/build_finger_controls.py` adds the finger sliders ([Step 11](11-finger-controls.md)); run it after `build_controls.py`. `tools/build_props.py` and `tools/build_prop_rig.py` add the kettlebell and mace and their grips ([Step 12](12-props.md)); the prop rig re-runs the finger script. `tools/pose_tests.py` poses the rig and measures the skin ([Step 9](09-test-the-rig.md)); `tools/smooth_weights.py` is the weight-smoothing experiment we rejected. More rig and animation scripts will follow.
+- `tools/decimate_body.py` builds the low-poly `Body` from the hidden `Body_HighPoly` reference ([Step 3](03-reduce-the-polygon-count.md)). `tools/clean_body.py` runs the Step 4 checks and fixes. `tools/rig_landmarks.py` holds the bone layout as data ([Step 5](05-plan-the-bone-layout.md)). `tools/build_armature.py` builds the armature from it ([Step 6](06-build-the-body-armature.md)). `tools/bind_and_weight.py` binds the mesh and makes the weights export-ready ([Step 8](08-parent-and-weight.md)). `tools/build_controls.py` adds the IK controls ([Step 10](10-ik-for-arms-and-legs.md)). The pipeline order is `build_armature.py` (with `HANDS = True`), then `bind_and_weight.py`, then `build_controls.py`. `tools/build_finger_controls.py` adds the finger sliders ([Step 11](11-finger-controls.md)); run it after `build_controls.py`. `tools/anim_core.py` builds looping actions from keyframe tables and measures them, `tools/exercises/squat.py` is the squat table, and `tools/make_motion_chart.py` draws the measurements ([Step 13](13-legs-driven-by-ik.md)). `tools/build_props.py` and `tools/build_prop_rig.py` add the kettlebell and mace and their grips ([Step 12](12-props.md)); the prop rig re-runs the finger script. `tools/pose_tests.py` poses the rig and measures the skin ([Step 9](09-test-the-rig.md)); `tools/smooth_weights.py` is the weight-smoothing experiment we rejected. More rig and animation scripts will follow.

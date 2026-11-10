@@ -88,7 +88,7 @@ We used the hard lock. The elbow pre-bend is in [`tools/rig_landmarks.py`](tools
 
 After this step, posing a thigh or shin by hand does nothing visible: the IK pulls the leg back to the foot target. Our Step 9 test script suddenly reported a lunge with 0.0% volume change, which is how we noticed. [`tools/pose_tests.py`](tools/pose_tests.py) now **mutes the IK while it poses** and turns it back on afterwards.
 
-For animating, the usual answer is an **IK/FK switch**: a slider that sets the constraints' influence from 0 (FK) to 1 (IK). We have not built one yet. A pull-up needs it, because the legs dangle freely while the hands hold the bar.
+For animating, the usual answer is an **IK/FK switch**: a slider that sets the constraints' influence from 0 (FK) to 1 (IK). We have not built one yet. A pull-up needs it, because the legs dangle freely while the hands hold the bar ([Step 15](README.md)).
 
 **Concepts**
 - **FK and IK:** FK rotates each joint from the root outward. IK starts from where the end (hand or foot) should be and solves the joints backward.
@@ -100,7 +100,7 @@ For animating, the usual answer is an **IK/FK switch**: a slider that sets the c
 - **Controls versus deform bones:** the 8 controls have *Deform* turned off, so they are left out of the skin weights and the export. They sit in their own `Controls` bone collection.
 
 **Caveats**
-- **IK is solved only inside Blender.** glTF has no IK, so before exporting for the web we **bake** the animation onto the deform bones ([Step 21](README.md)).
+- **IK is solved only inside Blender.** glTF has no IK, so before exporting for the web we **bake** the animation onto the deform bones ([Step 19](README.md)).
 - **The hands keep their rest orientation** unless a `grab` slider snaps them to a grip ([Step 12](12-props.md)).
 - **No heel roll.** In the lunge the rear heel stays flat instead of lifting. A foot-roll control would fix it.
 - **The elbow moved 1.5 cm,** so the [Step 5](05-plan-the-bone-layout.md) elbow position is now x = 0.49, y = 0.075.

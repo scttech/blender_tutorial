@@ -61,7 +61,7 @@ An overhand grip turns the palm one way and an underhand grip the other, so the 
 |---|---|
 | ![Twist at the wrist](blender-human-tutorial-images/step9-twist_hand-top.png) | ![Twist from the elbow](blender-human-tutorial-images/step9-twist_fore-top.png) |
 
-Twisting **at the wrist is clean**. Twisting **from the elbow kinks the elbow**, because the weights near the elbow turn with the bone. **So turn the `Hand` bone to change grips.** We tested only a 90-degree twist in one direction, so a full underhand-to-overhand swing of 180 is still unproven. If it pinches in [Step 17](README.md) we add forearm twist bones then.
+Twisting **at the wrist is clean**. Twisting **from the elbow kinks the elbow**, because the weights near the elbow turn with the bone. **So turn the `Hand` bone to change grips.** We tested only a 90-degree twist in one direction, so a full underhand-to-overhand swing of 180 is still unproven. If it pinches in [Step 15](README.md) (pull-up and chin-up) we add forearm twist bones then.
 
 ## Two fixes we tried, and rejected
 
@@ -83,7 +83,7 @@ After the experiments we re-ran Step 8's script and confirmed the numbers match 
 Our first overhead pose used 150 degrees, and the render showed the arms folded back across the shoulders. The T-pose is *already* 90 degrees out, so "overhead" is about 80 degrees more. Looking at the render caught what the numbers (volume -1.2%) did not.
 
 **Not tested, and why it matters**
-- **A push-up:** hands on the floor, the whole body rotated. That is [Step 15](README.md).
+- **A push-up:** hands on the floor, the whole body rotated. That is [Step 14](README.md).
 - **The shoulders and sleeves with the arms hanging:** in the front view of the curl the T-shirt sleeves flare outward at the shoulders. A mild but real artefact of a model built in a T-pose.
 - **The neck and head,** and **the toes** (only the lunge's rear foot).
 - **A grip on a bar or a handle:** [Steps 11 and 12](README.md).

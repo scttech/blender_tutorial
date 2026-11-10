@@ -57,7 +57,7 @@ All from below, so the palm is visible:
 
 ## Two traps we hit
 
-1. **Setting a property from Python does not run the drivers.** Our first test said the thumb tip moved **0.0 mm** for `thumb_oppose` 1, with every driver reporting valid. Dragging a slider in the interface tells Blender something changed, but assigning `bone["fist"] = 1.0` from a script does not. The fix is one line, `rig.update_tag()`, after setting the values. Scripts that set sliders (including the baking script in [Step 21](README.md)) need it.
+1. **Setting a property from Python does not run the drivers.** Our first test said the thumb tip moved **0.0 mm** for `thumb_oppose` 1, with every driver reporting valid. Dragging a slider in the interface tells Blender something changed, but assigning `bone["fist"] = 1.0` from a script does not. The fix is one line, `rig.update_tag()`, after setting the values. Scripts that set sliders (including the baking script in [Step 19](README.md)) need it.
 2. **The finger bones are driven, so you cannot rotate them by hand any more.** A manual rotation snaps back to the driver's value. Pose fingers with the sliders. (To pose a finger bone directly, mute its driver.)
 
 **Concepts**
@@ -67,7 +67,7 @@ All from below, so the palm is visible:
 - **Clamp:** `max(0, min(1, x))` keeps a value between 0 and 1, so `fist` 1 plus `index` 1 does not curl the finger twice.
 
 **Not tested, and why it matters**
-- **Keyframing the sliders and baking them.** glTF cannot store drivers, so they must be baked into plain rotation keyframes before export. We have not tried that yet ([Step 21](README.md)).
+- **Baking the drivers for export.** (Keyframing the sliders is now proven: see [Step 13](13-legs-driven-by-ik.md).) glTF cannot store drivers, so they must be baked into plain rotation keyframes before export. We have not tried that yet ([Step 19](README.md)).
 - **Spreading the fingers apart:** the fingers are fused, so we left it out.
 - **A tight grip on a real handle:** done in [Step 12](12-props.md), which measures the grip and lets a `grab` slider close the hand around a prop. It extends this script (`GRABS`).
 
