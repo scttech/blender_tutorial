@@ -1,0 +1,17 @@
+# Thoracic spine rotation: on hands and knees, the LEFT hand behind the head. Rotate the elbow down toward the opposite (right) arm, then open back up toward the ceiling, the head following.
+# The right hand and both knees stay planted. 4 s per cycle.
+name = "ThoracicRotation"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 121, 4], pose = "twist" }]
+
+[params]
+hip_z = 0.50
+tw = 20.0           # degrees of twist in all, shared over the three spine bones (down is +, open is -)
+
+[poses.twist]
+generator = "quad_base"
+args = { hip_z = "=hip_z", spine = [0, 0, 0] }
+Spine = { rot = [0, "=0.25*tw*sin(2*pi*(f-1)/120)", 0] }
+Spine1 = { rot = [0, "=0.4*tw*sin(2*pi*(f-1)/120)", 0] }
+Spine2 = { rot = [0, "=0.35*tw*sin(2*pi*(f-1)/120)", 0] }
+post = [ { fn = "bird_dog_limbs", args = { a = 0, free_arm = "L" } }, { fn = "ride_arms", args = { style = "behind_head", sides = "L" } } ]

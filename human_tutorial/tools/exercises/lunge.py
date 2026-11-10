@@ -80,3 +80,11 @@ def reverse_lunge(u, knee, lift=0.14, step=0.525):
     p = lunge_pose(z, step, u, lift)
     for k in ("Hand_IK.L", "Elbow_Pole.L"): p.pop(k)
     return p
+
+
+def hip_flexor(u, knee=95.0, shift=0.05, tuck=10.0):
+    """the half-kneeling hip flexor stretch: the static lunge at its bottom (front knee bent by `knee` degrees), then u (0..1) tucks the pelvis under (`tuck` degrees) and shifts the hips
+    forward by `shift` metres. No arms: the hands go on the hips"""
+    p = lunge_at_knee(knee); mv = p["Hips"]["move"]
+    p["Hips"] = {"move": (mv[0], mv[1] - shift * u, mv[2]), "rot": (-tuck * u, 0, 0)}
+    return p

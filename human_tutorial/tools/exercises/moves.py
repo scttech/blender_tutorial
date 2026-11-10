@@ -72,3 +72,49 @@ def single_leg(u, lift=0.10, sway=0.0):
 def bird_dog_base(hip_y=0.30, hip_z=0.50):
     """on hands and knees: the torso level (the pelvis pitched forward 90 degrees about the hips), the head looking down and ahead"""
     return {"Hips": {"move": (0, hip_y - 0.06, hip_z - 0.97), "rot": (90, 0, 0)}, "Neck": {"rot": (-12, 0, 0)}, "Head": {"rot": (-22, 0, 0)}}
+
+
+def quad_base(hip_y=0.30, hip_z=0.53, pitch=90.0, spine=(0, 0, 0), neck=-12.0, head=-22.0):
+    """on hands and knees: the pelvis pitched forward about the hips so the torso is level; spine, neck and head are the flexion of each (degrees; negative = extension)"""
+    return {"Hips": {"move": (0, hip_y - 0.06, hip_z - 0.97), "rot": (pitch, 0, 0)}, "Spine": {"rot": (spine[0], 0, 0)}, "Spine1": {"rot": (spine[1], 0, 0)},
+            "Spine2": {"rot": (spine[2], 0, 0)}, "Neck": {"rot": (neck, 0, 0)}, "Head": {"rot": (head, 0, 0)}}
+
+def childs_pose(c, ankle_y=0.86, hips_y=0.62, hips_z=0.26, pitch=78.0):
+    """from hands and knees (c = 0) to the child's pose (c = 1): the hips sit back toward the heels (not onto them: that bent the knees past their limit and tore the skin), the shins and knees stay where they are, the forehead goes to the floor.
+    The ankles are fixed on the floor behind; the legs fold as the hips come back"""
+    a = quad_base(0.30 + (hips_y - 0.30) * c, 0.53 + (hips_z - 0.53) * c, 90 + (pitch - 90) * c, (0, 0, 0), -12 + 42 * c, -22 + 40 * c)
+    for s in "LR":
+        x = 0.12 if s == "L" else -0.12
+        a[f"Foot_IK.{s}"] = {"at": (x, ankle_y, 0.12), "wrot": (0, 0, 0)}; w = c ** 2; a[f"Knee_Pole.{s}"] = {"at": (x * (1.25 + 3.75 * w), 0.15 + 0.55 * w, 0.15)}      # at the start the pole is just ahead of the knees; folded, the hip, knee and ankle are level, so the knees open out to the sides at floor height
+    return a
+
+def shoulder_roll(psi, tilt=0.0, r=9.0):
+    """a backward shoulder roll at phase psi (radians): the shoulders go forward, up, back, down (the clavicles turn about x for forward-back and z for up-down, r degrees at most),
+    and the neck tilts the ear toward a shoulder by `tilt` degrees"""
+    b = -r * math.cos(psi); c = -r * math.sin(psi)
+    p = squat_body(0.0)
+    p["Clavicle.L"] = {"rot": (b, 0, c)}
+    p["Neck"] = {"rot": (0, 0, 0.7 * tilt)}; p["Head"] = {"rot": (0, 0, 0.3 * tilt)}
+    return p
+
+def hip_circle(psi, flex=60.0, amp_flex=12.0, amp_ab=20.0, dx_hips=-0.045):
+    """balance on the right leg (the right hand on a rail) and trace a circle with the LEFT knee: the thigh is lifted `flex` degrees forward, plus amp_flex of forward-back and amp_ab of
+    out-and-in, around the circle of phase psi (radians). The shin hangs from the knee"""
+    b = rig.data.bones; T = b["Thigh.L"].head_local.copy(); A0 = b["Foot_IK.L"].head_local
+    fl = math.radians(flex + amp_flex * math.cos(psi)); ab = math.radians(amp_ab * math.sin(psi))
+    d = Vector((math.sin(ab), -math.sin(fl) * math.cos(ab), -math.cos(fl) * math.cos(ab)))
+    T = Vector((T.x + dx_hips, T.y, T.z)); knee = T + d * 0.42; ankle = knee + Vector((0, 0.15, -1.0)).normalized() * 0.45
+    return {"Hips": {"move": (dx_hips, 0, 0)}, "Foot_IK.L": {"at": tuple(ankle), "wrot": (0, 0, 0)}, "Knee_Pole.L": {"at": tuple(knee + d * 0.5 + Vector((0, 0, 0.2)))},
+            "Foot_IK.R": {"at": (-A0.x, A0.y, A0.z), "wrot": (0, 0, 0)},
+            "Hand_IK.R": {"at": (-0.52, -0.05, 1.12), "wrot": (0, 0, 0), "props": {"fist": 0.0}}, "Elbow_Pole.R": {"at": (-0.40, 0.55, 1.0)}}
+
+def hamstring_stretch(u, stride=0.52, back=0.25, pitch=42.0):
+    """stand with the left heel forward and the leg straight, then hinge at the hips with a flat back toward the foot (u: 0 standing, 1 the stretch). The front ankle is placed
+    `stride` metres ahead of the standing foot with the toes up; the hips go back and down by the amount that makes the front leg 0.86 m long (just short of straight)"""
+    b = rig.data.bones; T = b["Thigh.L"].head_local; A0 = b["Foot_IK.L"].head_local
+    dy = (T.y + back) - (A0.y - stride); dx = abs(A0.x - T.x)
+    hz1 = A0.z + math.sqrt(max(0.86 ** 2 - dy ** 2 - dx ** 2, 0.04)); drop = max(0.0, T.z - hz1)
+    p = hinge_body(u, back=back, drop=drop, pitch=pitch)
+    p["Foot_IK.L"] = {"at": (A0.x, A0.y - stride * u, A0.z + 0.014 * u), "wrot": (-30 * u, 0, 0)}; p["Knee_Pole.L"] = {"at": (A0.x, A0.y - stride * u - 0.5, 0.5)}
+    p["Foot_IK.R"] = {"at": (-A0.x, A0.y, A0.z + 0.003), "wrot": (0, 0, 0)}            # the standing foot is planted explicitly, a hair above the floor
+    return p

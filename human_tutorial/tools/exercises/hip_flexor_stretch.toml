@@ -1,0 +1,14 @@
+# Hip flexor stretch: from a half-kneeling lunge, tuck the pelvis under and shift forward until the front of the back-leg hip stretches, torso upright, hands on the hips. Hold, release.
+name = "HipFlexorStretch"
+python = ["lunge.py", "poselib.py"]
+timeline = [{ frames = [1, 37, 4], pose = "stretch", set = { u = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [41, 101, 10], pose = "stretch", set = { u = 1 } },
+            { frames = [105, 141, 4], pose = "stretch", set = { u = "=(1+cos(pi*(f-105)/36))/2" } }]
+
+[params]
+u = 0
+
+[poses.stretch]
+generator = "hip_flexor"
+args = { u = "=u" }
+post = [ { fn = "ride_arms", args = { style = "hips_fists" } } ]

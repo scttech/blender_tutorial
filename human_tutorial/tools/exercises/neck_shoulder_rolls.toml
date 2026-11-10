@@ -1,0 +1,14 @@
+# Neck and shoulder rolls: roll the shoulders up, back and down in slow circles (two, 3 s), then gently tilt the ear toward each shoulder (2 s). Slow and pain-free.
+name = "NeckShoulderRolls"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 91, 3], pose = "roll", set = { psi = "=2*pi*2*(f-1)/90", tilt = 0 } },
+            { frames = [94, 154, 3], pose = "roll", set = { psi = 0, tilt = "=18*sin(2*pi*(f-94)/60)" } }]
+
+[params]
+psi = 0
+tilt = 0
+
+[poses.roll]
+generator = "shoulder_roll"
+args = { psi = "=psi", tilt = "=tilt" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides_short" } } ]

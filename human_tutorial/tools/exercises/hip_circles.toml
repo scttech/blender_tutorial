@@ -1,0 +1,13 @@
+# Hip circles: stand on one leg (the right hand on a rail), lift the other knee, and trace slow circles with the knee, one way then the other, to open up the hip.
+# Lift the knee (1 s), two circles one way (4 s), lower, two circles... one full routine: lift, circles clockwise, circles back, lower. The left arm hangs at the side.
+name = "HipCircles"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 121, 3], pose = "circle", set = { psi = "=2*pi*(f-1)/60" } }]       # 4 s: two circles; the next loop reverses by playing it back (psi continues)
+
+[params]
+psi = 0
+
+[poses.circle]
+generator = "hip_circle"
+args = { psi = "=psi" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides", sides = "L" } } ]

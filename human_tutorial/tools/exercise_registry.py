@@ -82,4 +82,10 @@ EXERCISES = [
     dict(name="SingleLegBalance", file="single_leg_balance.toml", keys=[1, 19, 73, 94], extra=None, checks=["balance"], clearance=[], notes="the right hand rests on a rail (not modelled)"),
     dict(name="HeelDrop", file="heel_drop.toml", keys=[1, 19, 25, 28, 40], extra=None, checks=["balance"], clearance=[], notes="the drop takes 3 frames"),
     dict(name="ChinTuck", file="chin_tuck.toml", keys=[1, 19, 49, 67], extra=None, checks=["ankles", "balance"], clearance=[], notes="the head slides back about 4 cm"),
+    dict(name="CatCow", file="cat_cow.toml", keys=[1, 31, 61, 91, 121], extra=None, checks=[], clearance=[], notes="the hands and knees are planted; the spine curves"),
+    dict(name="ThoracicRotation", file="thoracic_rotation.toml", keys=[1, 31, 61, 91, 121], extra=None, checks=[], clearance=[], notes="the left hand is behind the head; the right hand and knees are planted"),
+    dict(name="HipCircles", file="hip_circles.toml", keys=[1, 31, 61, 91, 121], extra=None, checks=[], clearance=[], notes="the right hand rests on a rail (not modelled)"),
+    dict(name="HamstringStretch", file="hamstring_stretch.toml", keys=[1, 37, 101, 141], extra=None, checks=[], clearance=[], notes="the front foot is off its rest position (heel forward, toes up)"),
+    dict(name="HipFlexorStretch", file="hip_flexor_stretch.toml", keys=[1, 37, 101, 141], support_frame=37, extra=None, checks=["balance"], clearance=[], notes="a half-kneeling lunge; hands on the hips"),
+    dict(name="NeckShoulderRolls", file="neck_shoulder_rolls.toml", keys=[1, 46, 91, 154], extra=None, checks=["ankles", "balance"], clearance=[], notes="the shoulders roll through 9 degrees of clavicle motion"),
 ]

@@ -1,0 +1,14 @@
+# Cat-cow: on hands and knees, alternate between arching the back toward the ceiling (cat: the spine flexes, the head drops) and dropping the belly while lifting the chest (cow: the spine
+# extends, the head lifts). 4 s per cycle, keyed every 4 frames. The hands and knees do not move (the shoulders move a little).
+name = "CatCow"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 121, 4], pose = "cc" }]
+
+[params]
+hip_y = 0.30
+hip_z = 0.50
+
+[poses.cc]
+generator = "quad_base"
+args = { hip_y = "=hip_y", hip_z = "=hip_z", spine = ["=6*sin(2*pi*(f-1)/120)", "=6*sin(2*pi*(f-1)/120)", "=4*sin(2*pi*(f-1)/120)"], neck = "=-12+30*max(sin(2*pi*(f-1)/120),0)+16*min(sin(2*pi*(f-1)/120),0)", head = "=-22+38*max(sin(2*pi*(f-1)/120),0)+10*min(sin(2*pi*(f-1)/120),0)" }
+post = [ { fn = "bird_dog_limbs", args = { a = 0 } } ]

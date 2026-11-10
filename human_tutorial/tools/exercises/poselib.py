@@ -21,6 +21,8 @@ STYLES = {
     "arms_sides": dict(frame="Hips", hand=(0.26, 0.06, 0.93), rot=(0, 90, 0), pole=(0.34, 0.60, 1.15), fist=0.0),
     # arms hanging loosely at the sides, riding on the CHEST so they swing with a twist
     "arms_swing": dict(frame="Spine2", hand=(0.26, 0.06, 0.93), rot=(0, 90, 0), pole=(0.34, 0.60, 1.15), fist=0.0),
+    # the same, with the hand 4 cm higher (a shorter reach), for the shoulder rolls: the shoulders rise 3 cm and a fully stretched arm would no longer reach
+    "arms_sides_short": dict(frame="Hips", hand=(0.26, 0.06, 0.98), rot=(0, 90, 0), pole=(0.34, 0.60, 1.15), fist=0.0),
     "hips_fists": dict(frame="Hips", hand=(0.25, 0.05, 1.12), rot=(0, 90, 0), pole=(0.70, 0.20, 1.25), fist=1.0),
 }
 
@@ -153,19 +155,23 @@ def arms_toward(pose, u, up=0.14):
     return out
 
 
-def bird_dog_limbs(pose, a, arm=0.50, thigh=0.42, shin=0.45, arm_deg=90.0, rest_deg=20.0, leg_deg=90.0):
+def bird_dog_limbs(pose, a, arm=0.50, thigh=0.42, shin=0.45, arm_deg=90.0, rest_deg=20.0, leg_deg=90.0, free_arm=""):
     """a POST HOOK for the bird dog (on hands and knees). a in -1..1: a > 0 extends the LEFT arm forward and the RIGHT leg back until each is level with the back; a < 0 the other pair.
     The planted hands are flat under the shoulders, the planted knees on the floor with the shins flat behind. Each limb is a hinge about its shoulder or hip, so the hand and
     ankle ride an arc"""
-    _apply_pose(pose); P = pose_bones(); out = {}
+    # the knees are placed from the hips of the body WITHOUT its spine curved; the hands from the shoulders as they are
+    flat = {k: ({**v, "rot": (0, 0, 0)} if k in ("Spine", "Spine1", "Spine2", "Neck", "Head") else v) for k, v in pose.items()}
+    _apply_pose(flat); P = pose_bones(); legs = {s: P[f"Thigh.{s}"].head.copy() for s in "LR"}                  # the hips do not depend on the spine
+    _apply_pose(pose); P = pose_bones(); out = {}                                                              # the hands follow the shoulders (they slide a few cm as the spine curves)
     for side in "LR":
         e_arm = max(0.0, a) if side == "L" else max(0.0, -a); e_leg = max(0.0, -a) if side == "L" else max(0.0, a)
-        S = P[f"UpperArm.{side}"].head.copy(); T = P[f"Thigh.{side}"].head.copy()
+        S = P[f"UpperArm.{side}"].head.copy(); T = legs[side]
         beta = math.radians(arm_deg * e_arm); L0 = S.z - 0.045; L = L0 + (arm - L0) * math.sin(beta)       # planted: the wrist 4.5 cm up; extended: `arm` metres out
         hand = S + Vector((0, -math.sin(beta), -math.cos(beta))) * L
         gam = math.radians(rest_deg + (leg_deg - rest_deg) * e_leg); knee = T + Vector((0, math.sin(gam), -math.cos(gam))) * thigh; ankle = knee + Vector((0, 1, 0)) * shin; ankle.z = max(ankle.z, 0.10)       # the sole is 10 cm below the ankle
-        out[f"Hand_IK.{side}"] = {"at": tuple(hand), "wrot": (0, 0, -90), "props": {"fist": 0.0}}
-        out[f"Elbow_Pole.{side}"] = {"at": tuple(S + Vector((0.5 if side == "L" else -0.5, 0.2, 0.1)))}
+        if side not in free_arm:         # a free arm (a hand behind the head) is placed by another hook
+            out[f"Hand_IK.{side}"] = {"at": tuple(hand), "wrot": (0, 0, -90), "props": {"fist": 0.0}}
+            out[f"Elbow_Pole.{side}"] = {"at": tuple(S + Vector((0.5 if side == "L" else -0.5, 0.2, 0.1)))}
         out[f"Foot_IK.{side}"] = {"at": tuple(ankle), "wrot": (0, 0, 0)}
         out[f"Knee_Pole.{side}"] = {"at": tuple(knee + Vector((0, -0.5, 0.2)))}
     return out
@@ -188,3 +194,13 @@ def halo_hold(pose, t, direction=1, r=0.20, zc=1.90, yc=0.02, chest=(0.0, -0.209
     off = Vector((0, m.y * math.cos(a) - m.z * math.sin(a), m.y * math.sin(a) + m.z * math.cos(a)))
     h = max(0.0, min(1.0, (W.z - chest.z) / (zc - chest.z)))
     return ride_prop(pose, "Kettlebell", at=tuple(W - off), rot=(phi, 0, 0), grab="grab_kb_goblet", pole=(0.45, 0.10, 1.15 + 0.60 * h))
+
+
+def hands_slide(pose, c, reach=0.45):
+    """a POST HOOK for the child's pose: both hands flat on the floor, sliding forward from under the shoulders (c = 0) to `reach` metres ahead of them (c = 1)"""
+    _apply_pose(pose); P = pose_bones(); out = {}
+    for side in "LR":
+        S = P[f"UpperArm.{side}"].head.copy()
+        out[f"Hand_IK.{side}"] = {"at": (S.x, S.y - reach * c, 0.045), "wrot": (0, 0, -90), "props": {"fist": 0.0}}
+        out[f"Elbow_Pole.{side}"] = {"at": (S.x + (0.5 if side == "L" else -0.5), S.y + 0.1, S.z + 0.1)}
+    return out

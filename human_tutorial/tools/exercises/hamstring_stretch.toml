@@ -1,0 +1,14 @@
+# Hamstring stretch: stand with one heel forward and the leg straight, hinge at the hips with a flat back until the stretch is felt behind the thigh, hold, and return.
+name = "HamstringStretch"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 37, 4], pose = "ham", set = { u = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [41, 101, 10], pose = "ham", set = { u = 1 } },
+            { frames = [105, 141, 4], pose = "ham", set = { u = "=(1+cos(pi*(f-105)/36))/2" } }]       # 1.2 s down, 2 s hold, 1.2 s up
+
+[params]
+u = 0
+
+[poses.ham]
+generator = "hamstring_stretch"
+args = { u = "=u" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides" } } ]
