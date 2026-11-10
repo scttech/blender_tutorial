@@ -2,7 +2,9 @@
 
 **Goal:** the first real animation, and the pattern for every exercise where the feet stay planted and the hips move. We teach it with the **squat**. The same technique covers the lunge, the goblet squat, the deadlift hinge and step-ups.
 
-**The idea:** do not key the legs at all. The `Foot_IK` controls stay where they are, so the feet cannot slide. We key only the **hips** (down and back), the **spine** (a forward lean), the **head** (keep the eyes level) and the **hands**. The IK from [Step 10](10-ik-for-arms-and-legs.md) works out the knees.
+**The idea:** do not *move* the legs. The `Foot_IK` controls stay at their rest position, so the feet cannot slide. We move only the **hips** (down and back), the **spine** (a forward lean), the **head** (keep the eyes level) and the **hands**. The IK from [Step 10](10-ik-for-arms-and-legs.md) works out the knees.
+
+**Every action keys every control.** The library keys the *complete* set of controls (115 curves; 105 when this step was written, before later steps added sliders and a prop bone) in every action, at their rest values unless the table says otherwise. This is not optional: see "A flaw found later" below.
 
 ## A motion is a table
 
@@ -96,6 +98,28 @@ Out of 23,240 edges, 2.3% stretch badly at the bottom. The volume loss matches [
 3. **Blender 5 changed the animation API.** There is no `action.fcurves` any more: curves live in layers, strips and channelbags. `anim_core.py` has a helper for it.
 4. **Props in the way.** Our contact sheet showed the mace and the kettlebell standing next to the character. We hide them for the picture.
 
+## A flaw found later: actions leaked into each other
+
+This step's first version left the feet, the toes and the knee poles **unkeyed**, because "unkeyed means they cannot slide". It looked right, and it was right, until the three animations of this part were played one after another in a loop. The **second time round, the squat was wrong.**
+
+**Why:** an action only controls the channels it keys. Anything it leaves out keeps whatever the *previous* action left there. The squat never keyed the hips' *rotation*, the feet, the toes or the poles, so after the sit-up it inherited the sit-up's pelvis angle, and after the push-up the push-up's foot positions. We measured the damage: the same squat frame differed from a clean one by **up to 1.1 m** (the elbow poles), with the head 0.6 to 0.9 m out.
+
+**The fix:** `build_action()` now merges a **base pose**, every control at its rest value, under the first key, so every action keys the same set of curves (115 now). It is a rule for every action we build, not a detail of the squat.
+
+**The test:** every action after every other action, at three frames each, compared bone by bone with the same action played from a clean pose:
+
+| Action | After a different action | Worst difference of any bone |
+|---|---|---|
+| Squat | after Push-up, after Sit-up | **0.000 mm** |
+| Push-up | after Squat, after Sit-up | **0.000 mm** |
+| Sit-up | after Squat, after Push-up | **0.000 mm** |
+
+The squat's own measurements did not change (ankle drift 0.092 mm, reach 0.03 mm). Playing the loop live confirmed it: on later passes the squat's hips matched the clean squat at every frame, including the bottom (0.39 m), with the ankle fixed.
+
+**Why it matters beyond Blender:** a game engine has the same problem. When Babylon.js switches from one animation to another, a bone the new animation does not touch keeps whatever the old one left. Every exported animation must therefore carry the whole set ([Step 19](README.md)).
+
+**We found this because the person following the tutorial played the animations in a loop.** Each action had passed all its own checks.
+
 ## Closing an open question from Step 11
 
 [Step 11](11-finger-controls.md) asked whether a **keyed slider** really drives the finger bones. We tested it with a two-key action: with `fist` keyed 0 to 1, the index bone went 0, 40 and 80 degrees at frames 1, 6 and 11 (the thumb opposition 0, 17.5 and 35), and the right hand matched. Keyframing sliders works. Baking the drivers for export is still untested ([Step 19](README.md)).
@@ -113,8 +137,9 @@ These will be built from tables once [Step 17](README.md) sets out the recipe.
 
 ## The checks, as a recipe
 
-Everything above can be turned into a checklist that every planted-feet exercise has to pass:
+Everything above can be turned into a checklist that every exercise has to pass:
 
+- **an action plays identically after any other action** (the test above);
 - the ankles move less than 0.5 mm unless a foot is meant to move;
 - the hand targets are always reached (error under 1 mm);
 - the centre of mass stays inside the support area in every frame;

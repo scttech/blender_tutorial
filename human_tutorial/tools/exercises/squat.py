@@ -2,7 +2,8 @@
 
     G = {}; exec(open(".../anim_core.py").read(), G); exec(open(".../exercises/squat.py").read(), G)
 
-Feet are NOT keyed: the Foot_IK controls stay where they are, so the feet cannot slide, and the knees bend because the hips drop.
+The feet do not move: the Foot_IK controls stay at their rest position (anim_core keys every control at rest unless a table says otherwise,
+so the squat plays the same after any other action), and the knees bend because the hips drop.
 Hands are held out in front for balance; their targets lower with the shoulders so the arms stay within reach.
 30 fps. 2.0 s loop: 0.8 s down, 0.27 s pause at the bottom, 0.93 s up.
 """

@@ -61,7 +61,7 @@ An overhand grip turns the palm one way and an underhand grip the other, so the 
 |---|---|
 | ![Twist at the wrist](blender-human-tutorial-images/step9-twist_hand-top.png) | ![Twist from the elbow](blender-human-tutorial-images/step9-twist_fore-top.png) |
 
-Twisting **at the wrist is clean**. Twisting **from the elbow kinks the elbow**, because the weights near the elbow turn with the bone. **So turn the `Hand` bone to change grips.** We tested only a 90-degree twist in one direction, so a full underhand-to-overhand swing of 180 is still unproven. If it pinches in [Step 15](README.md) (pull-up and chin-up) we add forearm twist bones then.
+Twisting **at the wrist is clean**. Twisting **from the elbow kinks the elbow**, because the weights near the elbow turn with the bone. **So turn the `Hand` bone to change grips.** We tested only a 90-degree twist in one direction here. **[Step 15](15-hanging-and-pulling.md) tested the full 178-degree overhand-to-underhand swing: it is smooth, with a mild pinch (forearm radius down to 0.89 of rest) at the underhand end.** Forearm twist bones would remove it; we have not built them.
 
 ## Two fixes we tried, and rejected
 

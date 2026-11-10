@@ -14,7 +14,8 @@ keeps its previous value (rest at the first key). Pose entries, per bone:
 Write the LEFT bone (".L") and the table is mirrored to the right when mirror=True: positions flip x, "rot" becomes (x, -y, -z),
 slider values are copied.
 
-build_action() makes one keyframe per channel at every key (so every curve shares the same keys), eases between them (Bezier,
+build_action() keys EVERY control (the base pose, at rest, under the first key), so an action never depends on what played before it.
+It makes one keyframe per channel at every key (so every curve shares the same keys), eases between them (Bezier,
 auto-clamped), and for a loop adds a Cycles modifier and marks the action cyclic. The LAST key should equal the FIRST for a loop.
 measure() plays an action and records what matters: where the ankles are (no sliding), joint angles, the centre of mass against the
 feet (balance), reach errors, and the loop seam.
@@ -26,7 +27,7 @@ from mathutils import Vector, Euler
 
 rig, body, scene = bpy.data.objects["Rig"], bpy.data.objects["Body"], bpy.context.scene
 FPS = 30
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under")
 
 def mirror_name(n): return n[:-2] + ".R" if n.endswith(".L") else n
 def rest_head(bone): return rig.data.bones[bone].head_local.copy()
@@ -61,7 +62,31 @@ def expand(keys, mirror):
 
 def rest_value(chan):
     bone, kind, name = chan
-    return {"move": (0, 0, 0), "at": (0, 0, 0), "rot": (0, 0, 0), "wrot": (0, 0, 0), "prop": 0.0}[kind]
+    if kind == "at": return tuple(rig.data.bones[bone].head_local)          # a control at rest sits at its rest position
+    return {"move": (0, 0, 0), "rot": (0, 0, 0), "wrot": (0, 0, 0), "prop": 0.0}[kind]
+
+def base_pose():
+    """EVERY control any exercise may use, at its rest value. build_action() merges this under the first key, so an action keys the
+    complete set. Why: an action only controls the channels it keys, so anything it leaves out keeps whatever the PREVIOUS action
+    left there (found in Step 14: a squat played after a sit-up came out wrong, up to a metre off). Write the left side; it mirrors."""
+    b = rig.data.bones; at = lambda n: tuple(b[n].head_local)
+    pose = {"Root": {"move": (0, 0, 0), "rot": (0, 0, 0)}, "Hips": {"move": (0, 0, 0), "rot": (0, 0, 0)}}
+    for n in ("Spine", "Spine1", "Spine2", "Neck", "Head"): pose[n] = {"rot": (0, 0, 0)}
+    pose["Clavicle.L"] = {"rot": (0, 0, 0)}; pose["Toes.L"] = {"rot": (0, 0, 0)}
+    pose["Foot_IK.L"] = {"at": at("Foot_IK.L"), "wrot": (0, 0, 0)}
+    pose["Hand_IK.L"] = {"at": at("Hand_IK.L"), "wrot": (0, 0, 0), "props": {k: 0.0 for k in SLIDERS}}
+    pose["Knee_Pole.L"] = {"at": at("Knee_Pole.L")}; pose["Elbow_Pole.L"] = {"at": at("Elbow_Pole.L")}
+    for n in ("Kettlebell", "Mace", "PullupBar"): pose[n] = {"at": at(n), "rot": (0, 0, 0)}
+    return pose
+
+def merge(base, pose):
+    out = {k: {a: (dict(v) if isinstance(v, dict) else v) for a, v in spec.items()} for k, spec in base.items()}
+    for bone, spec in pose.items():
+        o = out.setdefault(bone, {})
+        for k, v in spec.items():
+            if k == "props": o.setdefault("props", {}).update(v)
+            else: o[k] = v
+    return out
 
 def write(chan, value):
     bone, kind, name = chan; pb = rig.pose.bones[bone]
@@ -89,11 +114,14 @@ def clear_pose():
             if k in pb.keys(): pb[k] = 0.0
     bpy.ops.object.mode_set(mode='OBJECT'); rig.update_tag(); bpy.context.view_layer.update()
 
-def build_action(name, keys, mirror=True, loop=True, fps=FPS):
+def build_action(name, keys, mirror=True, loop=True, fps=FPS, full=True):
+    """full=True (the default) keys EVERY control, so the action does not depend on what played before it (see base_pose)"""
     clear_pose()
     for a in [a for a in bpy.data.actions if a.name == name]:
         a.user_clear(); bpy.data.actions.remove(a)
-    keys = sorted(keys, key=lambda k: k[0]); table = expand(keys, mirror)
+    keys = sorted(keys, key=lambda k: k[0])
+    if full: keys[0] = (keys[0][0], merge(base_pose(), keys[0][1]))
+    table = expand(keys, mirror)
     chans = sorted({c for _, flat in table for c in flat}, key=str)
     action = bpy.data.actions.new(name); action.use_fake_user = True
     rig.animation_data_create(); rig.animation_data.action = action

@@ -87,7 +87,7 @@ The sit-up cannot use a rigid body: the pelvis stays down while the spine curls.
 | Half-way | 8.6 cm |
 | Sitting up | 6.8 cm |
 
-**2. Roll the pelvis and curl the spine.** The Hips turn backwards from 90 degrees (lying flat) to 55 (sitting), and the spine bends forward 20, 16 and 12 degrees (48 in all). The feet are not keyed, so they stay planted and the knees bend 117 to 119 degrees.
+**2. Roll the pelvis and curl the spine.** The Hips turn backwards from 90 degrees (lying flat) to 55 (sitting), and the spine bends forward 20, 16 and 12 degrees (48 in all). The feet stay planted at one position and the knees bend 117 to 119 degrees.
 
 **3. The hands ride on the torso.** With the arms crossed on the chest, a hand target fixed in the world would be left behind as the chest rises. So the build is **two passes**: pose the body, read where the chest is in that pose, then place each hand and each elbow pole relative to the chest and key it. The hand's orientation is built from the chest's frame (palm into the chest, fingers toward the opposite shoulder).
 
@@ -130,6 +130,7 @@ Out of 23,304 edges. The push-up is the gentlest movement we have measured and t
 3. **The elbow limit is a real constraint.** The sit-up arms sit at the IK limit. A rig that silently bends past its limits would hide it, so `measure()` records the elbow every frame.
 4. **The props were in the way.** The kettlebell and mace stand where the body lies. We hide them for the pictures. They would need moving in a real scene.
 5. **A stray image** (a leftover from our contact-sheet script) was removed from the saved file.
+6. **The actions were leaking into each other.** Played in a loop, the squat from [Step 13](13-legs-driven-by-ik.md) went wrong on the second pass, because it did not key channels (the hips' rotation, the feet) that the push-up and sit-up had changed. The push-up and sit-up already keyed those, which is why they looked right. The library now keys every control in every action; see Step 13.
 
 ## Other exercises, from the same techniques
 
@@ -146,6 +147,7 @@ These come from [Step 17](README.md)'s recipe.
 
 ## Checks added to the recipe
 
+- an action plays **identically after any other action** (order independence, Step 13);
 - no part of the body goes below the floor (the lowest vertex stays above -2 mm);
 - the contact points (hands, toes, pelvis) do not drift;
 - the chest and head clearance is measured, so a push-up neither floats nor lies on the floor;
@@ -170,4 +172,4 @@ These come from [Step 17](README.md)'s recipe.
 
 ---
 
-[← Previous: Legs driven by IK](13-legs-driven-by-ik.md) · [Contents](README.md) · Next: Hanging and pulling, the pull-up and chin-up (not written yet)
+[← Previous: Legs driven by IK](13-legs-driven-by-ik.md) · [Contents](README.md) · [Next: Hanging and pulling →](15-hanging-and-pulling.md)
