@@ -1,0 +1,14 @@
+# V-up: lying flat, arms extended overhead. Raise the legs and torso together to meet in a V, the hands reaching toward the toes, then lower with control.
+name = "VUp"
+python = ["situp.py", "poselib.py"]
+timeline = [{ frames = [1, 31, 3], pose = "v", set = { u = "=(1-cos(pi*(f-1)/30))/2" } },
+            { frames = [37, 67, 3], pose = "v", set = { u = "=(1+cos(pi*(f-37)/30))/2" } }]       # 1.0 s up, 0.2 s pause, 1.0 s down
+
+[params]
+u = 0
+top = 52.0          # the pelvis angle at the top (90 = flat): the torso is this many degrees from upright... lower = more upright
+
+[poses.v]
+generator = "curl_body"
+args = { t = "=u", top = "=top", spine = [0, 0, 0], neck = 0, head = 0 }
+post = [ { fn = "lying_legs", args = { gl = "=80-35*u", kl = 0.5, gr = "=80-35*u", kr = 0.5 } }, { fn = "arms_toward", args = { u = "=u" } } ]

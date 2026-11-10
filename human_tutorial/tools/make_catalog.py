@@ -10,11 +10,11 @@ ex = re.findall(r'Exercise\(\s*name = "([^"]+)",\s*category = ExerciseCategory\.
 
 # status -> (meaning, list of names). "Goblet Squat" is in the app twice (dumbbell and kettlebell); one entry covers both.
 G = {
- "Built": ["Plank", "Glute Bridge", "Dead Bug", "Kettlebell Russian Twist", "Mace Russian Twist", "Mace Overhead Press", "Mace Good Morning", "Mace Barbarian Squat", "Kettlebell Halo", "Diamond Push-Up", "Reverse Lunge", "Mace Reverse Lunge", "Kettlebell Lunge", "Mace Squat", "Crunch", "Hanging Leg Raise", "Goblet Squat", "Kettlebell Deadlift", "Push-Up", "Pull-Up", "Chin-Up", "Bodyweight Squat", "Air Squat", "Sit-Up", "Lunge", "Kettlebell Swing", "Mace 10-to-2 Swing"],
+ "Built": ["Calf Raise", "Jumping Jack", "Standing Torso Twist", "Standing Hip Abduction", "Leg Raise", "Flutter Kicks", "Bicycle Crunch", "V-Up", "Plank", "Glute Bridge", "Dead Bug", "Kettlebell Russian Twist", "Mace Russian Twist", "Mace Overhead Press", "Mace Good Morning", "Mace Barbarian Squat", "Kettlebell Halo", "Diamond Push-Up", "Reverse Lunge", "Mace Reverse Lunge", "Kettlebell Lunge", "Mace Squat", "Crunch", "Hanging Leg Raise", "Goblet Squat", "Kettlebell Deadlift", "Push-Up", "Pull-Up", "Chin-Up", "Bodyweight Squat", "Air Squat", "Sit-Up", "Lunge", "Kettlebell Swing", "Mace 10-to-2 Swing"],
  "Variant": [],
- "New": ["Side Plank", "Mountain Climber", "Burpee", "Superman", "Bird Dog", "Leg Raise", "V-Up", "Flutter Kicks",
-         "Bicycle Crunch", "Russian Twist", "Calf Raise", "Pistol Squat", "Jumping Jack", "Jump Squat", "Skater Hop", "Standing Hip Abduction",
-         "Single-Leg Balance", "Standing Torso Twist", "Neck and Shoulder Rolls", "Hip Circles", "Cat-Cow", "World's Greatest Stretch", "90/90 Hip Stretch",
+ "New": ["Side Plank", "Mountain Climber", "Burpee", "Superman", "Bird Dog",
+         "Russian Twist", "Pistol Squat", "Jump Squat", "Skater Hop",
+         "Single-Leg Balance", "Neck and Shoulder Rolls", "Hip Circles", "Cat-Cow", "World's Greatest Stretch", "90/90 Hip Stretch",
          "Thoracic Spine Rotation", "Child's Pose", "Hip Flexor Stretch", "Hamstring Stretch", "Chin Tuck", "Heel Drop", "Stretching / Mobility Flow",
          "Pike Push-Up", "Box Breathing", "Pelvic Floor Contraction (Kegel)",
          "Mace 360 Swing", "Mace Front Raise (Around the World)", "Mace Uppercut", "Mace Shield Cast"],

@@ -1,0 +1,15 @@
+# Standing hip abduction: hold a wall for balance (the right hand rests on a rail 52 cm out) and lift the LEFT leg straight out to the side, toes forward, without leaning.
+# Lower slowly. The hips shift 4 cm over the standing foot. The left arm hangs at the side.
+name = "StandingHipAbduction"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 25, 4], pose = "lift", set = { u = "=(1-cos(pi*(f-1)/24))/2" } },
+            { frames = [37, 61, 4], pose = "lift", set = { u = "=(1+cos(pi*(f-37)/24))/2" } }]       # 0.8 s up, 0.4 s pause, 0.8 s down
+
+[params]
+u = 0
+angle = 40.0        # degrees the leg is lifted out to the side
+
+[poses.lift]
+generator = "hip_abduction"
+args = { u = "=u", angle = "=angle" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides", sides = "L" } } ]

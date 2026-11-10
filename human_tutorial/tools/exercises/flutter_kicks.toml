@@ -1,0 +1,14 @@
+# Flutter kicks: on the back, legs straight and hovering just off the floor, hands at the sides; kick the legs up and down alternately, small and quick.
+name = "FlutterKicks"
+python = ["situp.py", "poselib.py"]
+timeline = [{ frames = [1, 25, 2], pose = "kick" }]       # 0.8 s: two kicks of each leg, a 0.4 s cycle
+
+[params]
+amp = 7.0           # degrees each thigh swings either side of its level
+level = 76.0        # the thigh's angle from the ceiling at the middle of the kick (90 would be flat on the floor)
+
+[poses.kick]
+generator = "curl_body"
+args = { t = 0 }
+post = [ { fn = "arms_on_floor", args = { reach = 0.42, x = 0.28 } },
+         { fn = "lying_legs", args = { gl = "=level+amp*sin(2*pi*(f-1)/12)", kl = 0.5, gr = "=level-amp*sin(2*pi*(f-1)/12)", kr = 0.5 } } ]

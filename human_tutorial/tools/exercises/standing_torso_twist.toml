@@ -1,0 +1,16 @@
+# Standing torso twist: feet hip-width, rotate the torso gently side to side, the arms swinging loosely (they ride on the chest, so they swing with it).
+name = "StandingTorsoTwist"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 61, 4], pose = "twist" }]       # 2.0 s: one slow twist each way
+
+[params]
+twist = 14.0        # degrees on each of the three spine bones (42 in all)
+
+[poses.twist]
+generator = "squat_body"
+args = { t = 0 }
+Spine = { rot = [0, "=twist*sin(2*pi*(f-1)/60)", 0] }
+Spine1 = { rot = [0, "=twist*sin(2*pi*(f-1)/60)", 0] }
+Spine2 = { rot = [0, "=twist*sin(2*pi*(f-1)/60)", 0] }
+Neck = { rot = [0, "=0.3*twist*sin(2*pi*(f-1)/60)", 0] }
+post = [ { fn = "ride_arms", args = { style = "arms_swing" } } ]

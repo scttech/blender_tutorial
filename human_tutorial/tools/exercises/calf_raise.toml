@@ -1,0 +1,15 @@
+# Calf raise: stand tall, rise onto the balls of the feet as high as you can, pause, lower with control. Each foot turns about its ball (the toes stay
+# flat on the floor) and the hips rise with the ankles. Arms hang at the sides, riding on the hips. Keyed every 4 frames along the rise.
+name = "CalfRaise"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 25, 4], pose = "raise", set = { u = "=(1-cos(pi*(f-1)/24))/2" } },
+            { frames = [37, 61, 4], pose = "raise", set = { u = "=(1+cos(pi*(f-37)/24))/2" } }]      # 0.8 s up, 0.4 s pause, 0.8 s down
+
+[params]
+u = 0
+angle = 50.0        # degrees each foot turns about its ball at the top
+
+[poses.raise]
+generator = "calf_raise"
+args = { u = "=u", angle = "=angle" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides" } } ]

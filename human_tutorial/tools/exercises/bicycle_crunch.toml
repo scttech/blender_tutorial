@@ -1,0 +1,17 @@
+# Bicycle crunch: on the back, hands behind the head. Bring one elbow toward the opposite knee while the other leg extends, alternating in a smooth pedalling motion.
+# The left leg is bent when s = 1 and the right when s = 0; the torso curls and twists with it.
+name = "BicycleCrunch"
+python = ["situp.py", "poselib.py"]
+timeline = [{ frames = [1, 61, 3], pose = "pedal" }]       # 2.0 s: a left and a right
+
+[params]
+tw = 18.0           # degrees of twist on each spine bone
+
+[poses.pedal]
+generator = "curl_body"
+args = { t = 1, top = 90, spine = [16, 13, 10], neck = 8, head = 6 }
+Spine = { rot = [16, "=tw*sin(2*pi*(f-1)/60)", 0] }
+Spine1 = { rot = [13, "=tw*sin(2*pi*(f-1)/60)", 0] }
+Spine2 = { rot = [10, "=tw*sin(2*pi*(f-1)/60)", 0] }
+post = [ { fn = "ride_arms", args = { style = "behind_head" } },
+         { fn = "lying_legs", args = { gl = "=75-100*(1+sin(2*pi*(f-1)/60))/2", kl = "=100*(1+sin(2*pi*(f-1)/60))/2", gr = "=75-100*(1-sin(2*pi*(f-1)/60))/2", kr = "=100*(1-sin(2*pi*(f-1)/60))/2" } } ]

@@ -66,4 +66,12 @@ EXERCISES = [
     dict(name="KettlebellHalo", file="kettlebell_halo.toml", keys=[1, 31, 61], extra=None, checks=["ankles", "balance"], clearance=[], notes="the bell passes close to the head and neck; clearance is not checked"),
     dict(name="DeadBug", file="dead_bug.toml", keys=[1, 16, 31, 46, 61], extra=None, checks=[], clearance=[], notes="the feet are in the air: no planted contacts to check"),
     dict(name="SquatHandsTogether", file="squat_hands_together.toml", keys=[1, 25, 33, 61], extra=None, checks=["ankles", "balance"], clearance=[], notes="arms at the sides standing; the hands come together in front of the chest at the bottom"),
+    dict(name="CalfRaise", file="calf_raise.toml", keys=[1, 25, 37, 61], extra=None, checks=["balance"], clearance=[], notes="the heels lift; the toes stay on the floor"),
+    dict(name="StandingTorsoTwist", file="standing_torso_twist.toml", keys=[1, 16, 31, 46, 61], extra=None, checks=["ankles", "balance"], clearance=[], notes="the arms swing with the chest"),
+    dict(name="JumpingJack", file="jumping_jack.toml", keys=[1, 16, 31], extra=None, checks=[], clearance=[], notes="the feet leave the floor by 12 cm halfway; the legs are kept just short of straight"),
+    dict(name="LegRaise", file="leg_raise.toml", keys=[1, 31, 37, 67], extra=None, checks=[], clearance=[], notes="the legs are straight (0.5 degrees of knee bend)"),
+    dict(name="FlutterKicks", file="flutter_kicks.toml", keys=[1, 7, 13, 25], extra=None, checks=[], clearance=[], notes="a fast alternating kick, keyed every 2 frames"),
+    dict(name="BicycleCrunch", file="bicycle_crunch.toml", keys=[1, 16, 31, 46, 61], extra=None, checks=[], clearance=[], notes="the feet are in the air; hands behind the head"),
+    dict(name="VUp", file="v_up.toml", keys=[1, 31, 37, 67], extra=None, checks=[], clearance=[], notes="the hands reach toward the ankles"),
+    dict(name="StandingHipAbduction", file="standing_hip_abduction.toml", keys=[1, 25, 37, 61], extra=None, checks=["balance"], clearance=[], notes="the right hand rests on a rail 52 cm out (not modelled); balance uses both feet"),
 ]

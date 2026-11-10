@@ -1,0 +1,13 @@
+# Jumping jack: jump the feet out while the arms swing overhead, then jump back in. One jack is 1.0 s; the feet are 12 cm off the floor halfway.
+# Keyed every 3 frames: the arms swing on an arc about the shoulders and the feet leave the floor.
+name = "JumpingJack"
+python = "moves.py"
+timeline = [{ frames = [1, 31, 3], pose = "jack", set = { u = "=(1-cos(2*pi*(f-1)/30))/2" } }]
+
+[params]
+u = 0
+spread = 0.46       # how far apart each ankle is from the centre line when open (m)
+
+[poses.jack]
+generator = "jumping_jack"
+args = { u = "=u", spread = "=spread" }
