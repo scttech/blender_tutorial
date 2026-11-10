@@ -12,4 +12,3 @@ Spine1 = { rot = [6, 0, 0] }
 Spine2 = { rot = [4, 0, 0] }
 Neck = { rot = [-5, 0, 0] }
 Head = { rot = [-8, 0, 0] }
-"Hand_IK.L" = { at = [0.12, -0.41, 1.12] }       # the hands ride higher: the shoulders do not drop as far

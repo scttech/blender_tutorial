@@ -1,0 +1,17 @@
+# Squat with the arms hanging at the sides when standing; the hands come together in front of the chest (fingers up, palms facing, elbows down)
+# as you reach the bottom, and go back to the sides as you stand. The body is the squat's (moves.squat_body); keyed every 4 frames because the
+# hands travel from the sides to the chest in a straight line between keys.
+name = "SquatHandsTogether"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 25, 4], pose = "squat", set = { t = "=(1-cos(pi*(f-1)/24))/2" } },
+            { frames = [33, 61, 4], pose = "squat", set = { t = "=(1+cos(pi*(f-33)/28))/2" } }]      # 0.8 s down, 0.27 s pause, 0.93 s up
+
+[params]
+t = 0
+depth = 0.58
+sit_back = 0.14
+
+[poses.squat]
+generator = "squat_body"
+args = { t = "=t", depth = "=depth", back = "=sit_back" }
+post = [ { fn = "ride_arms_blend", args = { a = "arms_sides", b = "hands_together", w = "=t" } } ]

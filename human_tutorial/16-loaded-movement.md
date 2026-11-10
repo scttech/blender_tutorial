@@ -1,5 +1,7 @@
 # Step 16: Loaded movement: the kettlebell swing and the mace 10-to-2
 
+> **Correction (later):** a real mace 10-to-2 is done with the head of the mace swinging *behind* the back (hanging down behind you, then up behind each shoulder to 10 and 2 o'clock), not held in front of the chest as this step built it. The action in the Blender file is now the behind-the-back version (`tools/exercises/mace_10_to_2.toml`); the front-of-chest swing described below is kept as `MACE_10_TO_2` in `mace.py`. The measurements below are for the front version.
+
 **Goal:** the last technique: exercises where **the prop leads and the hands follow**. In [Step 15](15-hanging-and-pulling.md) the bar was fixed and the body moved. Here the prop *moves*, on a path we choose, and the body is choreographed around it. We teach it with two exercises that show different things:
 
 | | What it teaches | Exercises it covers |

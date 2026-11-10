@@ -21,7 +21,8 @@ GRIPS = {"pullup": ("grab_bar_over", -0.10, -6.0), "chinup": ("grab_bar_under", 
 SPINE_TOP, NECK_TOP, HEAD_TOP = (-5.0, -5.0, -4.0), -6.0, -8.0       # extension at the top (negative = bending backward). A first try with -10 and -15 tipped the head back to look at the ceiling
 
 _b = rig.data.bones
-_H0, _A0, _KP0 = (_b[n].head_local.copy() for n in ("Hips", "Foot_IK.L", "Knee_Pole.L"))
+_H0, _A0, _KP0, _S0 = (_b[n].head_local.copy() for n in ("Hips", "Foot_IK.L", "Knee_Pole.L", "UpperArm.L"))
+ELBOW_POLE = Vector((0.0, -0.60, -0.30))       # the left elbow pole, relative to the shoulder: in FRONT of the body and a little below it, so the elbows point forward and down, not out to the sides (measured: the elbow ends 0 to 2 cm out from the shoulder, 23-26 cm forward, 15-19 cm down)
 _HEAD = torso_masks()[1]
 
 def _apply(spec):
@@ -38,7 +39,8 @@ def rise_pose(grip, lift, t):
             "Spine": {"rot": (SPINE_TOP[0] * t, 0, 0)}, "Spine1": {"rot": (SPINE_TOP[1] * t, 0, 0)}, "Spine2": {"rot": (SPINE_TOP[2] * t, 0, 0)},
             "Neck": {"rot": (NECK_TOP * t, 0, 0)}, "Head": {"rot": (HEAD_TOP * t, 0, 0)},
             "Foot_IK.L": {"at": tuple(M(_A0)), "wrot": (lean, 0, 0)}, "Knee_Pole.L": {"at": tuple(M(_KP0))},
-            "Hand_IK.L": {"props": {"grab_bar_over": 0.0, "grab_bar_under": 0.0, slider: 1.0}}}      # set BOTH sliders: a stale one would blend in
+            "Hand_IK.L": {"props": {"grab_bar_over": 0.0, "grab_bar_under": 0.0, slider: 1.0}},      # set BOTH sliders: a stale one would blend in
+            "Elbow_Pole.L": {"at": tuple(M(_S0) + ELBOW_POLE)}}                                      # the pole rides with the shoulder, in front of it
 
 def _reach_error(spec):
     _apply(spec); P = pose_bones()

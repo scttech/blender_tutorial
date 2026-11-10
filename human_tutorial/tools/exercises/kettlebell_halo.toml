@@ -1,0 +1,14 @@
+# Kettlebell halo: the bell held upside down by the horns at chest height, circled around the head close to the neck, then back.
+# The bell keeps its orientation (it translates around the head). Body upright and still.
+name = "KettlebellHalo"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 61, 3], pose = "halo" }]
+
+[params]
+r = 0.26            # radius of the circle (m), centred on the head
+cz = 1.92           # height of the bell's top (origin of the bone with the bell upside down: the horns are 0.3 below it)
+
+[poses.halo]
+generator = "squat_body"
+args = { t = 0 }
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = ["=r*sin(2*pi*(f-1)/60)", "=0.02-r*cos(2*pi*(f-1)/60)", "=cz"], rot = [180, 0, 0], grab = "grab_kettlebell", pole = [0.40, 0.10, 1.25] } } ]

@@ -8,10 +8,11 @@ The name, category and equipment come from the app. **The status column is our j
 
 | Status | Count | Meaning |
 |---|---|---|
-| **Built** | 19 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
+| **Built** | 28 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
 | **Variant** | 0 | an existing table with changed numbers or one changed grab; no new technique |
-| **New** | 53 | a new table, using techniques and props we already have |
+| **New** | 37 | a new table, using techniques and props we already have |
 | **Fixture** | 13 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
+| **One hand** | 7 | needs a one-handed grip on the prop: the grab sliders drive BOTH hands, so a single-arm press, row, clean or snatch needs a per-hand grab added to the rig first |
 | **Dumbbell** | 18 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
 | **Barbell** | 17 | needs a barbell prop with a two-hand grip, plus a rack or bench for most |
 | **Machine** | 17 | needs a machine or cable fixture modelled; the person mostly sits or stands still |
@@ -24,7 +25,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 ## Suggested order
 
 1. **Variants** (7): done.
-2. **New, bodyweight** and **New, mace and kettlebell** (about 50): no new modelling. Many are floor poses (plank, bridge, dead bug) the Step 14 technique already covers.
+2. **New** (the remaining ones): no new modelling. Plank, glute bridge, dead bug, the Russian twists, the mace press, good morning and barbarian squat and the kettlebell halo are done.
 3. **Dumbbell, then barbell** (35): one prop each with grips, then many exercises. These are the biggest payoff per prop.
 4. **Fixtures** (13) and **small props** (10): a bench, box and wall unlock many at once.
 5. **Technique** (16): each needs a new library feature first (root motion, a gait cycle, rolling). Do them last, one feature at a time.
@@ -56,7 +57,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Pull-Up | Bodyweight | Built |
 | Deadlift | Barbell | Barbell |
 | Bent-Over Row | Barbell | Barbell |
-| Mace Good Morning | Mace | New |
+| Mace Good Morning | Mace | Built |
 | Chin-Up | Bodyweight | Built |
 | Romanian Deadlift | Barbell | Barbell |
 | Sumo Deadlift | Barbell | Barbell |
@@ -69,7 +70,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Good Morning | Barbell | Barbell |
 | Superman | Bodyweight | New |
 | Kettlebell Deadlift | Kettlebell | Built |
-| Kettlebell Row | Kettlebell | New |
+| Kettlebell Row | Kettlebell | One hand |
 | Chin Tuck | Bodyweight | New |
 | Child's Pose | Bodyweight | New |
 
@@ -80,7 +81,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Overhead Press | Barbell | Barbell |
 | Mace 10-to-2 Swing | Mace | Built |
 | Mace Front Raise (Around the World) | Mace | New |
-| Mace Overhead Press | Mace | New |
+| Mace Overhead Press | Mace | Built |
 | Mace Shield Cast | Mace | New |
 | Dumbbell Shoulder Press | Dumbbell | Dumbbell |
 | Arnold Press | Dumbbell | Dumbbell |
@@ -93,8 +94,8 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Pike Push-Up | Bodyweight | New |
 | Handstand Push-Up | Bodyweight | Technique |
 | Band Pull-Apart | Band | Small prop |
-| Kettlebell Press | Kettlebell | New |
-| Kettlebell Halo | Kettlebell | New |
+| Kettlebell Press | Kettlebell | One hand |
+| Kettlebell Halo | Kettlebell | Built |
 | Wall Angel | Bodyweight | Fixture |
 
 ## Arms (11)
@@ -122,7 +123,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Back Squat | Barbell | Barbell |
 | Lunge | Bodyweight | Built |
 | Mace Squat | Mace | Built |
-| Mace Barbarian Squat | Mace | New |
+| Mace Barbarian Squat | Mace | Built |
 | Mace Reverse Lunge | Mace | Built |
 | Front Squat | Barbell | Barbell |
 | Goblet Squat | Dumbbell | Built |
@@ -134,7 +135,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Leg Extension | Machine | Machine |
 | Leg Curl | Machine | Machine |
 | Hip Thrust | Barbell | Fixture |
-| Glute Bridge | Bodyweight | New |
+| Glute Bridge | Bodyweight | Built |
 | Calf Raise | Bodyweight | New |
 | Box Jump | Bodyweight | Fixture |
 | Wall Sit | Bodyweight | Fixture |
@@ -156,9 +157,9 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Exercise | Equipment | Status |
 |---|---|---|
 | Mountain Climber | Bodyweight | New |
-| Plank | Bodyweight | New |
+| Plank | Bodyweight | Built |
 | Sit-Up | Bodyweight | Built |
-| Mace Russian Twist | Mace | New |
+| Mace Russian Twist | Mace | Built |
 | Crunch | Bodyweight | Built |
 | Bicycle Crunch | Bodyweight | New |
 | Russian Twist | Bodyweight | New |
@@ -166,11 +167,11 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Hanging Leg Raise | Bodyweight | Built |
 | Side Plank | Bodyweight | New |
 | V-Up | Bodyweight | New |
-| Dead Bug | Bodyweight | New |
+| Dead Bug | Bodyweight | Built |
 | Ab Wheel Rollout | Other | Small prop |
 | Flutter Kicks | Bodyweight | New |
 | Kettlebell Farmer's Carry | Kettlebell | Technique |
-| Kettlebell Russian Twist | Kettlebell | New |
+| Kettlebell Russian Twist | Kettlebell | Built |
 | Bird Dog | Bodyweight | New |
 | Pelvic Floor Contraction (Kegel) | Bodyweight | New |
 | Pallof Press | Band | Small prop |
@@ -185,14 +186,14 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Farmer's Carry | Dumbbell | Dumbbell |
 | Mace 360 Swing | Mace | New |
 | Mace Uppercut | Mace | New |
-| Mace Single-Arm Swing | Mace | New |
+| Mace Single-Arm Swing | Mace | One hand |
 | Clean and Press | Barbell | Barbell |
 | Thruster | Barbell | Barbell |
 | Turkish Get-Up | Kettlebell | Technique |
-| Kettlebell Clean | Kettlebell | New |
-| Kettlebell Snatch | Kettlebell | New |
-| Kettlebell Clean and Press | Kettlebell | New |
-| Kettlebell Thruster | Kettlebell | New |
+| Kettlebell Clean | Kettlebell | One hand |
+| Kettlebell Snatch | Kettlebell | One hand |
+| Kettlebell Clean and Press | Kettlebell | One hand |
+| Kettlebell Thruster | Kettlebell | One hand |
 | Man Maker | Dumbbell | Dumbbell |
 | Wall Ball | Other | Small prop |
 | Battle Ropes | Other | Small prop |

@@ -45,3 +45,16 @@ def mace_extra():
                 "head_x": head.x, "head_z": head.z, "mace_tilt": math.degrees(math.atan2((top - base).x, (top - base).z))}
     return extra
 
+
+
+def mace_behind(theta, px=0.0, py=0.12, pz=1.50):
+    """the mace held with BOTH hands behind the neck and the head swinging behind the back (the real 10-to-2). The hands' midpoint is the pivot (px, py, pz);
+    theta is where the head is: 0 = hanging straight down behind the back, +120 = at 10 o'clock (up and to the character's left), -120 = 2 o'clock.
+    The mace is turned half a turn about the X axis (head down). That also puts the shaft BEHIND the hands: the grips sit 9 cm behind the shaft's
+    axis otherwise, which would put the shaft inside the back. The Euler angles are written directly as (180, -theta, 0), which stays continuous
+    through the whole swing (a matrix converted back to Euler angles would flip at the crossings)."""
+    eul = Euler((math.pi, -math.radians(theta), 0), 'XYZ'); R = eul.to_matrix()
+    origin = Vector((px, py, pz)) - R @ _MID
+    return {"Mace": {"at": tuple(origin), "wrot": (180.0, -theta, 0.0)},
+            "Hand_IK.L": {"props": {"grab_mace": 1.0}}, "Elbow_Pole.L": {"at": (0.65, 0.10, 1.75)},
+            "Knee_Pole.L": {"at": tuple(_b["Knee_Pole.L"].head_local)}}

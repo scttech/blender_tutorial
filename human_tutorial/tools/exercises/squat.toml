@@ -1,6 +1,7 @@
-# The bodyweight squat, as text. Same motion as squat.py (Step 13); check_dsl_equivalence.py proves they build the same action.
+# The bodyweight squat, as text, with the hands behind the head. (squat.py, Step 13, is the original with the arms held forward; that version let the elbows flare.)
 # The feet do not move: the Foot_IK controls stay at rest, the knees bend because the hips drop. 30 fps, 2.0 s loop.
 name = "Squat"
+python = "poselib.py"
 # (timeline is above the [tables] on purpose: in TOML a key written after a [table] heading belongs to that table)
 timeline = [[1, "stand"], [25, "bottom"], [33, "bottom"], [61, "stand"]]    # 0.8 s down, 0.27 s pause, 0.93 s up
 
@@ -24,11 +25,11 @@ Spine2 = { rot = [6, 0, 0] }
 Neck = { rot = [-8, 0, 0] }         # keep the eyes forward
 Head = { rot = [-14, 0, 0] }
 
-# the arms: held out in front for balance, the targets lowering with the shoulders
+# the arms: hands behind the head, elbows wide (they ride on the head, so they follow the lean). Variants swap this for other arm positions.
 [poses.arms_stand]
-"Hand_IK.L" = { at = [0.12, -0.40, 1.30] }
+post = [ { fn = "ride_arms", args = { style = "behind_head" } } ]
 [poses.arms_bottom]
-"Hand_IK.L" = { at = [0.12, -0.42, 0.88] }
+post = [ { fn = "ride_arms", args = { style = "behind_head" } } ]
 
 [poses.stand]
 extends = ["body_stand", "arms_stand"]

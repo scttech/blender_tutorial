@@ -1,0 +1,14 @@
+# Dead bug: on the back, arms to the ceiling, hips and knees at 90 degrees (the table top). Lower the opposite arm and leg toward the floor,
+# return, and swap sides. Both limbs of a pair move together (hinges about the shoulder and the hip), keyed every 3 frames along the arc.
+name = "DeadBug"
+python = ["situp.py", "poselib.py"]
+timeline = [{ frames = [1, 61, 3], pose = "bug" }]       # 2.0 s: left arm and right leg, then right arm and left leg
+
+[params]
+a = 0
+b = 0
+
+[poses.bug]
+generator = "curl_body"
+args = { t = 0 }
+post = [ { fn = "dead_bug_limbs", args = { a = "=max(0, sin(2*pi*(f-1)/60))**2", b = "=max(0, -sin(2*pi*(f-1)/60))**2" } } ]

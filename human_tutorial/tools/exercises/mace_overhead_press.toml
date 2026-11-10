@@ -1,0 +1,18 @@
+# Mace overhead press: the mace upright by the handle at the shoulder, pressed straight overhead and lowered. Body upright and still;
+# the mace rides on the chest. s = 0 at the shoulder, 1 at lockout; keyed every 5 frames along the path.
+name = "MaceOverheadPress"
+python = ["moves.py", "mace.py", "poselib.py"]
+timeline = [{ frames = [1, 31, 5], pose = "press", set = { s = "=(1-cos(pi*(f-1)/30))/2" } }, { frame = 36, pose = "press", set = { s = 1 } },
+            { frames = [41, 71, 5], pose = "press", set = { s = "=(1+cos(pi*(f-41)/30))/2" } }]
+
+[params]
+s = 0
+y0 = -0.22          # the mace's y at the shoulder, and
+z0 = 1.20           # its height (the origin of the mace bone, at the foot of the shaft)
+y1 = -0.20          # ... at lockout
+z1 = 1.56
+
+[poses.press]
+generator = "squat_body"
+args = { t = 0 }
+post = [ { fn = "ride_prop", args = { prop = "Mace", at = [0, "=y0+(y1-y0)*s", "=z0+(z1-z0)*s"], grab = "grab_mace", pole = [0.30, "=-0.15+0.15*s", "=1.05+0.5*s"] } } ]

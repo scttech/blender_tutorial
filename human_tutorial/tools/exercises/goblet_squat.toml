@@ -1,13 +1,17 @@
-# Goblet squat: the squat holding a kettlebell at the chest by the handle. The bell rides on the chest (poselib.ride_prop), so it
-# follows the lean; both hands snap to the handle. A more upright torso than the bodyweight squat (the bell pulls the chest forward).
+# Goblet squat: the squat holding a kettlebell at the chest by the HORNS (the two sides of the handle), the bell level with the chest. The bell
+# rides on the chest (poselib.ride_prop), so it follows the lean; each hand wraps one side of the handle (grab_kb_goblet). A more upright torso than the bodyweight squat (the bell pulls the chest forward).
 name = "GobletSquat"
 extends = "Squat"
-python = "poselib.py"
+python = ["poselib.py", "kbswing.py"]
+
+[params]
+ky = -0.30          # the bell's y (m): clear of the chest (the bell is 20 cm across)
+kz = 1.24           # the height of the bone at the bell's base: the bell's body is then centred at 1.34 m, level with the chest
 
 [poses.arms_stand]
-post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, -0.29, 1.0], grab = "grab_kettlebell", pole = [0.30, 0.0, 1.0] } } ]
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, "=ky", "=kz"], grab = "grab_kb_goblet", pole = [0.40, -0.05, 1.15] } } ]
 [poses.arms_bottom]
-post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, -0.29, 1.0], grab = "grab_kettlebell", pole = [0.30, 0.0, 1.0] } } ]
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, "=ky", "=kz"], grab = "grab_kb_goblet", pole = [0.40, -0.05, 1.15] } } ]
 [poses.body_bottom]
 Spine = { rot = [9, 0, 0] }
 Spine1 = { rot = [7, 0, 0] }

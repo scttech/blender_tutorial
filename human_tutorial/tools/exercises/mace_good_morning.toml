@@ -1,0 +1,16 @@
+# Mace good morning: the mace across the upper back behind the head, hinge at the hips with a flat spine until the torso is near parallel to the floor, then stand.
+name = "MaceGoodMorning"
+python = ["moves.py", "mace.py", "poselib.py"]
+timeline = [{ frames = [1, 31, 5], pose = "hinge", set = { t = "=(1-cos(pi*(f-1)/30))/2" } }, { frame = 41, pose = "hinge", set = { t = 1 } },
+            { frames = [46, 71, 5], pose = "hinge", set = { t = "=(1+cos(pi*(f-41)/30))/2" } }]
+
+[params]
+t = 0
+back = 0.30
+drop = 0.20
+pitch = 60.0
+
+[poses.hinge]
+generator = "hinge_body"
+args = { t = "=t", back = "=back", drop = "=drop", pitch = "=pitch", spine = [0, 0, 0], neck = -30, head = -30 }
+post = [ { fn = "ride_prop", args = { prop = "Mace", at = [0.27, 0.07, 1.60], rot = [0, -90, 0], grab = "grab_mace", pole = [0.65, 0.10, 1.75] } } ]

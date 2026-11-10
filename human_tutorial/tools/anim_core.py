@@ -27,7 +27,7 @@ from mathutils import Vector, Euler
 
 rig, body, scene = bpy.data.objects["Rig"], bpy.data.objects["Body"], bpy.context.scene
 FPS = 30
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet")
 
 def mirror_name(n): return n[:-2] + ".R" if n.endswith(".L") else n
 def rest_head(bone): return rig.data.bones[bone].head_local.copy()
@@ -49,7 +49,7 @@ def expand(keys, mirror):
     chans = []
     for frame, pose in keys:
         flat = {}
-        for bone, spec in pose.items():
+        for bone, spec in sorted(pose.items(), key=lambda kv: kv[0].endswith(".R")):       # explicit right-side entries come last, so they win over the mirrored left
             sides = [(bone, 1)] + ([(mirror_name(bone), -1)] if mirror and bone.endswith(".L") else [])
             for b, s in sides:
                 if "move" in spec: flat[(b, "move", None)] = (spec["move"][0] * s, spec["move"][1], spec["move"][2])

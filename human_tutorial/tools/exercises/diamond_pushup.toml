@@ -5,3 +5,5 @@ extends = "Pushup"
 [params]
 hand_x = 0.05
 phi_up = 74.5       # a little lower than the standard 73.5: hands 14 cm inside the shoulders need a shorter reach (73.5 left the arms 13.7 mm short)
+pole_out = 0.5       # the elbows flare out to the sides (without this they fold back into the body)
+pole_up = 0.5        # ... and the pole sits up toward the back so the folded arm does not drop the elbow through the floor (0.1 sank it 64 mm)

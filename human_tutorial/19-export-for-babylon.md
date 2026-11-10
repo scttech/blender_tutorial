@@ -23,7 +23,7 @@ exec(open("/Users/chris/blender_tutorial/human_tutorial/tools/export_glb.py").re
 
 **By hand:** select Body, Rig and the three props, **File, Export, glTF 2.0 (.glb)**, tick **Limit to: Selected Objects**, in **Animation** choose **Actions**, tick **Sampling Animations**, and under **Armature** tick **Export Deform Bones Only**. The prop trick needs the three prop bones' **Deform** checkbox (Bone properties) ticked first.
 
-Result: **2.75 MB**, 55 joints (52 body bones plus 3 prop bones), 8 animations (the file grows as exercises are added: with the 18 actions of the exercise catalogue it is 3.12 MB and every action was re-verified, worst error 0.12 mm), textures from Step 18 (JPEG 33 KB and 612 KB, PNG 977 KB, JPEG 35 KB).
+Result: **2.75 MB**, 55 joints (52 body bones plus 3 prop bones), 8 animations (the file grows as exercises are added: with the 27 actions built from the exercise catalogue it is 3.47 MB and every action was re-verified, worst error 0.12 mm in both checks), textures from Step 18 (JPEG 33 KB and 612 KB, PNG 977 KB, JPEG 35 KB).
 
 ## Does it match Blender?
 
@@ -56,6 +56,10 @@ The worst error anywhere is **0.036 mm**, far below anything visible. The IK leg
 4. **The prop materials export as double sided** (we only switched culling on for the body). They are tiny; set it on them too if you want every triangle counted.
 5. **The Root bone is not in the file.** The hips are a child of the `Rig` node. The animations move the hips, and nothing in the exercises needs a separate root.
 6. **The exporter writes a lot of WARNING lines** during the export. They were harmless here; the check above is why we can say so.
+
+## Hiding the props
+
+The kettlebell, mace and pull-up bar are separate meshes in the GLB, named `Kettlebell`, `Mace` and `PullupBar`, so Babylon can hide any of them: `scene.getMeshByName("Mace").setEnabled(false)`. We checked this in Node (the call works and the body stays enabled). The prop bones keep animating while a mesh is disabled, which costs nothing. `viewer/index.html` shows only the props the chosen exercise uses and has a checkbox to hide them all.
 
 ## Viewing it
 

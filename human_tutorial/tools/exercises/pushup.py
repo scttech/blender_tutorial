@@ -23,14 +23,17 @@ _H0, _A0, _S0, _KP0 = (_b[n].head_local.copy() for n in ("Hips", "Foot_IK.L", "U
 _B0 = Vector((0.0, _b["Foot.L"].tail_local.y, _b["Foot.L"].tail_local.z))        # the ball of the foot, on the centre line
 _HAND_Y = rigid(_B0, (0, Y_PIVOT, Z_PIVOT), PHI_UP)(_S0).y                          # hands directly under the shoulders at the top
 
-def pushup_pose(phi, hand_x=HAND_X):
-    """hand_x: how far each wrist is from the centre line (0.25 = the standard push-up; 0.05 = diamond)"""
+def pushup_pose(phi, hand_x=HAND_X, pole_out=0.0, pole_up=0.10):
+    """hand_x: how far each wrist is from the centre line (0.25 = the standard push-up; 0.05 = diamond).
+    pole_out: 0 leaves the elbow pole where the rig rests it; otherwise the pole sits this far out to the side of the shoulder and rides on the body, so the elbows flare outward. pole_up: how far up (toward the back) it sits; a pole level with the shoulder lets a folded arm drop its elbow through the floor"""
     M = rigid(_B0, (0, Y_PIVOT, Z_PIVOT), phi)
-    return {"Hips": {"move": tuple(M(_H0) - _H0), "rot": (phi, 0, 0)},
+    pose = {"Hips": {"move": tuple(M(_H0) - _H0), "rot": (phi, 0, 0)},
             "Foot_IK.L": {"at": tuple(M(_A0)), "wrot": (phi, 0, 0)}, "Knee_Pole.L": {"at": tuple(M(_KP0))},
             "Toes.L": {"rot": (-phi, 0, 0)},
             "Neck": {"rot": (-18, 0, 0)}, "Head": {"rot": (-28, 0, 0)},                         # lift the eyes to look ahead
             "Hand_IK.L": {"at": (hand_x, _HAND_Y, HAND_Z), "wrot": (0, 0, -90), "props": {"fist": 0.0}}}
+    if pole_out: pose["Elbow_Pole.L"] = {"at": tuple(M(_S0 + Vector((pole_out, pole_up, 0.0))))}
+    return pose
 
 _MID = (PHI_UP + PHI_DN) / 2                    # a key halfway keeps the hips on their arc (a chord would shorten the legs)
 PUSHUP = [(1, pushup_pose(PHI_UP)), (16, pushup_pose(_MID)), (31, pushup_pose(PHI_DN)),

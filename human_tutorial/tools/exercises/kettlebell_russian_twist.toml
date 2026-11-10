@@ -1,0 +1,19 @@
+# Kettlebell Russian twist: seated on the floor, torso leaned back, feet planted, the bell held at the chest; rotate the torso side to side.
+# The bell rides on the chest, so it swings with the twist.
+name = "KettlebellRussianTwist"
+python = ["situp.py", "poselib.py"]
+timeline = [{ frames = [1, 61, 5], pose = "twist" }]       # 2.0 s: left, right, back to the start
+
+[params]
+lean = 50.0         # the torso's angle from lying (90 = flat, 0 = upright)
+twist = 15.0        # degrees of twist on each of the three spine bones (45 in all)
+
+[poses.hold]
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, -0.29, 1.0], grab = "grab_kettlebell", pole = [0.30, 0.0, 1.0] } } ]
+[poses.twist]
+extends = "hold"
+generator = "curl_body"
+args = { t = 1, top = "=lean", spine = [0, 0, 0], neck = 0, head = 0 }
+Spine = { rot = [0, "=twist*sin(2*pi*(f-1)/60)", 0] }
+Spine1 = { rot = [0, "=twist*sin(2*pi*(f-1)/60)", 0] }
+Spine2 = { rot = [0, "=twist*sin(2*pi*(f-1)/60)", 0] }

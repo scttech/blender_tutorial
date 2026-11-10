@@ -7,13 +7,15 @@ timeline = [[1, "top"], [16, "mid"], [31, "bottom"], [37, "bottom"], [52, "mid"]
 phi_up = 73.5       # degrees the body has turned from standing at the top (arms nearly straight); 90 would be lying flat
 phi_down = 88.0     # ... and at the bottom (chest about 4 cm off the floor)
 hand_x = 0.25       # how far each wrist is from the centre line (m)
+pole_up = 0.10      # how far toward the back the pole sits (raises the elbows off the floor)
+pole_out = 0.0      # 0 = the rig's default elbow pole; > 0 puts it this far out to the side so the elbows flare
 
 [poses.top]
 generator = "pushup_pose"
-args = { phi = "=phi_up", hand_x = "=hand_x" }
+args = { phi = "=phi_up", hand_x = "=hand_x", pole_out = "=pole_out", pole_up = "=pole_up" }
 [poses.mid]
 generator = "pushup_pose"
-args = { phi = "=(phi_up+phi_down)/2", hand_x = "=hand_x" }     # a key halfway keeps the hips on their arc
+args = { phi = "=(phi_up+phi_down)/2", hand_x = "=hand_x", pole_out = "=pole_out", pole_up = "=pole_up" }     # a key halfway keeps the hips on their arc
 [poses.bottom]
 generator = "pushup_pose"
-args = { phi = "=phi_down", hand_x = "=hand_x" }
+args = { phi = "=phi_down", hand_x = "=hand_x", pole_out = "=pole_out", pole_up = "=pole_up" }

@@ -1,15 +1,16 @@
-# The steel mace 10-to-2, as text. Same motion as mace.py (Step 16). The geometry (the pivot between the hands, the grip
-# bones) stays in Python as the generator `mace_pose`; the text says how far and how fast it swings.
+# The steel mace 10-to-2: both hands on the handle behind the neck, the head hanging down behind the back. Swing it up behind one shoulder to
+# 10 o'clock, back down, up behind the other shoulder to 2 o'clock, and down. (The first version of this exercise, Step 16, held the mace in
+# front of the chest; that is mace.py's MACE_10_TO_2 and is no longer the exercise.)
 name = "Mace10to2"
 python = "mace.py"
-# (timeline is above the [tables] on purpose: in TOML a key written after a [table] heading belongs to that table)
-timeline = [{ frames = [1, 31, 3], pose = "swing_pose" }]
+timeline = [{ frames = [1, 61, 1], pose = "swing" }]       # 2.0 s: left, down, right, down; keyed every frame (every 3 left the hands 111 mm out of reach between keys)
 
 [params]
-swing = 60          # degrees either side of vertical: +60 = 10 o'clock, -60 = 2 o'clock
-period = 30         # frames for one full left-right-left cycle
+swing = 120         # degrees from hanging straight down to the head at 10 or 2 o'clock
+px = 0.0           # the pivot (the midpoint of the hands): x,
+py = 0.18           # the pivot (the midpoint of the hands): y behind the spine (level with the back of the head),
+pz = 1.72 # ... and its height
 
-[poses.swing_pose]
-generator = "mace_pose"
-args = { gamma = "=swing*cos(2*pi*(f-1)/period)" }     # a cosine keyed every 3 frames: with only the extremes, the hands' midpoint would rise mid-swing
-
+[poses.swing]
+generator = "mace_behind"
+args = { theta = "=swing*sin(2*pi*(f-1)/60)", px = "=px", py = "=py", pz = "=pz" }

@@ -1,0 +1,14 @@
+# Plank: the push-up's top position held on straight arms. The body is rigid on the toes and hands; a slow 0.8 degree sway stands in for breathing.
+name = "Plank"
+python = "pushup.py"
+timeline = [[1, "a"], [31, "b"], [61, "a"]]      # 2.0 s loop
+
+[params]
+phi = 73.5
+sway = 0.8
+[poses.a]
+generator = "pushup_pose"
+args = { phi = "=phi" }
+[poses.b]
+generator = "pushup_pose"
+args = { phi = "=phi+sway" }

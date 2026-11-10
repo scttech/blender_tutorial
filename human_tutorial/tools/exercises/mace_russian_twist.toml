@@ -1,0 +1,7 @@
+# Mace Russian twist: the kettlebell version holding the mace upright at the chest instead.
+name = "MaceRussianTwist"
+extends = "KettlebellRussianTwist"
+python = ["mace.py", "poselib.py"]
+
+[poses.hold]
+post = [ { fn = "ride_prop", args = { prop = "Mace", at = [0, -0.371, 1.01], grab = "grab_mace", pole = [0.30, 0.0, 1.0] } } ]

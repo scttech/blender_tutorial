@@ -1,0 +1,21 @@
+# Glute bridge: on the back, knees bent, feet flat, arms on the floor; drive the hips up until the body is a straight line from shoulders to knees.
+# The lying body is the sit-up's (situp.py), tipped back by `lift` degrees about the shoulders; the pelvis height is settled against the floor.
+name = "GluteBridge"
+python = ["situp.py", "poselib.py"]
+timeline = [[1, "down"], [28, "up"], [40, "up"], [72, "down"]]
+
+[params]
+reach = 0.42        # how far down the floor the hands lie from the shoulders (m)
+hand_x = 0.28
+lift = 28.0         # degrees the torso is tipped up from the floor
+
+[poses.arms]
+post = [ { fn = "arms_on_floor", args = { reach = "=reach", x = "=hand_x" } } ]
+[poses.down]
+extends = "arms"
+generator = "curl_body"
+args = { t = 0 }
+[poses.up]
+extends = "arms"
+generator = "curl_body"
+args = { t = 1, top = "=90+lift", spine = [0, 0, 0], neck = 0, head = 0 }

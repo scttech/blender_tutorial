@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gym animations viewer</title>
 <style>html,body{margin:0;height:100%;background:#1b1d21;color:#eee;font:14px system-ui}#c{width:100%;height:100%;display:block;touch-action:none}
-#bar{position:fixed;left:8px;top:8px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 16px)}button{padding:6px 10px;border-radius:6px;border:1px solid #556;background:#2a2e36;color:#eee;cursor:pointer}button.on{background:#3d6fd1}</style></head>
+#bar{position:fixed;left:8px;top:8px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 16px)}button{padding:6px 10px;border-radius:6px;border:1px solid #556;background:#2a2e36;color:#eee;cursor:pointer}button.on{background:#3d6fd1}label{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:1px solid #556;background:#2a2e36}</style></head>
 <body><canvas id="c"></canvas><div id="bar"></div>
 <script src="https://cdn.babylonjs.com/v7.54.3/babylon.js"></script>
 <script src="https://cdn.babylonjs.com/v7.54.3/loaders/babylonjs.loaders.min.js"></script>
@@ -17,9 +17,14 @@ BABYLON.SceneLoader.ImportMeshAsync("", "../exports/", "human_all_animations.glb
   const root = res.meshes[0];                       // glTF is right-handed, Babylon left-handed: the loader adds a mirror on __root__; the model faces the camera we set up
   const bar = document.getElementById("bar"); let current = null;
   res.animationGroups.forEach(g => g.stop());
-  const show = (g, b) => { if (current) current.stop(); current = g; g.start(true); [...bar.children].forEach(x => x.classList.toggle("on", x === b)); };
+  // the props are separate meshes named Kettlebell, Mace and PullupBar: switch off the ones an exercise does not use (or all of them)
+  const PROPS = { Kettlebell: /kettlebell|kbswing|goblet/i, Mace: /mace/i, PullupBar: /pullup|chinup|hangingleg/i };
+  let showProps = true;
+  const updateProps = () => { for (const [name, re] of Object.entries(PROPS)) { const m = scene.getMeshByName(name); if (m) m.setEnabled(showProps && !!current && re.test(current.name)); } };
+  const box = document.createElement("label"); box.innerHTML = '<input type="checkbox" checked> props'; box.firstChild.onchange = e => { showProps = e.target.checked; updateProps(); }; bar.appendChild(box);
+  const show = (g, b) => { if (current) current.stop(); current = g; g.start(true); [...bar.children].forEach(x => x.classList.toggle("on", x === b)); updateProps(); };
   res.animationGroups.forEach(g => { const b = document.createElement("button"); b.textContent = g.name; b.onclick = () => show(g, b); bar.appendChild(b); });
-  if (res.animationGroups.length) bar.children[0].click();
+  if (res.animationGroups.length) bar.children[1].click();
 });
 engine.runRenderLoop(() => scene.render()); addEventListener("resize", () => engine.resize());
 </script></body></html>
