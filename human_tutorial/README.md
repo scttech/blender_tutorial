@@ -21,7 +21,7 @@ Read straight from the `.glb` header with `../cat_tutorial/tools/inspect_glb.py`
 | Origin | at the waist, so the feet sit about 0.95 m below the floor |
 | Materials | 1, unnamed |
 
-## Contents (planned)
+## Contents
 
 ### Part 1: Inspect and clean up
 1. [Inspect the model](01-inspect-the-model.md): import it, check scale, orientation and pose
@@ -63,7 +63,7 @@ Not one tutorial per exercise. Many exercises share the same body mechanics, so 
 ### Part 6: Using the model elsewhere
 18. [Shrink the textures for the web](18-shrink-the-textures.md): 19.4 MB to 1.7 MB of textures (a 20 MB GLB to 2.3 MB), with resolution spent where the detail is, and a measured warning that PSNR hides soft eyes
 19. [Export for Babylon.js](19-export-for-babylon.md): one 2.75 MB GLB with the props and eight animations; the IK and finger drivers baked, and checked against Blender to 0.036 mm in our own skinning and in Babylon itself
-20. The Blender file
+20. [The Blender file](20-the-blender-file.md): what is in `human_rig.blend`, how to use it, what we kept (the original textures) and what is still open
 
 ## Files
 

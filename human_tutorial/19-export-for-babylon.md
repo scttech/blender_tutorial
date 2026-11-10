@@ -80,4 +80,4 @@ cd human_tutorial && python3 -m http.server 8000      # then http://localhost:80
 
 ---
 
-[← Previous: Shrink the textures](18-shrink-the-textures.md) · [Contents](README.md) · Next: The Blender file (not written yet)
+[← Previous: Shrink the textures](18-shrink-the-textures.md) · [Contents](README.md) · [Next: The Blender file →](20-the-blender-file.md)
