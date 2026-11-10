@@ -88,4 +88,7 @@ EXERCISES = [
     dict(name="HamstringStretch", file="hamstring_stretch.toml", keys=[1, 37, 101, 141], extra=None, checks=[], clearance=[], notes="the front foot is off its rest position (heel forward, toes up)"),
     dict(name="HipFlexorStretch", file="hip_flexor_stretch.toml", keys=[1, 37, 101, 141], support_frame=37, extra=None, checks=["balance"], clearance=[], notes="a half-kneeling lunge; hands on the hips"),
     dict(name="NeckShoulderRolls", file="neck_shoulder_rolls.toml", keys=[1, 46, 91, 154], extra=None, checks=["ankles", "balance"], clearance=[], notes="the shoulders roll through 9 degrees of clavicle motion"),
+    dict(name="PistolSquat", file="pistol_squat.toml", keys=[1, 33, 41, 73], extra=None, checks=[], clearance=[], notes="the left leg is held out in front, so the ankles are not checked for drift"),
+    dict(name="SkaterHop", file="skater_hop.toml", keys=[1, 7, 15, 22, 31], extra=None, checks=[], clearance=[], notes="the feet leave the floor by 10 cm in flight"),
+    dict(name="BoxBreathing", file="box_breathing.toml", keys=[1, 121, 241, 361, 481], extra=None, checks=["ankles", "balance"], clearance=[], notes="a very small motion over 16 seconds"),
 ]

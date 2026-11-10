@@ -1,0 +1,14 @@
+# Pistol squat: balance on one leg (the right) with the other (left) leg held out in front, squat down to full depth on the standing leg, then drive back up. The hands are together in front of
+# the chest for balance. 2.4 s loop: 1.1 s down, 0.3 s at the bottom, 1.0 s up.
+name = "PistolSquat"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 33, 4], pose = "pistol", set = { t = "=(1-cos(pi*(f-1)/32))/2" } },
+            { frames = [41, 73, 4], pose = "pistol", set = { t = "=(1+cos(pi*(f-41)/32))/2" } }]
+
+[params]
+t = 0
+
+[poses.pistol]
+generator = "pistol_squat"
+args = { t = "=t" }
+post = [ { fn = "ride_arms", args = { style = "hands_together" } } ]

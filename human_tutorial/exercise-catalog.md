@@ -8,9 +8,9 @@ The name, category and equipment come from the app. **The status column is our j
 
 | Status | Count | Meaning |
 |---|---|---|
-| **Built** | 50 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
+| **Built** | 53 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
 | **Variant** | 0 | an existing table with changed numbers or one changed grab; no new technique |
-| **New** | 15 | a new table, using techniques and props we already have |
+| **New** | 12 | a new table, using techniques and props we already have |
 | **Fixture** | 13 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
 | **One hand** | 7 | needs a one-handed grip on the prop: the grab sliders drive BOTH hands, so a single-arm press, row, clean or snatch needs a per-hand grab added to the rig first |
 | **Dumbbell** | 18 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
@@ -139,12 +139,12 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Calf Raise | Bodyweight | Built |
 | Box Jump | Bodyweight | Fixture |
 | Wall Sit | Bodyweight | Fixture |
-| Pistol Squat | Bodyweight | New |
+| Pistol Squat | Bodyweight | Built |
 | Goblet Squat | Kettlebell | Built |
 | Kettlebell Lunge | Kettlebell | Built |
 | Heel Drop | Bodyweight | Built |
 | Jump Squat | Bodyweight | Built |
-| Skater Hop | Bodyweight | New |
+| Skater Hop | Bodyweight | Built |
 | Sit-to-Stand | Bodyweight | Fixture |
 | Standing Hip Abduction | Bodyweight | Built |
 | Single-Leg Balance | Bodyweight | Built |
@@ -231,7 +231,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | 90/90 Hip Stretch | Bodyweight | New |
 | Thoracic Spine Rotation | Bodyweight | Built |
 | Neck and Shoulder Rolls | Bodyweight | Built |
-| Box Breathing | Bodyweight | New |
+| Box Breathing | Bodyweight | Built |
 
 ## Martial Arts (22)
 

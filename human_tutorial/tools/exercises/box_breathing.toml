@@ -1,0 +1,13 @@
+# Box breathing: in for four counts, hold for four, out for four, hold for four (4 s each, a 16 s cycle). The chest lifts and the shoulders rise a few degrees: a very small motion.
+name = "BoxBreathing"
+python = ["moves.py", "pushup.py", "poselib.py"]
+timeline = [[1, "out"], [121, "in"], [241, "in"], [361, "out"], [481, "out"]]
+
+[poses.out]
+generator = "box_breath"
+args = { b = 0 }
+post = [ { fn = "ride_arms", args = { style = "arms_sides_short" } } ]
+[poses.in]
+generator = "box_breath"
+args = { b = 1 }
+post = [ { fn = "ride_arms", args = { style = "arms_sides_short" } } ]

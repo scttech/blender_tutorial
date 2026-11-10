@@ -1,0 +1,17 @@
+# Skater hop: leap sideways from one foot to the other, landing softly on a bent knee and sweeping the trailing leg behind. s = 0 on the right foot, 1 on the left. One crossing takes 9 frames;
+# the body is held 6 frames on each landing. 1.0 s per side-to-side-and-back... a full cycle (right, left, right) is 1.5 s.
+name = "SkaterHop"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frame = 1, pose = "hop", set = { s = 0 } }, { frame = 7, pose = "hop", set = { s = 0 } },
+            { frames = [8, 15, 1], pose = "hop", set = { s = "=(1-cos(pi*(f-7)/9))/2" } },
+            { frame = 16, pose = "hop", set = { s = 1 } }, { frame = 22, pose = "hop", set = { s = 1 } },
+            { frames = [23, 30, 1], pose = "hop", set = { s = "=(1+cos(pi*(f-22)/9))/2" } },
+            { frame = 31, pose = "hop", set = { s = 0 } }]
+
+[params]
+s = 0
+
+[poses.hop]
+generator = "skater_hop"
+args = { s = "=s" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides" } } ]

@@ -118,3 +118,30 @@ def hamstring_stretch(u, stride=0.52, back=0.25, pitch=42.0):
     p["Foot_IK.L"] = {"at": (A0.x, A0.y - stride * u, A0.z + 0.014 * u), "wrot": (-30 * u, 0, 0)}; p["Knee_Pole.L"] = {"at": (A0.x, A0.y - stride * u - 0.5, 0.5)}
     p["Foot_IK.R"] = {"at": (-A0.x, A0.y, A0.z + 0.003), "wrot": (0, 0, 0)}            # the standing foot is planted explicitly, a hair above the floor
     return p
+
+
+def pistol_squat(t, depth=0.52, back=0.14, lean=1.0):
+    """a single-leg squat on the RIGHT leg, the left leg held out in front. t: 0 standing .. 1 the bottom. The hips shift over the standing foot, drop and sit back; the torso leans as in the
+    squat; the left ankle is held 0.85 m from the left hip, forward and a little below level, so the free leg stays straight, and its foot points up"""
+    b = rig.data.bones; T = b["Thigh.L"].head_local; A0 = b["Foot_IK.L"].head_local
+    dx = -0.095 * t; dz = -depth * t; dy = back * t
+    p = squat_body(t, depth, back, lean)
+    p["Hips"] = {"move": (dx, dy, dz)}
+    hip = Vector((T.x + dx, T.y + dy, T.z + dz)); fl = math.radians(78)
+    ankle = hip + Vector((0, -0.84 * math.sin(fl), -0.84 * math.cos(fl)))
+    p["Foot_IK.L"] = {"at": tuple(ankle), "wrot": (-75, 0, 0)}; p["Knee_Pole.L"] = {"at": (ankle.x, ankle.y * 0.5, ankle.z + 0.5)}
+    p["Foot_IK.R"] = {"at": (-A0.x, A0.y, A0.z), "wrot": (0, 0, 0)}
+    return p
+
+def skater_hop(s, jump=0.10, spread=0.30, dip=0.14):
+    """a skater hop: s = 0 balanced on the RIGHT leg at x = -spread with the left leg trailing behind; s = 1 the mirror image on the left leg. In between the body hops across: both
+    feet are `jump` metres off the floor at the middle, and the landing leg is bent by `dip` metres at each end"""
+    b = rig.data.bones; T = b["Thigh.L"].head_local; A0 = b["Foot_IK.L"].head_local
+    fl = math.sin(math.pi * s); hx = -(spread - 0.095) + 2 * (spread - 0.095) * s
+    hz = -dip * (1 - fl) + 0.5 * jump * fl                                   # bent at the ends, a little extended in the air
+    rx = -spread + (0.10 + spread) * s; lx = -0.10 + (spread + 0.10) * s       # the right foot goes from planted to trailing, the left from trailing to planted
+    ry = A0.y + 0.40 * s; ly = A0.y + 0.40 * (1 - s)
+    rz = A0.z + 0.10 * s + jump * fl; lz = A0.z + 0.10 * (1 - s) + jump * fl
+    return {"Hips": {"move": (hx, 0.06 * (1 - abs(1 - 2 * s)), hz), "rot": (8 * (1 - fl), 0, 0)}, "Spine": {"rot": (6 * (1 - fl), 0, 0)}, "Spine1": {"rot": (6 * (1 - fl), 0, 0)},
+            "Foot_IK.L": {"at": (lx, ly, lz), "wrot": (0, 0, 0)}, "Knee_Pole.L": {"at": (lx + 0.04, -0.55, 0.55)},
+            "Foot_IK.R": {"at": (rx, ry, rz), "wrot": (0, 0, 0)}, "Knee_Pole.R": {"at": (rx - 0.04, -0.55, 0.55)}}

@@ -12,7 +12,7 @@ phi is the angle the body has turned from standing: 90 would be lying flat. 73.5
 Numbers come from calibrating against the mesh (see Step 14): toe pivot height 3.5 cm, hand height 4.1 cm, top angle for arms that
 just reach, bottom angle for the chest 4 cm from the floor.
 """
-from mathutils import Vector
+from mathutils import Vector, Matrix
 
 PHI_UP, PHI_DN = 73.5, 88.0                    # degrees from standing
 Y_PIVOT, Z_PIVOT = 0.65, 0.035                 # where the toes are planted (the ball of the foot): behind the origin, 3.5 cm up
@@ -74,3 +74,8 @@ def superman_pose(u, arm_lift=0.16, leg_lift=0.14, reach=0.48):
     for k, (s, n, h) in enumerate((("Spine", -10, 0), ("Spine1", -8, 0), ("Spine2", -6, 0))): pose[s] = {"rot": (n * u, 0, 0)}
     pose["Neck"] = {"rot": (-18 - 10 * u, 0, 0)}; pose["Head"] = {"rot": (-28 - 6 * u, 0, 0)}
     return pose
+
+
+def box_breath(b):
+    """a breath at depth b (0 = out, 1 = full): the chest lifts and the shoulders rise a little"""
+    return {"Spine": {"rot": (-1.5 * b, 0, 0)}, "Spine1": {"rot": (-2.0 * b, 0, 0)}, "Spine2": {"rot": (-3.0 * b, 0, 0)}, "Clavicle.L": {"rot": (0, 0, -3.0 * b)}, "Neck": {"rot": (1.0 * b, 0, 0)}}
