@@ -62,19 +62,19 @@ def mace_extra():
 
 
 
-def mace_behind(theta, px=0.0, py=0.12, pz=1.50, cross=0.0, cross_up=0.0, shift=0.0, swap_at=25.0):
+def mace_behind(theta, px=0.0, py=0.12, pz=1.50, cross=0.0, cross_up=0.0, shift=0.0, yaw=0.0):
     """the mace held with BOTH hands behind the neck and the head swinging behind the back (the real 10-to-2). The hands' midpoint is the pivot (px, py, pz);
     theta is where the head is: 0 = hanging straight down behind the back, +120 = at 10 o'clock (up and to the character's left), -120 = 2 o'clock.
     The mace is turned half a turn about the X axis (head down). That also puts the shaft BEHIND the hands: the grips sit 9 cm behind the shaft's
     axis otherwise, which would put the shaft inside the back. The Euler angles are written directly as (180, -theta, 0), which stays continuous
     through the whole swing (a matrix converted back to Euler angles would flip at the crossings)."""
     px = px + shift * max(0.0, math.sin(math.radians(theta)))        # swinging to the left: slide the hands toward the head's side, so the right hand does not pass to the left of the left hand
-    eul = Euler((math.pi, -math.radians(theta), 0), 'XYZ'); R = eul.to_matrix()
+    g = yaw * max(0.0, math.sin(math.radians(theta)))        # swinging to the left: turn the mace a little about the vertical, so the hand nearer the head is also further back and the forearms pass behind each other
+    eul = Euler((math.pi, -math.radians(theta), math.radians(g)), 'XYZ'); R = eul.to_matrix()
     origin = Vector((px, py, pz)) - R @ _MID
     # When the head swings to the character's LEFT, the right hand (the one nearer the head) ends up to the left of the left hand: the arms cross. Keep them from passing
     # through each other by sending the left elbow low and the right elbow high while they cross, so one forearm goes under the other
     c = max(0.0, min(1.0, theta / 50.0))
-    w = max(0.0, min(1.0, theta / swap_at))                    # 0 = the normal grips, 1 = the hands swapped (the head is on the left)
-    return {"Mace": {"at": tuple(origin), "wrot": (180.0, -theta, 0.0)},
-            "Hand_IK.L": {"props": {"grab_mace": 1.0 - w, "grab_mace_swap": w}}, "Elbow_Pole.L": {"at": (0.65, 0.10, 1.75 - cross * c)}, "Elbow_Pole.R": {"at": (-0.65, 0.10, 1.75 + cross_up * c)},
+    return {"Mace": {"at": tuple(origin), "wrot": (180.0, -theta, g)},
+            "Hand_IK.L": {"props": {"grab_mace": 1.0}}, "Elbow_Pole.L": {"at": (0.65, 0.10, 1.75 - cross * c)}, "Elbow_Pole.R": {"at": (-0.65, 0.10, 1.75 + cross_up * c)},
             "Knee_Pole.L": {"at": tuple(_b["Knee_Pole.L"].head_local)}}

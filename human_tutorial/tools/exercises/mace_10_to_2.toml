@@ -11,9 +11,10 @@ px = 0.0           # the pivot (the midpoint of the hands): x,
 py = 0.18           # the pivot (the midpoint of the hands): y behind the spine (level with the back of the head),
 shift = 0.0         # while the head swings to the character's left the hands slide this far left (m): without it the right hand ends up left of the left hand and the arms pass through each other
 cross = 0.0
+yaw = 55           # degrees the mace turns about the vertical while the head is on the left (see mace.py)
 cross_up = 0.0
 pz = 1.72 # ... and its height
 
 [poses.swing]
 generator = "mace_behind"
-args = { theta = "=swing*sin(2*pi*(f-1)/60)", px = "=px", py = "=py", pz = "=pz", cross = "=cross", cross_up = "=cross_up", shift = "=shift" }
+args = { theta = "=swing*sin(2*pi*(f-1)/60)", px = "=px", py = "=py", pz = "=pz", cross = "=cross", cross_up = "=cross_up", shift = "=shift", yaw = "=yaw" }

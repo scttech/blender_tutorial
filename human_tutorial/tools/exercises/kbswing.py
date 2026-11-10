@@ -80,17 +80,17 @@ def swing_pose(alpha, phi, kappa, dy):
 KBSWING = [(f, swing_pose(**swing_params(f))) for f in range(1, END + 1, 2)]
 
 _PELVIS = None
-def _arm_clearance(P, v, radius=0.04):
-    """how far the pelvis and thighs are from the arms (mm, minus the arm's radius): negative means an arm is inside the hips. Measured from the pelvis, lower-spine and thigh
-    vertices to the segments shoulder-elbow-wrist of both arms"""
+def _arm_clearance(P, v, radius=0.035):
+    """how far the thighs are from the forearms (mm, minus the forearm's radius): negative means a forearm is inside a leg. Measured from the thigh vertices to the
+    forearms (elbow to wrist). The waist is left out: the arms hang against it by design"""
     global _PELVIS
     if _PELVIS is None:
         names = {g.index: g.name for g in body.vertex_groups}
         dom = [names[max(vx.groups, key=lambda g: g.weight).group] if vx.groups else "" for vx in body.data.vertices]
-        _PELVIS = np.array([d in ("Hips", "Spine") or d.startswith("Thigh") for d in dom])
+        _PELVIS = np.array([d.startswith("Thigh") for d in dom])
     pts = v[_PELVIS]; best = 1e9
     for s in "LR":
-        for a, b in ((P[f"UpperArm.{s}"].head, P[f"ForeArm.{s}"].head), (P[f"ForeArm.{s}"].head, P[f"ForeArm.{s}"].tail)):
+        for a, b in ((P[f"ForeArm.{s}"].head, P[f"ForeArm.{s}"].tail),):         # the forearm only: the upper arm hangs against the waist by design, the forearm is what goes into the hips
             a, b = np.array(a), np.array(b); ab = b - a; t = np.clip(((pts - a) @ ab) / (ab @ ab), 0, 1)
             best = min(best, float(np.linalg.norm(pts - (a + np.outer(t, ab)), axis=1).min()))
     return 1000 * (best - radius)

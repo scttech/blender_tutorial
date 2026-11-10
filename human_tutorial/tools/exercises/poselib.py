@@ -14,7 +14,7 @@ from mathutils import Vector, Euler
 STYLES = {
     # fist on the side of the hip, elbow out and a little back (Step 17 lunge)
     # hands cupped behind the head, elbows wide (a crunch); rides on the head
-    "behind_head": dict(frame="Head", hand=(0.115, 0.145, 1.75), rot=(180, -110, 0), pole=(0.70, 0.0, 1.70), fist=0.3),
+    "behind_head": dict(frame="Head", hand=(0.12, 0.16, 1.72), rot=(90, 0, 169), pole=(0.70, 0.0, 1.70), fist=0.3),
     # hands together in front of the chest, fingers up, palms facing, elbows down and out (a prayer or diamond hold); rides on the chest
     "hands_together": dict(frame="Spine2", hand=(0.045, -0.20, 1.33), rot=(180, -90, 0), pole=(0.38, -0.08, 1.10), fist=0.0),
     # arms hanging straight down at the sides, hands by the thighs, palms in; rides on the hips (so the arms stay at the sides as the hips drop)
@@ -171,19 +171,20 @@ def bird_dog_limbs(pose, a, arm=0.50, thigh=0.42, shin=0.45, arm_deg=90.0, rest_
     return out
 
 
-def halo_hold(pose, t, direction=1, r=0.26, zc=1.66, yc=0.02, chest=(0.0, -0.209, 1.452)):
-    """a POST HOOK for the kettlebell halo. The bell is held by the horns (the sides of the handle, grab_kb_goblet). t in 0..1 is one trip: from the chest (bell hanging below the
-    hands) up in front of the face while the bell turns over (bell pointing up), once around the head at wrist radius r (direction +1 = toward the character's left first, -1 = right),
-    then back down to the chest and the bell turns back, with a short pause. The hands' midpoint W is placed; the bell's origin is then W minus where the grips sit in the bell's frame."""
+def halo_hold(pose, t, direction=1, r=0.20, zc=1.90, yc=0.02, chest=(0.0, -0.209, 1.452), flip=0.0):
+    """a POST HOOK for the kettlebell halo. The bell is held by the horns (the sides of the handle, grab_kb_goblet) and hangs below the hands the whole time: the wrists do NOT flex
+    to turn it (flip = 0; a number turns the bell over by that many degrees on the way up). t in 0..1 is one trip: from the chest up in front of the face, the arms lifting until the
+    hands are above the head, once around the head (hands at radius r, height zc; direction +1 = toward the character's left first, -1 = right), then back down to the centre of
+    the chest, with a short pause. The bell moves only because the hands do. The hands' midpoint W is placed; the bell's origin is W minus where the grips sit in the bell's frame."""
     UP, CIRC, DOWN = 18 / 96, 54 / 96, 18 / 96
     ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, x)))
     front = Vector((0.0, yc - r, zc)); chest = Vector(chest)
-    if t < UP: u = ease(t / UP); W = chest + (front - chest) * u; phi = 180 * u
+    if t < UP: u = ease(t / UP); W = chest + (front - chest) * u; phi = flip * u
     elif t < UP + CIRC:
-        psi = direction * 2 * math.pi * (t - UP) / CIRC; W = Vector((r * math.sin(psi), yc - r * math.cos(psi), zc)); phi = 180.0
-    elif t < UP + CIRC + DOWN: u = ease((t - UP - CIRC) / DOWN); W = front + (chest - front) * u; phi = 180 * (1 - u)
+        psi = direction * 2 * math.pi * (t - UP) / CIRC; W = Vector((r * math.sin(psi), yc - r * math.cos(psi), zc)); phi = flip
+    elif t < UP + CIRC + DOWN: u = ease((t - UP - CIRC) / DOWN); W = front + (chest - front) * u; phi = flip * (1 - u)
     else: W = chest; phi = 0.0
     a = math.radians(phi); m = Vector((0, 0.091, 0.212))                          # the wrists' midpoint in the bell's own frame (see build_prop_rig: KBGoblet_Grip)
     off = Vector((0, m.y * math.cos(a) - m.z * math.sin(a), m.y * math.sin(a) + m.z * math.cos(a)))
-    h = phi / 180.0
-    return ride_prop(pose, "Kettlebell", at=tuple(W - off), rot=(phi, 0, 0), grab="grab_kb_goblet", pole=(0.40, -0.05, 1.15 + 0.45 * h))
+    h = max(0.0, min(1.0, (W.z - chest.z) / (zc - chest.z)))
+    return ride_prop(pose, "Kettlebell", at=tuple(W - off), rot=(phi, 0, 0), grab="grab_kb_goblet", pole=(0.45, 0.10, 1.15 + 0.60 * h))

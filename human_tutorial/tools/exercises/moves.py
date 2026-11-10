@@ -6,12 +6,18 @@ squat_body(t, depth, back, lean)                       the squat's body, t = 0 s
 """
 def _lerp(a, b, t): return a + (b - a) * t
 
-def hinge_body(t, back=0.30, drop=0.40, pitch=40.0, spine=(6.0, 5.0, 4.0), neck=-14.0, head=-18.0):
+def hinge_body(t, back=0.30, drop=0.40, pitch=40.0, spine=(6.0, 5.0, 4.0), neck=-14.0, head=-18.0, stance=None):
     """a hip hinge / deadlift. pitch: how far the pelvis tips forward (the spine stays straight: the spine bones add `spine` degrees of lean);
     neck and head turn the other way so the eyes look ahead and down"""
-    return {"Hips": {"move": (0, back * t, -drop * t), "rot": (pitch * t, 0, 0)},
+    pose = {"Hips": {"move": (0, back * t, -drop * t), "rot": (pitch * t, 0, 0)},
             "Spine": {"rot": (spine[0] * t, 0, 0)}, "Spine1": {"rot": (spine[1] * t, 0, 0)}, "Spine2": {"rot": (spine[2] * t, 0, 0)},
             "Neck": {"rot": (neck * t, 0, 0)}, "Head": {"rot": (head * t, 0, 0)}}
+    if stance:                                   # feet this far either side of the centre (the rest stance is 0.19): a wider stance leaves room between the legs for the arms
+        b = rig.data.bones; A0, P0 = b["Foot_IK.L"].head_local, b["Knee_Pole.L"].head_local
+        pose["Foot_IK.L"] = {"at": (stance, A0.y, A0.z), "wrot": (0, 0, 0)}; pose["Knee_Pole.L"] = {"at": (stance + 0.08, P0.y, P0.z)}
+        T0 = b["Thigh.L"].head_local; dz = A0.z + math.sqrt(0.86 ** 2 - (stance - T0.x) ** 2) - T0.z       # wide feet are further from the hip joint: lower the hips so the legs still reach (0.86 m, just short of straight)
+        mv = pose["Hips"]["move"]; pose["Hips"]["move"] = (mv[0], mv[1], mv[2] + dz)
+    return pose
 
 def squat_body(t, depth=0.58, back=0.14, lean=1.0):
     """the bodyweight squat's body. lean: 1 = the squat's 30 degrees of forward lean, 0.3 = more upright (a held weight)"""

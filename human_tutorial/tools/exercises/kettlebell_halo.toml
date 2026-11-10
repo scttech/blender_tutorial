@@ -1,18 +1,19 @@
-# Kettlebell halo: hold the bell by the horns (the sides of the handle) at the chest with the bell hanging down, raise it past the face while it turns over (bell pointing
-# up), circle the head once, bring it back down to the centre of the chest and turn it over again, then reverse: the same trip around the head the other way.
+# Kettlebell halo: hold the bell by the horns (the sides of the handle) at the chest with the bell hanging down, raise it past the face (the wrists stay straight: the bell keeps hanging) until the hands are above the head, circle the head once with the hands
+# above it, bring it back down to the centre of the chest and turn it over again, then reverse: the same trip around the head the other way.
 # One trip is 96 frames (3.2 s): 18 up, 54 around, 18 down, 6 pause. Keyed every frame: with keys every 3 frames the hands were out of reach between keys at the corners of the path.
 name = "KettlebellHalo"
-python = ["moves.py", "poselib.py"]
+python = ["moves.py", "poselib.py", "kbswing.py"]
 timeline = [{ frames = [1, 97, 1], pose = "halo", set = { t = "=(f-1)/96", dir = 1 } },
             { frames = [98, 193, 1], pose = "halo", set = { t = "=(f-97)/96", dir = -1 } }]
 
 [params]
 t = 0
 dir = 1
-r = 0.26            # how far the hands (wrists) orbit from the head's centre (m)
-zc = 1.66           # the hands' height while circling the head
+r = 0.2            # how far the hands (wrists) orbit from the head's centre (m)
+yc = 0.1           # the circle's centre y (m): behind the head's centre, because the bell hangs 9 cm in front of the wrists and would otherwise go through the back of the head
+zc = 1.88           # the hands' height while circling: just above the head (the top of the head is 1.87 m)
 
 [poses.halo]
 generator = "squat_body"
 args = { t = 0 }
-post = [ { fn = "halo_hold", args = { t = "=t", direction = "=dir", r = "=r", zc = "=zc" } } ]
+post = [ { fn = "halo_hold", args = { t = "=t", direction = "=dir", r = "=r", zc = "=zc", yc = "=yc" } } ]

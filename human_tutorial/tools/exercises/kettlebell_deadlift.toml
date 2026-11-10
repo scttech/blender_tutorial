@@ -2,7 +2,7 @@
 # The bell is held by both hands on the handle (grab_kettlebell) and moves with them: it runs from the floor (t = 1) to hanging in front of the thighs (t = 0).
 # Keyed every 5 frames along the way: with only the two ends, the shoulders would cut a chord and the arms would be pulled out of reach mid-lift.
 name = "KettlebellDeadlift"
-python = "moves.py"
+python = ["moves.py", "kbswing.py"]
 timeline = [{ frames = [1, 31, 5], pose = "hinge", set = { t = "=(1-cos(pi*(f-1)/30))/2" } },
             { frame = 41, pose = "hinge", set = { t = 1 } },
             { frames = [46, 71, 5], pose = "hinge", set = { t = "=(1+cos(pi*(f-41)/30))/2" } }]      # 1.0 s down, 0.33 s at the bottom, 1.0 s up
@@ -10,16 +10,20 @@ timeline = [{ frames = [1, 31, 5], pose = "hinge", set = { t = "=(1-cos(pi*(f-1)
 [params]
 back = 0.30
 drop = 0.40
-pitch = 55.0
+pitch = 65.0
+py0 = -0.6         # the elbow pole y at the top and at the bottom: forward of the elbows, so the forearms swing out and forward, clear of the thighs (0.45 left them 27 mm inside)
+py1 = -0.3
+stance = 0.32       # feet apart (each this far from the centre line): a wider stance than rest (0.19) leaves room for the arms between the knees
 t = 0
-yb = 0.0           # how far the bell bulges out (+) or in (-) midway, so the arms stay in reach as the shoulders swing forward
+yb = -0.04           # how far the bell bulges out (+) or in (-) midway, so the arms stay in reach as the shoulders swing forward
 zb = 0.05          # ... and how far up
-ky = -0.15         # the bell's y at the top (m): the origin of the bell bone
-kz = 0.67          # ... and its height at the top
+y_end = -0.15      # the bell's y on the floor (m): level with the toes (the toes run from -0.075 to -0.148), between the feet
+ky = -0.26         # the bell's y at the top (m): the origin of the bell bone
+kz = 0.72          # ... and its height at the top
 
 [poses.hinge]
 generator = "hinge_body"
-args = { t = "=t", back = "=back", drop = "=drop", pitch = "=pitch" }
-Kettlebell = { at = [0, "=ky+(-0.04-ky)*t+yb*sin(pi*t)", "=kz*(1-t)+zb*sin(pi*t)"] }
+args = { t = "=t", back = "=back", drop = "=drop", pitch = "=pitch", stance = "=stance" }
+Kettlebell = { at = [0, "=ky+(y_end-ky)*t+yb*sin(pi*t)", "=kz*(1-t)+zb*sin(pi*t)"] }
 "Hand_IK.L" = { props = { grab_kettlebell = 1.0 } }
-"Elbow_Pole.L" = { at = [0.55, "=0.45+0.15*t", "=1.0-0.1*t"] }
+"Elbow_Pole.L" = { at = [0.55, "=py0+(py1-py0)*t", "=1.0-0.1*t"] }
