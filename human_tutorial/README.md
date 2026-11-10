@@ -50,19 +50,18 @@ Not one tutorial per exercise. Many exercises share the same body mechanics, so 
 16. [Loaded movement](16-loaded-movement.md): the prop leads and the hands follow: a kettlebell on a pendulum arc with a timed hip hinge, and a mace turning about the hands. Curved paths need dense keys (**kettlebell swing**, **mace 10-to-2**; the clean, 360 and barbarian squat are listed as future work)
 
 ### Part 5: The exercise library
-17. The exercise recipe: the keyframe-table format, a checklist of measured checks every exercise must pass, and which technique each exercise uses. After this, each exercise is built from a table, not written up as its own tutorial.
+17. [The exercise recipe](17-the-exercise-recipe.md): a procedure, a template and an **automatic checklist** (tested against four real bugs), proved by building a lunge. After this, an exercise is a table, not a tutorial.
 
-| Exercise | Technique | Built in |
+| Exercise | Technique | Status |
 |---|---|---|
-| Squat | legs driven by IK | Step 13 |
-| Lunge, goblet squat, deadlift | legs driven by IK, plus a prop for the last two | after Step 17 |
-| Push-up, sit-up | floor work | after Step 14 |
-| Pull-up, chin-up | hanging and pulling | after Step 15 |
-| Kettlebell swing, clean | loaded movement | after Step 16 |
-| Mace 360, 10-to-2, barbarian squat | loaded movement | after Step 16 |
+| Squat, push-up, sit-up, pull-up, chin-up | [13](13-legs-driven-by-ik.md), [14](14-floor-work.md), [15](15-hanging-and-pulling.md) | built |
+| Lunge (static) | [13](13-legs-driven-by-ik.md) and [14](14-floor-work.md), built in [17](17-the-exercise-recipe.md) | built |
+| Kettlebell swing, mace 10-to-2 | [16](16-loaded-movement.md) | built |
+| Goblet squat, barbarian squat | squat plus a prop riding the torso | not built: see Step 17 |
+| Kettlebell clean, mace 360 | loaded movement | not built: see Step 17 |
 
 ### Part 6: Using the model elsewhere
-18. Shrink the textures for the web
+18. [Shrink the textures for the web](18-shrink-the-textures.md): 19.4 MB to 1.7 MB of textures (a 20 MB GLB to 2.3 MB), with resolution spent where the detail is, and a measured warning that PSNR hides soft eyes
 19. Export for Babylon.js: bake the IK and the finger drivers, keep the prop bones
 20. The Blender file
 
@@ -70,4 +69,4 @@ Not one tutorial per exercise. Many exercises share the same body mechanics, so 
 
 - Images live in `blender-human-tutorial-images/`.
 - `exports/` will hold the exported `.glb` files.
-- `tools/decimate_body.py` builds the low-poly `Body` from the hidden `Body_HighPoly` reference ([Step 3](03-reduce-the-polygon-count.md)). `tools/clean_body.py` runs the Step 4 checks and fixes. `tools/rig_landmarks.py` holds the bone layout as data ([Step 5](05-plan-the-bone-layout.md)). `tools/build_armature.py` builds the armature from it ([Step 6](06-build-the-body-armature.md)). `tools/bind_and_weight.py` binds the mesh and makes the weights export-ready ([Step 8](08-parent-and-weight.md)). `tools/build_controls.py` adds the IK controls ([Step 10](10-ik-for-arms-and-legs.md)). The pipeline order is `build_armature.py` (with `HANDS = True`), then `bind_and_weight.py`, then `build_controls.py`. `tools/build_finger_controls.py` adds the finger sliders ([Step 11](11-finger-controls.md)); run it after `build_controls.py`. `tools/anim_core.py` builds looping actions from keyframe tables and measures them, `tools/exercises/squat.py`, `pushup.py`, `situp.py`, `pullup.py` (pull-up and chin-up), `kbswing.py` and `mace.py` are the exercise tables; `tools/build_all_actions.py` rebuilds every action, measures it and runs the order test ([Step 15](15-hanging-and-pulling.md)) ([Step 14](14-floor-work.md) adds world rotation, rigid pivoting and floor checks), and `tools/make_motion_chart.py` draws the measurements ([Step 13](13-legs-driven-by-ik.md)). `tools/build_props.py` and `tools/build_prop_rig.py` add the kettlebell and mace and their grips ([Step 12](12-props.md)); the prop rig re-runs the finger script. `tools/pose_tests.py` poses the rig and measures the skin ([Step 9](09-test-the-rig.md)); `tools/smooth_weights.py` is the weight-smoothing experiment we rejected. More rig and animation scripts will follow.
+- `tools/decimate_body.py` builds the low-poly `Body` from the hidden `Body_HighPoly` reference ([Step 3](03-reduce-the-polygon-count.md)). `tools/clean_body.py` runs the Step 4 checks and fixes. `tools/rig_landmarks.py` holds the bone layout as data ([Step 5](05-plan-the-bone-layout.md)). `tools/build_armature.py` builds the armature from it ([Step 6](06-build-the-body-armature.md)). `tools/bind_and_weight.py` binds the mesh and makes the weights export-ready ([Step 8](08-parent-and-weight.md)). `tools/build_controls.py` adds the IK controls ([Step 10](10-ik-for-arms-and-legs.md)). The pipeline order is `build_armature.py` (with `HANDS = True`), then `bind_and_weight.py`, then `build_controls.py`. `tools/build_finger_controls.py` adds the finger sliders ([Step 11](11-finger-controls.md)); run it after `build_controls.py`. `tools/anim_core.py` builds looping actions from keyframe tables and measures them, `tools/exercises/squat.py`, `pushup.py`, `situp.py`, `pullup.py` (pull-up and chin-up), `lunge.py`, `kbswing.py` and `mace.py` are the exercise tables, and `_template.py` is the one to copy; `tools/shrink_textures.py` shrinks the textures ([Step 18](18-shrink-the-textures.md)); `tools/exercise_registry.py` lists them all, `tools/check_actions.py` checks them and `tools/test_checker.py` tests the checker ([Step 17](17-the-exercise-recipe.md)); `tools/build_all_actions.py` rebuilds every action, measures it and runs the order test ([Step 15](15-hanging-and-pulling.md)) ([Step 14](14-floor-work.md) adds world rotation, rigid pivoting and floor checks), and `tools/make_motion_chart.py` draws the measurements ([Step 13](13-legs-driven-by-ik.md)). `tools/build_props.py` and `tools/build_prop_rig.py` add the kettlebell and mace and their grips ([Step 12](12-props.md)); the prop rig re-runs the finger script. `tools/pose_tests.py` poses the rig and measures the skin ([Step 9](09-test-the-rig.md)); `tools/smooth_weights.py` is the weight-smoothing experiment we rejected. More rig and animation scripts will follow.

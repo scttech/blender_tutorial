@@ -178,4 +178,4 @@ The clean and the 360 are the hardest, because the grip changes or the prop pass
 
 ---
 
-[← Previous: Hanging and pulling](15-hanging-and-pulling.md) · [Contents](README.md) · Next: The exercise recipe (not written yet)
+[← Previous: Hanging and pulling](15-hanging-and-pulling.md) · [Contents](README.md) · [Next: The exercise recipe →](17-the-exercise-recipe.md)

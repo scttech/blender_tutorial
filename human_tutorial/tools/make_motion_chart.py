@@ -32,7 +32,7 @@ for i, sp in enumerate(specs):
     Y = lambda v: y0 + ph - (v - lo) / (hi - lo) * ph
     a(f'<text class="t" x="{L}" y="{y0 - 8}">{label}</text>')
     a(f'<rect x="{L}" y="{y0}" width="{W - L - R}" height="{ph}" fill="none" class="g"/>')
-    if band: a(f'<rect class="b" x="{L}" y="{Y(band[1])}" width="{W - L - R}" height="{Y(band[0]) - Y(band[1])}"/><text x="{L + 6}" y="{Y(band[1]) + 14}">sole of the shoe</text>')
+    if band: a(f'<rect class="b" x="{L}" y="{Y(band[1])}" width="{W - L - R}" height="{Y(band[0]) - Y(band[1])}"/><text x="{L + 6}" y="{Y(band[1]) + 14}">base of support (the soles)</text>')
     for k in keys: a(f'<line class="k" x1="{x(k)}" x2="{x(k)}" y1="{y0}" y2="{y0 + ph}"/>')
     a('<polyline class="l" points="' + " ".join(f"{x(f):.1f},{Y(v):.1f}" for f, v in zip(F, vals)) + '"/>')
     for v in (lo + pad, hi - pad): a(f'<text x="{L - 6}" y="{Y(v) + 4}" text-anchor="end">{v:.2f}</text>')

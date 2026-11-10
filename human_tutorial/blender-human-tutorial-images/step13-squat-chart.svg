@@ -24,7 +24,7 @@
 <text x="72" y="246.3448275862069" text-anchor="end">137.56</text>
 <text class="t" x="78" y="408">Centre of mass, front to back (cm)</text>
 <rect x="78" y="416" width="658" height="150" fill="none" class="g"/>
-<rect class="b" x="78" y="525.8122095995948" width="658" height="12.14079922003964"/><text x="84" y="539.8122095995948">sole of the shoe</text>
+<rect class="b" x="78" y="525.8122095810377" width="658" height="12.140799238387444"/><text x="84" y="539.8122095810377">base of support (the soles)</text>
 <line class="k" x1="78.0" x2="78.0" y1="416" y2="566"/>
 <line class="k" x1="341.2" x2="341.2" y1="416" y2="566"/>
 <line class="k" x1="428.93333333333334" x2="428.93333333333334" y1="416" y2="566"/>

@@ -173,12 +173,32 @@ def floor_report(v):
     """lowest point of each region, and how many of its vertices are within 1 cm of the floor (z = 0)"""
     reg = regions(); return {r: (float(v[reg == r, 2].min()), int((v[reg == r, 2] < 0.01).sum())) for r in ("hands", "feet", "body")}
 
+_TRI = None
+_SKIN = None
+def volume(v):
+    """the volume of the closed mesh with vertex positions v (uses the triangles cached by mesh_state)"""
+    a, b, c = v[_TRI[:, 0]], v[_TRI[:, 1]], v[_TRI[:, 2]]
+    return float(np.einsum("ij,ij->i", a, np.cross(b, c)).sum() / 6.0)
+
+def skin_baseline():
+    """the T-pose: every edge's length, which edges touch a hand, and the volume. Computed once. Skin checks compare against this."""
+    global _SKIN
+    if _SKIN is None:
+        clear_pose(); v0, _ = mesh_state(); me = body.data
+        e = np.empty(len(me.edges) * 2, dtype=np.int64); me.edges.foreach_get("vertices", e); e = e.reshape(-1, 2)
+        L0 = np.linalg.norm(v0[e[:, 0]] - v0[e[:, 1]], axis=1); reg = regions()
+        hand = (reg[e[:, 0]] == "hands") | (reg[e[:, 1]] == "hands"); ok = L0 > 0.004
+        _SKIN = (e, L0, ok & ~hand, ok & hand, volume(v0))
+    return _SKIN
+
 def mesh_state():
     """(vertex positions, centre of mass) of the deformed Body. The centre is the volume centroid of the closed mesh."""
     ev = body.evaluated_get(bpy.context.evaluated_depsgraph_get()); me = ev.to_mesh()
     n = len(me.vertices); v = np.empty(n * 3); me.vertices.foreach_get("co", v); v = v.reshape(n, 3)
     me.calc_loop_triangles(); t = np.empty(len(me.loop_triangles) * 3, dtype=np.int64)
     me.loop_triangles.foreach_get("vertices", t); t = t.reshape(-1, 3); ev.to_mesh_clear()
+    global _TRI
+    if _TRI is None: _TRI = t.copy()
     a, b, c = v[t[:, 0]], v[t[:, 1]], v[t[:, 2]]
     vol = np.einsum("ij,ij->i", a, np.cross(b, c)) / 6.0
     com = (vol[:, None] * (a + b + c) / 4.0).sum(axis=0) / vol.sum()
@@ -188,16 +208,21 @@ def pose_bones(): return rig.evaluated_get(bpy.context.evaluated_depsgraph_get()
 
 def measure(action_name, frames=None, extra=None):
     """play the action and record a dict of per-frame lists. extra(P, frame) may return more named values."""
+    skin_baseline()                                                  # (this clears the pose, so it must come before the action is assigned)
     act = bpy.data.actions[action_name]; rig.animation_data_create(); rig.animation_data.action = act
     f0, f1 = int(act.frame_start), int(act.frame_end); frames = frames or list(range(f0, f1 + 1))
     D = {"frame": frames, "hips_z": [], "hips_y": [], "knee_deg": [], "thigh_deg": [], "lean_deg": [], "com_y": [], "com_x": [],
          "ankle_drift_mm": [], "reach_err_mm": [], "foot_rot_deg": [], "elbow_deg": [], "straight_deg": [],
-         "min_z_hands": [], "min_z_feet": [], "min_z_body": [], "min_z_chest": [], "min_z_head": [], "contacts_hands": [], "contacts_feet": [], "contacts_body": []}
+         "min_z_hands": [], "min_z_feet": [], "min_z_body": [], "min_z_chest": [], "min_z_head": [],
+         "vol_pct": [], "stretch_body_max": [], "stretch_body_n": [], "stretch_hands_max": [], "squash_body_n": [], "contacts_hands": [], "contacts_feet": [], "contacts_body": []}
     scene.frame_set(frames[0]); P = pose_bones(); ankle0 = {s: P[f"Shin.{s}"].tail.copy() for s in "LR"}
     foot0 = {s: P[f"Foot.{s}"].matrix.to_quaternion() for s in "LR"}
     for f in frames:
         scene.frame_set(f); P = pose_bones(); verts, com = mesh_state(); fl = floor_report(verts)
         for r in ("hands", "feet", "body"): D[f"min_z_{r}"].append(fl[r][0]); D[f"contacts_{r}"].append(fl[r][1])
+        e, L0, body_ok, hand_ok, V0 = skin_baseline(); R = np.linalg.norm(verts[e[:, 0]] - verts[e[:, 1]], axis=1) / np.where(L0 > 0, L0, 1)
+        D["vol_pct"].append(100 * (volume(verts) / V0 - 1)); D["stretch_body_max"].append(float(R[body_ok].max())); D["stretch_body_n"].append(int((R[body_ok] > 1.5).sum()))
+        D["stretch_hands_max"].append(float(R[hand_ok].max())); D["squash_body_n"].append(int((R[body_ok] < 0.6).sum()))
         chest, head = torso_masks(); D["min_z_chest"].append(float(verts[chest, 2].min())); D["min_z_head"].append(float(verts[head, 2].min()))
         ua = (P["UpperArm.L"].tail - P["UpperArm.L"].head).normalized(); fa = (P["ForeArm.L"].tail - P["ForeArm.L"].head).normalized()
         D["elbow_deg"].append(math.degrees(ua.angle(fa)))

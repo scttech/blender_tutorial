@@ -34,3 +34,10 @@ def pushup_pose(phi):
 _MID = (PHI_UP + PHI_DN) / 2                    # a key halfway keeps the hips on their arc (a chord would shorten the legs)
 PUSHUP = [(1, pushup_pose(PHI_UP)), (16, pushup_pose(_MID)), (31, pushup_pose(PHI_DN)),
           (37, pushup_pose(PHI_DN)), (52, pushup_pose(_MID)), (67, pushup_pose(PHI_UP))]
+
+def contact_extra():
+    """per-frame measurements for measure(): where the planted contacts are (the ball of the foot and the wrist), so their drift can be checked"""
+    def extra(P, f):
+        return {"ball_y": P["Toes.L"].head.y, "ball_z": P["Toes.L"].head.z, "wrist_y": P["Hand.L"].head.y, "wrist_z": P["Hand.L"].head.z}
+    return extra
+
