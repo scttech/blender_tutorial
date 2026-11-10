@@ -8,9 +8,9 @@ The name, category and equipment come from the app. **The status column is our j
 
 | Status | Count | Meaning |
 |---|---|---|
-| **Built** | 9 | done: an action already exists and passes the checks |
-| **Variant** | 7 | an existing table with changed numbers or one changed grab; no new technique |
-| **New** | 56 | a new table, using techniques and props we already have |
+| **Built** | 19 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
+| **Variant** | 0 | an existing table with changed numbers or one changed grab; no new technique |
+| **New** | 53 | a new table, using techniques and props we already have |
 | **Fixture** | 13 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
 | **Dumbbell** | 18 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
 | **Barbell** | 17 | needs a barbell prop with a two-hand grip, plus a rack or bench for most |
@@ -23,7 +23,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 
 ## Suggested order
 
-1. **Variants** (7): minutes each, and they prove the recipe.
+1. **Variants** (7): done.
 2. **New, bodyweight** and **New, mace and kettlebell** (about 50): no new modelling. Many are floor poses (plank, bridge, dead bug) the Step 14 technique already covers.
 3. **Dumbbell, then barbell** (35): one prop each with grips, then many exercises. These are the biggest payoff per prop.
 4. **Fixtures** (13) and **small props** (10): a bench, box and wall unlock many at once.
@@ -38,7 +38,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Dumbbell Bench Press | Dumbbell | Dumbbell |
 | Incline Push-Up | Bodyweight | Fixture |
 | Decline Push-Up | Bodyweight | Fixture |
-| Diamond Push-Up | Bodyweight | Variant |
+| Diamond Push-Up | Bodyweight | Built |
 | Barbell Bench Press | Barbell | Barbell |
 | Incline Barbell Bench Press | Barbell | Barbell |
 | Incline Dumbbell Press | Dumbbell | Dumbbell |
@@ -68,7 +68,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | T-Bar Row | Machine | Machine |
 | Good Morning | Barbell | Barbell |
 | Superman | Bodyweight | New |
-| Kettlebell Deadlift | Kettlebell | New |
+| Kettlebell Deadlift | Kettlebell | Built |
 | Kettlebell Row | Kettlebell | New |
 | Chin Tuck | Bodyweight | New |
 | Child's Pose | Bodyweight | New |
@@ -121,14 +121,14 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Air Squat | Bodyweight | Built |
 | Back Squat | Barbell | Barbell |
 | Lunge | Bodyweight | Built |
-| Mace Squat | Mace | Variant |
+| Mace Squat | Mace | Built |
 | Mace Barbarian Squat | Mace | New |
-| Mace Reverse Lunge | Mace | Variant |
+| Mace Reverse Lunge | Mace | Built |
 | Front Squat | Barbell | Barbell |
-| Goblet Squat | Dumbbell | New |
+| Goblet Squat | Dumbbell | Built |
 | Bulgarian Split Squat | Dumbbell | Fixture |
 | Walking Lunge | Dumbbell | Dumbbell |
-| Reverse Lunge | Bodyweight | Variant |
+| Reverse Lunge | Bodyweight | Built |
 | Step-Up | Dumbbell | Fixture |
 | Leg Press | Machine | Machine |
 | Leg Extension | Machine | Machine |
@@ -139,8 +139,8 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Box Jump | Bodyweight | Fixture |
 | Wall Sit | Bodyweight | Fixture |
 | Pistol Squat | Bodyweight | New |
-| Goblet Squat | Kettlebell | New |
-| Kettlebell Lunge | Kettlebell | Variant |
+| Goblet Squat | Kettlebell | Built |
+| Kettlebell Lunge | Kettlebell | Built |
 | Heel Drop | Bodyweight | New |
 | Jump Squat | Bodyweight | New |
 | Skater Hop | Bodyweight | New |
@@ -159,11 +159,11 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Plank | Bodyweight | New |
 | Sit-Up | Bodyweight | Built |
 | Mace Russian Twist | Mace | New |
-| Crunch | Bodyweight | Variant |
+| Crunch | Bodyweight | Built |
 | Bicycle Crunch | Bodyweight | New |
 | Russian Twist | Bodyweight | New |
 | Leg Raise | Bodyweight | New |
-| Hanging Leg Raise | Bodyweight | Variant |
+| Hanging Leg Raise | Bodyweight | Built |
 | Side Plank | Bodyweight | New |
 | V-Up | Bodyweight | New |
 | Dead Bug | Bodyweight | New |

@@ -10,7 +10,7 @@ The file format (every part optional except `timeline`):
 
     name    = "Squat"
     extends = "Squat"           # start from another exercise in the library: its params, poses and timeline are inherited
-    python  = "mace.py"         # a file in tools/exercises/ run first, so `generator` below can use the functions it defines
+    python  = "mace.py"         # a file (or a list of files) in tools/exercises/ run first, so `generator` below can use the functions it defines
 
     [params]                    # named numbers; the expressions below can use them
     depth = 0.58
@@ -18,11 +18,12 @@ The file format (every part optional except `timeline`):
     [poses.stand]               # a pose: bone -> {move | at | rot | wrot | props} (the table format of anim_core.py)
     Hips = { move = [0, 0, 0] }
     [poses.bottom]
-    extends = "stand"           # inherit a pose; whatever this one says replaces the same bone's same entry
+    extends = "stand"           # inherit a pose (or a list of poses, layered in order); whatever this one says replaces the same bone's same entry
     Hips = { move = [0, "=sit_back", "=-depth"] }          # a string starting with "=" is an expression
     [poses.swing]
     generator = "mace_pose"     # a pose made by a Python function (for what a table cannot say: solving, rigid pivots)
     args = { gamma = "=60*cos(2*pi*(f-1)/30)" }
+    post = [ { fn = "ride_arms", args = { style = "hips_fists" } } ]   # a function that reads the finished pose and adds to it (hands riding on the torso)
 
     timeline = [ [1, "stand"], [25, "bottom"], [33, "bottom"], [61, "stand"] ]
     # a key can override params:   { frame = 25, pose = "bottom", set = { depth = 0.5 } }
@@ -75,6 +76,18 @@ def merge_pose(base, over):
             else: cur[k] = v
     return out
 
+RESERVED = ("extends", "generator", "args", "post")
+def merge_raw(parent, child):
+    """a child exercise's pose over the same-named inherited pose. If the child says extends, generator, args or post, that WHOLE group of
+    wiring replaces the parent's (so the child can swap what a pose is built from); the bones it lists merge over the parent's"""
+    out = {k: copy.deepcopy(v) for k, v in parent.items()}
+    if any(k in child for k in RESERVED):
+        for k in RESERVED: out.pop(k, None)
+    for k, v in child.items():
+        if k in RESERVED: out[k] = copy.deepcopy(v)
+    bones = merge_pose({k: v for k, v in out.items() if k not in RESERVED}, {k: v for k, v in child.items() if k not in RESERVED})
+    return {**{k: v for k, v in out.items() if k in RESERVED}, **bones}
+
 def _check_pose(pose, where):
     for bone, entries in pose.items():
         if not isinstance(entries, dict):
@@ -84,16 +97,22 @@ def _check_pose(pose, where):
             if k not in CHANNELS: raise DSLError(f"{where}: bone '{bone}' has an unknown entry '{k}' (allowed: {', '.join(CHANNELS)})")
 
 def resolve_pose(name, poses, where, seen=()):
-    """the pose `name` with its `extends` chain applied; returns (table pose, generator or None, generator args)"""
+    """the pose `name` with its `extends` chain applied; returns (table pose, generator or None, generator args, post hooks).
+    `extends` may be a list: the poses are layered in order, later ones replacing earlier ones entry by entry."""
     if name not in poses: raise DSLError(f"{where}: unknown pose '{name}' (known: {', '.join(sorted(poses))})")
     if name in seen: raise DSLError(f"{where}: pose '{name}' extends itself ({' -> '.join(seen + (name,))})")
-    raw = poses[name]; parent = raw.get("extends")
-    table, gen, args = ({}, None, {}) if parent is None else resolve_pose(parent, poses, f"{where} (via '{name}')", seen + (name,))
+    raw = poses[name]; parents = raw.get("extends", []); parents = [parents] if isinstance(parents, str) else list(parents)
+    table, gen, args, post = {}, None, {}, []
+    for parent in parents:
+        t, g, a, p = resolve_pose(parent, poses, f"{where} (via '{name}')", seen + (name,))
+        table = merge_pose(table, t); post = post + p
+        if g is not None: gen, args = g, a
     if "generator" in raw: gen, args = raw["generator"], dict(raw.get("args", {}))
     elif "args" in raw: args = {**args, **raw["args"]}
-    own = {k: v for k, v in raw.items() if k not in ("extends", "generator", "args")}
+    post = post + list(raw.get("post", []))
+    own = {k: v for k, v in raw.items() if k not in ("extends", "generator", "args", "post")}
     _check_pose(own, f"pose '{name}'")
-    return merge_pose(table, own), gen, args
+    return merge_pose(table, own), gen, args, post
 
 def _inherit(spec, library, chain=()):
     """apply `extends` at the exercise level: params merge, poses merge by name, the timeline is replaced if the child has one"""
@@ -106,7 +125,7 @@ def _inherit(spec, library, chain=()):
     out["params"] = {**base.get("params", {}), **spec.get("params", {})}
     poses = copy.deepcopy(base.get("poses", {}))
     for n, p in spec.get("poses", {}).items():
-        poses[n] = merge_pose(poses[n], p) if n in poses and "extends" not in p and "generator" not in p else p
+        poses[n] = merge_raw(poses[n], p) if n in poses else p
     out["poses"] = poses
     for k in ("timeline", "python"):
         if k in spec: out[k] = spec[k]
@@ -132,12 +151,18 @@ def compile_exercise(spec, library=None, generators=None):
         for f in frames:
             env = {**params, **entry.get("set", {}), "f": f}
             env = {k: evaluate(v, env, f"{where} param {k}") for k, v in env.items()}
-            table, gen, args = resolve_pose(entry["pose"], poses, where)
+            table, gen, args, post = resolve_pose(entry["pose"], poses, where)
             if gen is not None:
                 if generators is None or gen not in generators: raise DSLError(f"{where}: pose '{entry['pose']}' uses generator '{gen}', which is not available")
                 made = generators[gen](**evaluate(args, env, f"{where} args"))
                 _check_pose(made, f"generator '{gen}'"); table = merge_pose(made, table)
-            keys.append((f, evaluate(table, env, f"{where} pose '{entry['pose']}'")))
+            table = evaluate(table, env, f"{where} pose '{entry['pose']}'")
+            for h in post:             # post hooks read the finished pose (the body) and add to it: hands that ride on the torso, for example
+                fn = h.get("fn")
+                if generators is None or fn not in generators: raise DSLError(f"{where}: post hook '{fn}' is not available")
+                extra = generators[fn](table, **evaluate(h.get("args", {}), env, f"{where} post {fn}"))
+                _check_pose(extra, f"post hook '{fn}'"); table = merge_pose(table, evaluate(extra, env, f"post {fn}"))
+            keys.append((f, table))
     for (a, _), (b, _) in zip(keys, keys[1:]):
         if b <= a: raise DSLError(f"timeline: frame {b} comes after frame {a}; frames must increase")
     return keys
@@ -158,5 +183,6 @@ def compile_file(path, G=None, library_dir=None):
     while s.get("extends"): s = library[s["extends"]]; chain.append(s)
     if G is not None:
         for s in [spec] + chain:
-            if "python" in s: exec(open(os.path.join(folder, s["python"])).read(), G)
+            for py in ([s["python"]] if isinstance(s.get("python"), str) else s.get("python", [])):
+                if not G.get("_loaded_" + py): exec(open(os.path.join(folder, py)).read(), G); G["_loaded_" + py] = True
     return compile_exercise(spec, library, G)

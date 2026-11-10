@@ -1,0 +1,19 @@
+# Crunch: lying on the back, knees bent, hands behind the head; the shoulder blades curl off the floor and the pelvis stays down.
+# 30 fps, a 2.4 s loop. The lying body is the situp's (situp.py), with the pelvis kept flat and a smaller curl.
+name = "Crunch"
+python = ["situp.py", "poselib.py"]
+timeline = [[1, "flat"], [24, "curl"], [36, "curl"], [72, "flat"]]
+
+[params]
+curl = 30.0        # degrees of spine flexion at the top, shared across the three spine bones and the neck
+
+[poses.hands]
+post = [ { fn = "ride_arms", args = { style = "behind_head" } } ]
+[poses.flat]
+extends = "hands"
+generator = "curl_body"
+args = { t = 0 }
+[poses.curl]
+extends = "hands"
+generator = "curl_body"
+args = { t = 1, top = 90, spine = ["=curl*0.4", "=curl*0.33", "=curl*0.27"], neck = "=curl*0.25", head = "=curl*0.2" }

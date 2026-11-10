@@ -1,0 +1,19 @@
+# The push-up as text (Step 14). The geometry (pivot on the toes, planted hands) stays in pushup.py as the generator `pushup_pose`.
+name = "Pushup"
+python = "pushup.py"
+timeline = [[1, "top"], [16, "mid"], [31, "bottom"], [37, "bottom"], [52, "mid"], [67, "top"]]    # 1.0 s down, 0.2 s pause, 1.0 s up
+
+[params]
+phi_up = 73.5       # degrees the body has turned from standing at the top (arms nearly straight); 90 would be lying flat
+phi_down = 88.0     # ... and at the bottom (chest about 4 cm off the floor)
+hand_x = 0.25       # how far each wrist is from the centre line (m)
+
+[poses.top]
+generator = "pushup_pose"
+args = { phi = "=phi_up", hand_x = "=hand_x" }
+[poses.mid]
+generator = "pushup_pose"
+args = { phi = "=(phi_up+phi_down)/2", hand_x = "=hand_x" }     # a key halfway keeps the hips on their arc
+[poses.bottom]
+generator = "pushup_pose"
+args = { phi = "=phi_down", hand_x = "=hand_x" }

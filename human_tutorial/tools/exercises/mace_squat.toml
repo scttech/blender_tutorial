@@ -1,0 +1,15 @@
+# Mace squat: the squat holding the mace upright at the chest, head up (hammer grip). The mace rides on the chest.
+name = "MaceSquat"
+extends = "Squat"
+python = ["mace.py", "poselib.py"]
+
+[poses.arms_stand]
+post = [ { fn = "ride_prop", args = { prop = "Mace", at = [0, -0.371, 1.01], grab = "grab_mace", pole = [0.30, 0.0, 1.0] } } ]
+[poses.arms_bottom]
+post = [ { fn = "ride_prop", args = { prop = "Mace", at = [0, -0.371, 1.01], grab = "grab_mace", pole = [0.30, 0.0, 1.0] } } ]
+[poses.body_bottom]
+Spine = { rot = [9, 0, 0] }
+Spine1 = { rot = [7, 0, 0] }
+Spine2 = { rot = [4, 0, 0] }
+Neck = { rot = [-5, 0, 0] }
+Head = { rot = [-8, 0, 0] }

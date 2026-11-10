@@ -1,0 +1,7 @@
+# Kettlebell lunge: the static lunge with a kettlebell held at the chest (goblet position).
+name = "KettlebellLunge"
+extends = "Lunge"
+python = ["poselib.py"]
+
+[poses.hands_on_hips]
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, -0.29, 1.0], grab = "grab_kettlebell", pole = [0.30, 0.0, 1.0] } } ]

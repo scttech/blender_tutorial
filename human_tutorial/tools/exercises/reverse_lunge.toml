@@ -1,0 +1,29 @@
+# Reverse lunge: from standing, step one foot back, sink until the front thigh is level, drive back up and bring the foot in.
+# The front foot never moves. Fists on the hips, riding on the pelvis.
+name = "ReverseLunge"
+python = ["lunge.py", "poselib.py"]
+timeline = [[1, "stand"], [11, "step"], [20, "top"], [32, "bottom"], [40, "bottom"], [52, "top"], [61, "step"], [70, "stand"]]
+
+[params]
+knee_top = 18.0
+knee_bottom = 95.0
+lift = 0.14         # how high the rear foot rises as it steps (m)
+
+[poses.hands_on_hips]
+post = [ { fn = "ride_arms", args = { style = "hips_fists" } } ]
+[poses.stand]
+extends = "hands_on_hips"
+generator = "reverse_lunge"
+args = { u = 0, knee = "=knee_top", lift = "=lift" }
+[poses.step]
+extends = "hands_on_hips"
+generator = "reverse_lunge"
+args = { u = 0.5, knee = "=knee_top", lift = "=lift" }
+[poses.top]
+extends = "hands_on_hips"
+generator = "reverse_lunge"
+args = { u = 1, knee = "=knee_top", lift = "=lift" }
+[poses.bottom]
+extends = "hands_on_hips"
+generator = "reverse_lunge"
+args = { u = 1, knee = "=knee_bottom", lift = "=lift" }

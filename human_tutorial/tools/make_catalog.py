@@ -10,8 +10,8 @@ ex = re.findall(r'Exercise\(\s*name = "([^"]+)",\s*category = ExerciseCategory\.
 
 # status -> (meaning, list of names). "Goblet Squat" is in the app twice (dumbbell and kettlebell); one entry covers both.
 G = {
- "Built": ["Push-Up", "Pull-Up", "Chin-Up", "Bodyweight Squat", "Air Squat", "Sit-Up", "Lunge", "Kettlebell Swing", "Mace 10-to-2 Swing"],
- "Variant": ["Diamond Push-Up", "Reverse Lunge", "Mace Reverse Lunge", "Kettlebell Lunge", "Mace Squat", "Crunch", "Hanging Leg Raise"],
+ "Built": ["Diamond Push-Up", "Reverse Lunge", "Mace Reverse Lunge", "Kettlebell Lunge", "Mace Squat", "Crunch", "Hanging Leg Raise", "Goblet Squat", "Kettlebell Deadlift", "Push-Up", "Pull-Up", "Chin-Up", "Bodyweight Squat", "Air Squat", "Sit-Up", "Lunge", "Kettlebell Swing", "Mace 10-to-2 Swing"],
+ "Variant": [],
  "New": ["Plank", "Side Plank", "Mountain Climber", "Burpee", "Superman", "Bird Dog", "Dead Bug", "Glute Bridge", "Leg Raise", "V-Up", "Flutter Kicks",
          "Bicycle Crunch", "Russian Twist", "Calf Raise", "Pistol Squat", "Jumping Jack", "Jump Squat", "Skater Hop", "Standing Hip Abduction",
          "Single-Leg Balance", "Standing Torso Twist", "Neck and Shoulder Rolls", "Hip Circles", "Cat-Cow", "World's Greatest Stretch", "90/90 Hip Stretch",
@@ -19,7 +19,7 @@ G = {
          "Pike Push-Up", "Box Breathing", "Pelvic Floor Contraction (Kegel)",
          "Mace 360 Swing", "Mace Front Raise (Around the World)", "Mace Uppercut", "Mace Barbarian Squat", "Mace Overhead Press", "Mace Shield Cast",
          "Mace Single-Arm Swing", "Mace Russian Twist", "Mace Good Morning",
-         "Goblet Squat", "Kettlebell Clean", "Kettlebell Snatch", "Kettlebell Deadlift", "Kettlebell Press", "Kettlebell Clean and Press", "Kettlebell Thruster",
+         "Kettlebell Clean", "Kettlebell Snatch", "Kettlebell Press", "Kettlebell Clean and Press", "Kettlebell Thruster",
          "Kettlebell Row", "Kettlebell Halo", "Kettlebell Russian Twist"],
  "Fixture": ["Wall Push-Up", "Incline Push-Up", "Decline Push-Up", "Wall Sit", "Wall Angel", "Doorway Chest Stretch", "Sit-to-Stand", "Inverted Row", "Dip",
              "Box Jump", "Step-Up", "Bulgarian Split Squat", "Hip Thrust"],
@@ -36,7 +36,7 @@ G = {
  "Partner": ["Leg Pummeling"],   # plus every GRAPPLING_DUMMY exercise, added below
 }
 MEANING = {
- "Built": "done: an action already exists and passes the checks",
+ "Built": "done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables)",
  "Variant": "an existing table with changed numbers or one changed grab; no new technique",
  "New": "a new table, using techniques and props we already have",
  "Fixture": "the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones)",
@@ -67,7 +67,7 @@ out = ["# Exercise catalogue", "",
 out += [f"| **{s}** | {cnt[s]} | {MEANING[s]} |" for s in order]
 out += ["", f"Total {sum(cnt.values())}. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it counts twice here and shares one classification.", "",
         "## Suggested order", "",
-        "1. **Variants** (7): minutes each, and they prove the recipe.",
+        "1. **Variants** (7): done.",
         "2. **New, bodyweight** and **New, mace and kettlebell** (about 50): no new modelling. Many are floor poses (plank, bridge, dead bug) the Step 14 technique already covers.",
         "3. **Dumbbell, then barbell** (35): one prop each with grips, then many exercises. These are the biggest payoff per prop.",
         "4. **Fixtures** (13) and **small props** (10): a bench, box and wall unlock many at once.",

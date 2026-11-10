@@ -1,0 +1,16 @@
+# Goblet squat: the squat holding a kettlebell at the chest by the handle. The bell rides on the chest (poselib.ride_prop), so it
+# follows the lean; both hands snap to the handle. A more upright torso than the bodyweight squat (the bell pulls the chest forward).
+name = "GobletSquat"
+extends = "Squat"
+python = "poselib.py"
+
+[poses.arms_stand]
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, -0.29, 1.0], grab = "grab_kettlebell", pole = [0.30, 0.0, 1.0] } } ]
+[poses.arms_bottom]
+post = [ { fn = "ride_prop", args = { prop = "Kettlebell", at = [0, -0.29, 1.0], grab = "grab_kettlebell", pole = [0.30, 0.0, 1.0] } } ]
+[poses.body_bottom]
+Spine = { rot = [9, 0, 0] }
+Spine1 = { rot = [7, 0, 0] }
+Spine2 = { rot = [4, 0, 0] }
+Neck = { rot = [-5, 0, 0] }
+Head = { rot = [-8, 0, 0] }

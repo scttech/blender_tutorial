@@ -24,7 +24,7 @@ for ex in EXERCISES:
         exec(open(f"{HOME}/tools/exercises/{ex['module']}.py").read(), G); table_keys = G[ex["table"]]
     G["build_action"](name, table_keys)
     D = G["measure"](name, extra=(G[grip[0]](grip[1]) if grip[1] is not None else G[grip[0]]()) if grip else None); D["keys"] = keys
-    scene.frame_set(1); v, _ = G["mesh_state"](); sole = v[v[:, 2] < 0.02]                  # the soles on the floor at the first frame = the base of support
+    scene.frame_set(ex.get("support_frame", 1)); v, _ = G["mesh_state"](); sole = v[v[:, 2] < 0.02]                  # the soles on the floor at the first frame = the base of support
     D["support"] = [float(sole[:, 1].min()), float(sole[:, 1].max())] if len(sole) else None     # (none for an exercise that starts off the floor)
     G["save"](D, f"{HOME}/exports/{name.lower()}_measure.json")
     print(f"{name:10s} {len(D['frame']):3d} frames | reach {r(max(D['reach_err_mm']),2)} mm | knee {r(min(D['knee_deg']),1)}..{r(max(D['knee_deg']),1)} | "

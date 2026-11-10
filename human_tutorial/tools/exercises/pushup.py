@@ -23,13 +23,14 @@ _H0, _A0, _S0, _KP0 = (_b[n].head_local.copy() for n in ("Hips", "Foot_IK.L", "U
 _B0 = Vector((0.0, _b["Foot.L"].tail_local.y, _b["Foot.L"].tail_local.z))        # the ball of the foot, on the centre line
 _HAND_Y = rigid(_B0, (0, Y_PIVOT, Z_PIVOT), PHI_UP)(_S0).y                          # hands directly under the shoulders at the top
 
-def pushup_pose(phi):
+def pushup_pose(phi, hand_x=HAND_X):
+    """hand_x: how far each wrist is from the centre line (0.25 = the standard push-up; 0.05 = diamond)"""
     M = rigid(_B0, (0, Y_PIVOT, Z_PIVOT), phi)
     return {"Hips": {"move": tuple(M(_H0) - _H0), "rot": (phi, 0, 0)},
             "Foot_IK.L": {"at": tuple(M(_A0)), "wrot": (phi, 0, 0)}, "Knee_Pole.L": {"at": tuple(M(_KP0))},
             "Toes.L": {"rot": (-phi, 0, 0)},
             "Neck": {"rot": (-18, 0, 0)}, "Head": {"rot": (-28, 0, 0)},                         # lift the eyes to look ahead
-            "Hand_IK.L": {"at": (HAND_X, _HAND_Y, HAND_Z), "wrot": (0, 0, -90), "props": {"fist": 0.0}}}
+            "Hand_IK.L": {"at": (hand_x, _HAND_Y, HAND_Z), "wrot": (0, 0, -90), "props": {"fist": 0.0}}}
 
 _MID = (PHI_UP + PHI_DN) / 2                    # a key halfway keeps the hips on their arc (a chord would shorten the legs)
 PUSHUP = [(1, pushup_pose(PHI_UP)), (16, pushup_pose(_MID)), (31, pushup_pose(PHI_DN)),

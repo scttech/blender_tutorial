@@ -1,0 +1,7 @@
+# Diamond push-up: the push-up with the hands together under the chest (thumbs and index fingers make a diamond).
+name = "DiamondPushup"
+extends = "Pushup"
+
+[params]
+hand_x = 0.05
+phi_up = 74.5       # a little lower than the standard 73.5: hands 14 cm inside the shoulders need a shorter reach (73.5 left the arms 13.7 mm short)

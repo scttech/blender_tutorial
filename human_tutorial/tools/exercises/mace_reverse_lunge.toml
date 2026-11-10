@@ -1,0 +1,7 @@
+# Mace reverse lunge: the reverse lunge holding the mace upright at the chest, torso tall.
+name = "MaceReverseLunge"
+extends = "ReverseLunge"
+python = ["mace.py", "poselib.py"]
+
+[poses.hands_on_hips]
+post = [ { fn = "ride_prop", args = { prop = "Mace", at = [0, -0.371, 1.01], grab = "grab_mace", pole = [0.30, 0.0, 1.0] } } ]

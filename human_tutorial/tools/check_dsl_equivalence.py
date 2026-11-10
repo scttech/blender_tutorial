@@ -5,7 +5,7 @@ The Python tables are the ones we verified in Steps 13 to 16; a text file that b
 It builds throwaway actions named T_py and T_text and removes them; the real actions are not touched."""
 import bpy, os
 HOME = "/Users/chris/blender_tutorial/human_tutorial"; T = f"{HOME}/tools"
-PAIRS = [("squat.toml", "squat.py", "SQUAT"), ("mace_10_to_2.toml", "mace.py", "MACE_10_TO_2")]
+PAIRS = [("squat.toml", "squat.py", "SQUAT"), ("mace_10_to_2.toml", "mace.py", "MACE_10_TO_2"), ("pushup.toml", "pushup.py", "PUSHUP"), ("lunge.toml", "lunge.py", "LUNGE")]
 def snapshot(G, action):
     return {(fc.data_path, fc.array_index): [(round(kp.co.x, 6), kp.co.y, kp.interpolation) for kp in fc.keyframe_points] for fc in G["fcurves_of"](action)}
 for toml, py, table in PAIRS:

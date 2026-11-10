@@ -1,0 +1,25 @@
+# Kettlebell deadlift: the bell between the feet, hips back, flat spine; push the floor away and stand tall, then hinge back down.
+# The bell is held by both hands on the handle (grab_kettlebell) and moves with them: it runs from the floor (t = 1) to hanging in front of the thighs (t = 0).
+# Keyed every 5 frames along the way: with only the two ends, the shoulders would cut a chord and the arms would be pulled out of reach mid-lift.
+name = "KettlebellDeadlift"
+python = "moves.py"
+timeline = [{ frames = [1, 31, 5], pose = "hinge", set = { t = "=(1-cos(pi*(f-1)/30))/2" } },
+            { frame = 41, pose = "hinge", set = { t = 1 } },
+            { frames = [46, 71, 5], pose = "hinge", set = { t = "=(1+cos(pi*(f-41)/30))/2" } }]      # 1.0 s down, 0.33 s at the bottom, 1.0 s up
+
+[params]
+back = 0.30
+drop = 0.40
+pitch = 55.0
+t = 0
+yb = 0.0           # how far the bell bulges out (+) or in (-) midway, so the arms stay in reach as the shoulders swing forward
+zb = 0.05          # ... and how far up
+ky = -0.15         # the bell's y at the top (m): the origin of the bell bone
+kz = 0.67          # ... and its height at the top
+
+[poses.hinge]
+generator = "hinge_body"
+args = { t = "=t", back = "=back", drop = "=drop", pitch = "=pitch" }
+Kettlebell = { at = [0, "=ky+(-0.04-ky)*t+yb*sin(pi*t)", "=kz*(1-t)+zb*sin(pi*t)"] }
+"Hand_IK.L" = { props = { grab_kettlebell = 1.0 } }
+"Elbow_Pole.L" = { at = [0.55, "=0.45+0.15*t", "=1.0-0.1*t"] }

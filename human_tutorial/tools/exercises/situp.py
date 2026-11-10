@@ -27,21 +27,22 @@ def _apply(spec):
         for c, v in flat.items(): write(c, v)
     rig.update_tag(); bpy.context.view_layer.update()
 
-def body_pose(t, hips_z):
-    """the body without its arms, at t (0 lying .. 1 sitting up)"""
-    phi = LAY_PHI + (TOP_PHI - LAY_PHI) * t
-    s = lambda k: SPINE_TOP[k] * t
+def body_pose(t, hips_z, lay=LAY_PHI, top=TOP_PHI, spine=SPINE_TOP, neck=NECK_TOP, head=HEAD_TOP):
+    """the body without its arms, at t (0 lying .. 1 sitting up). lay/top: the pelvis angle lying and at the top (a crunch keeps it at 90);
+    spine, neck, head: the flexion at the top (degrees)"""
+    phi = lay + (top - lay) * t
+    s = lambda k: spine[k] * t
     return {"Hips": {"move": (0, Y_HIP - 0.06, hips_z - 0.97), "rot": (-phi, 0, 0)},
             "Spine": {"rot": (s(0), 0, 0)}, "Spine1": {"rot": (s(1), 0, 0)}, "Spine2": {"rot": (s(2), 0, 0)},
-            "Neck": {"rot": (NECK_TOP * t, 0, 0)}, "Head": {"rot": (HEAD_TOP * t, 0, 0)},
+            "Neck": {"rot": (neck * t, 0, 0)}, "Head": {"rot": (head * t, 0, 0)},
             "Foot_IK.L": {"at": (0.19, Y_HIP - FOOT_DY, 0.10), "wrot": (0, 0, 0)},
             "Knee_Pole.L": {"at": (0.14, Y_HIP - FOOT_DY / 2, 1.0)}}
 
-def settle(t, hips_z=0.11):
+def settle(t, hips_z=0.11, **kw):
     """lower or raise the pelvis until the lowest vertex of the body just touches the floor"""
     reg_body = regions() == "body"
     for _ in range(3):
-        _apply(body_pose(t, hips_z)); v, _ = mesh_state()
+        _apply(body_pose(t, hips_z, **kw)); v, _ = mesh_state()
         hips_z -= float(v[reg_body, 2].min())
     return hips_z
 
@@ -69,3 +70,10 @@ def situp_pose(t):
 _poses = {t: situp_pose(t) for t in (0.0, 0.5, 1.0)}
 HIPS_Z = {t: z for t, (spec, z) in _poses.items()}
 SITUP = [(1, _poses[0.0][0]), (18, _poses[0.5][0]), (34, _poses[1.0][0]), (40, _poses[1.0][0]), (60, _poses[0.5][0]), (79, _poses[0.0][0])]
+
+
+def curl_body(t, top=90.0, spine=(12.0, 10.0, 8.0), neck=8.0, head=6.0):
+    """a lying curl, no arms, for text files: t = 0 flat, 1 = curled. `top` is the pelvis angle at t = 1 (90 keeps the pelvis flat, as in a crunch; 55 is a sit-up).
+    The pelvis height is settled against the mesh so the body lies ON the floor"""
+    kw = dict(top=top, spine=tuple(spine), neck=neck, head=head)
+    return body_pose(t, settle(t, **kw), **kw)

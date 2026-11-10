@@ -23,7 +23,7 @@ exec(open("/Users/chris/blender_tutorial/human_tutorial/tools/export_glb.py").re
 
 **By hand:** select Body, Rig and the three props, **File, Export, glTF 2.0 (.glb)**, tick **Limit to: Selected Objects**, in **Animation** choose **Actions**, tick **Sampling Animations**, and under **Armature** tick **Export Deform Bones Only**. The prop trick needs the three prop bones' **Deform** checkbox (Bone properties) ticked first.
 
-Result: **2.75 MB**, 55 joints (52 body bones plus 3 prop bones), 8 animations, textures from Step 18 (JPEG 33 KB and 612 KB, PNG 977 KB, JPEG 35 KB).
+Result: **2.75 MB**, 55 joints (52 body bones plus 3 prop bones), 8 animations (the file grows as exercises are added: with the 18 actions of the exercise catalogue it is 3.12 MB and every action was re-verified, worst error 0.12 mm), textures from Step 18 (JPEG 33 KB and 612 KB, PNG 977 KB, JPEG 35 KB).
 
 ## Does it match Blender?
 

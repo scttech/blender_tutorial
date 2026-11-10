@@ -1,0 +1,16 @@
+# Hanging leg raise: hang from the bar (overhand grip) and lift the straight legs to horizontal, then lower them without swinging.
+# The hands are held to the bar by the grab slider; only the legs move. The hang height is the pull-up's dead hang (solved against the rig).
+name = "HangingLegRaise"
+python = "pullup.py"
+# dense keys along the arc: with only the hang and the top keyed, the ankle would travel the chord between them and the knee would fold to 90 degrees mid-lift
+timeline = [{ frames = [1, 31, 3], pose = "up" }, { frames = [40, 76, 3], pose = "down" }]       # 1.0 s up, 0.3 s hold (31 to 40), 1.2 s down
+
+[params]
+lift_to = 90.0       # degrees from hanging: 90 = the legs horizontal
+
+[poses.up]
+generator = "hang_pose"
+args = { alpha = "=lift_to*(1-cos(pi*(f-1)/30))/2" }
+[poses.down]
+generator = "hang_pose"
+args = { alpha = "=lift_to*(1+cos(pi*(f-40)/36))/2" }

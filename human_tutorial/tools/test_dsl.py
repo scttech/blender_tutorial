@@ -37,6 +37,16 @@ check("per-key set", abs(k4[4][1]["Hips"]["rot"][0] - 10 * math.sin(math.radians
 G = {"gen": lambda gamma: {"Mace": {"at": [0, 0, gamma]}}}
 k5 = compile_exercise({"poses": {"s": {"generator": "gen", "args": {"gamma": "=f*2"}, "Hips": {"move": [1, 1, 1]}}}, "timeline": [[3, "s"]]}, None, G)
 check("generator pose + own entries", k5[0][1]["Mace"]["at"] == (0, 0, 6) and k5[0][1]["Hips"]["move"] == (1, 1, 1))
+# layered extends and post hooks
+L = {"poses": {"a": {"Hips": {"move": [0, 0, 1]}}, "b": {"Spine": {"rot": [5, 0, 0]}, "Hips": {"move": [0, 0, 2]}}, "c": {"extends": ["a", "b"], "post": [{"fn": "add", "args": {"v": "=f"}}]}}, "timeline": [[4, "c"]]}
+k6 = compile_exercise(L, None, {"add": lambda pose, v: {"Head": {"rot": [v + pose["Hips"]["move"][2], 0, 0]}}})
+check("layered extends: later replaces earlier", k6[0][1]["Hips"]["move"] == (0, 0, 2) and k6[0][1]["Spine"]["rot"] == (5, 0, 0))
+check("post hook sees the finished pose and adds to it", k6[0][1]["Head"]["rot"] == (6, 0, 0))
+# a child can swap what a pose is built from (post / extends replace the parent's wiring)
+P = {"name": "P", "poses": {"arms": {"post": [{"fn": "add", "args": {"v": 1}}]}, "x": {"extends": "arms", "Hips": {"move": [0, 0, 1]}}}, "timeline": [[1, "x"]]}
+C = {"name": "C", "extends": "P", "poses": {"arms": {"post": [{"fn": "add", "args": {"v": 5}}]}}}
+gen_ = {"add": lambda pose, v: {"Head": {"rot": [v, 0, 0]}}}
+check("child swaps the post hook of an inherited pose", compile_exercise(C, {"P": P}, gen_)[0][1]["Head"]["rot"] == (5, 0, 0) and compile_exercise(P, None, gen_)[0][1]["Head"]["rot"] == (1, 0, 0))
 # errors
 raises("unknown pose", lambda: compile_exercise({"poses": {}, "timeline": [[1, "x"]]}), "unknown pose 'x'")
 raises("misspelt entry", lambda: compile_exercise({"poses": {"p": {"Hips": {"mvoe": [0, 0, 0]}}}, "timeline": [[1, "p"]]}), "unknown entry 'mvoe'")

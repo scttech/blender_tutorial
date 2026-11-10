@@ -80,3 +80,17 @@ def bar_extra(grip_prefix):
                 "wrist_y": P["Hand.L"].head.y, "wrist_z": P["Hand.L"].head.z, "shoulder_z": P["UpperArm.L"].head.z}
     return extra
 
+
+
+THIGH, SHANK = 0.42, 0.45         # about; the leg is kept a little short of straight so the knee never reaches its limit (0.87 m is straight)
+def hang_pose(alpha, grip="pullup", leg=0.868):
+    """dead hang (overhand grip) with the legs raised forward by alpha degrees from hanging (90 = horizontal). Straight-ish legs: the ankle is placed
+    `leg` metres from the hip along the raised leg and the knee points along the perpendicular, up and forward."""
+    hang = LIFT_HANG if grip == "pullup" else LIFT_HANG_CHIN
+    pose = rise_pose(grip, hang, 0.0); a = math.radians(alpha)
+    hip = Vector((0.0, _H0.y, _H0.z + hang))                                     # the hips' head with the lift applied
+    d = Vector((0.0, -math.sin(a), -math.cos(a))); n = Vector((0.0, -math.cos(a), math.sin(a)))
+    ankle = hip + d * leg + Vector((_A0.x, 0, 0)); knee = hip + d * THIGH + Vector((_KP0.x, 0, 0)); pole = knee + n * 0.5
+    pose["Foot_IK.L"] = {"at": tuple(ankle), "wrot": (-alpha, 0, 0)}
+    pose["Knee_Pole.L"] = {"at": tuple(pole)}
+    return pose
