@@ -38,8 +38,8 @@ Read straight from the `.glb` header with `../cat_tutorial/tools/inspect_glb.py`
 
 ### Part 3: Controls
 10. [IK for arms and legs](10-ik-for-arms-and-legs.md): hands and feet that stay planted, and why a straight arm breaks IK
-11. Finger controls: a curl control per finger and a fist pose
-12. Props: a kettlebell and a steel mace, and parenting them to a hand
+11. [Finger controls](11-finger-controls.md): sliders for a fist, each finger and the thumb, driven by formulas, with the limits of a fused hand shown
+12. [Props](12-props.md): a kettlebell and a steel mace the hands grip and move with, and a measured fit of hand to handle
 
 ### Part 4: Exercises
 13. Squat
@@ -59,4 +59,4 @@ Read straight from the `.glb` header with `../cat_tutorial/tools/inspect_glb.py`
 
 - Images live in `blender-human-tutorial-images/`.
 - `exports/` will hold the exported `.glb` files.
-- `tools/decimate_body.py` builds the low-poly `Body` from the hidden `Body_HighPoly` reference ([Step 3](03-reduce-the-polygon-count.md)). `tools/clean_body.py` runs the Step 4 checks and fixes. `tools/rig_landmarks.py` holds the bone layout as data ([Step 5](05-plan-the-bone-layout.md)). `tools/build_armature.py` builds the armature from it ([Step 6](06-build-the-body-armature.md)). `tools/bind_and_weight.py` binds the mesh and makes the weights export-ready ([Step 8](08-parent-and-weight.md)). `tools/build_controls.py` adds the IK controls ([Step 10](10-ik-for-arms-and-legs.md)). The pipeline order is `build_armature.py` (with `HANDS = True`), then `bind_and_weight.py`, then `build_controls.py`. `tools/pose_tests.py` poses the rig and measures the skin ([Step 9](09-test-the-rig.md)); `tools/smooth_weights.py` is the weight-smoothing experiment we rejected. More rig and animation scripts will follow.
+- `tools/decimate_body.py` builds the low-poly `Body` from the hidden `Body_HighPoly` reference ([Step 3](03-reduce-the-polygon-count.md)). `tools/clean_body.py` runs the Step 4 checks and fixes. `tools/rig_landmarks.py` holds the bone layout as data ([Step 5](05-plan-the-bone-layout.md)). `tools/build_armature.py` builds the armature from it ([Step 6](06-build-the-body-armature.md)). `tools/bind_and_weight.py` binds the mesh and makes the weights export-ready ([Step 8](08-parent-and-weight.md)). `tools/build_controls.py` adds the IK controls ([Step 10](10-ik-for-arms-and-legs.md)). The pipeline order is `build_armature.py` (with `HANDS = True`), then `bind_and_weight.py`, then `build_controls.py`. `tools/build_finger_controls.py` adds the finger sliders ([Step 11](11-finger-controls.md)); run it after `build_controls.py`. `tools/build_props.py` and `tools/build_prop_rig.py` add the kettlebell and mace and their grips ([Step 12](12-props.md)); the prop rig re-runs the finger script. `tools/pose_tests.py` poses the rig and measures the skin ([Step 9](09-test-the-rig.md)); `tools/smooth_weights.py` is the weight-smoothing experiment we rejected. More rig and animation scripts will follow.

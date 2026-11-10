@@ -65,12 +65,14 @@ We posed every finger of the left hand into a fist (fingers 80, 95 and 60 degree
 
 | Measurement | Result |
 |---|---|
-| Fingertips to wrist, open hand | 10 to 12 cm |
+| Fingertips to wrist, open hand | **19 to 22 cm** (index 21.3, middle 22.4, ring 21.2, pinky 18.9) |
 | Fingertips to wrist, fist (index, middle, pinky) | **8.3, 7.9, 7.4 cm** |
 | Fingertip height, fist (index, middle, pinky) | **1.403, 1.401, 1.406 m**, which is about 3 cm *below* the open-hand height of 1.432 m |
 | Thumb tip, fist | still at z = 1.434, 11.1 cm from the wrist: it moves *across* the palm, not down |
 
 The skin did **not** move in this test, because the bones are not attached yet. This only proves the bone chains and their axes work.
+
+**Correction (found in [Step 11](11-finger-controls.md)):** the original table said 10 to 12 cm for the open hand. That was the length of a finger, not the distance from the wrist. The fist numbers below it were right.
 
 **Concepts**
 - **Proximal, middle, distal:** the three finger bones, counting from the knuckle to the tip. (Anatomically the thumb has only two; we give it three so it has the same structure and a spare joint for the grip.)

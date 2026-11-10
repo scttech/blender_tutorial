@@ -101,10 +101,10 @@ For animating, the usual answer is an **IK/FK switch**: a slider that sets the c
 
 **Caveats**
 - **IK is solved only inside Blender.** glTF has no IK, so before exporting for the web we **bake** the animation onto the deform bones ([Step 21](README.md)).
-- **The hands keep their rest orientation.** There is no grip rotation yet.
+- **The hands keep their rest orientation** unless a `grab` slider snaps them to a grip ([Step 12](12-props.md)).
 - **No heel roll.** In the lunge the rear heel stays flat instead of lifting. A foot-roll control would fix it.
 - **The elbow moved 1.5 cm,** so the [Step 5](05-plan-the-bone-layout.md) elbow position is now x = 0.49, y = 0.075.
 
 ---
 
-[← Previous: Test the rig](09-test-the-rig.md) · [Contents](README.md) · Next: Finger controls (not written yet)
+[← Previous: Test the rig](09-test-the-rig.md) · [Contents](README.md) · [Next: Finger controls →](11-finger-controls.md)
