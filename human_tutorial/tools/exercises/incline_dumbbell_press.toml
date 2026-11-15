@@ -1,0 +1,14 @@
+# Dumbbell bench press: sit back on a 40-degree incline bench, feet on the floor, a dumbbell in each hand at the chest. Press them up until the arms are straight over the chest, then lower to the chest.
+# 1.2 s up, 0.3 s hold, 1.5 s down. The back lies on the bench (situp.incline_body); the dumbbells are placed from the shoulders (dumbbell.db_lying).
+name = "InclineDumbbellPress"
+python = ["situp.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "press", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "press", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.press]
+generator = "incline_body"
+args = { phi = 50 }
+post = [ { fn = "db_lying", args = { mode = "incline", h = "=h" } } ]

@@ -8,13 +8,13 @@ The name, category and equipment come from the app. **The status column is our j
 
 | Status | Count | Meaning |
 |---|---|---|
-| **Built** | 79 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
+| **Built** | 82 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
 | **Variant** | 0 | an existing table with changed numbers or one changed grab; no new technique |
 | **New** | 10 | a new table, using techniques and props we already have |
 | **Fixture** | 13 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
 | **One hand** | 7 | needs a one-handed grip on the prop: the grab sliders drive BOTH hands, so a single-arm press, row, clean or snatch needs a per-hand grab added to the rig first |
-| **Dumbbell** | 8 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
-| **Barbell** | 3 | needs a barbell prop with a two-hand grip, plus a rack or bench for most |
+| **Dumbbell** | 7 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
+| **Barbell** | 1 | needs a barbell prop with a two-hand grip, plus a rack or bench for most |
 | **Machine** | 17 | needs a machine or cable fixture modelled; the person mostly sits or stands still |
 | **Small prop** | 10 | needs a band, rope, wheel, ball or roller; bands and ropes bend, which a rigid prop bone cannot do |
 | **Technique** | 16 | needs something the animation library cannot do yet: travel across the floor (root motion), a gait cycle, inversion, or rolling and floor-to-standing transitions |
@@ -106,7 +106,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Barbell Curl | Barbell | Built |
 | Dumbbell Bicep Curl | Dumbbell | Built |
 | Hammer Curl | Dumbbell | Built |
-| Concentration Curl | Dumbbell | Dumbbell |
+| Concentration Curl | Dumbbell | Built |
 | Preacher Curl | Machine | Machine |
 | Tricep Pushdown | Machine | Machine |
 | Skull Crusher | Barbell | Built |
@@ -187,8 +187,8 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Mace 360 Swing | Mace | New |
 | Mace Uppercut | Mace | New |
 | Mace Single-Arm Swing | Mace | One hand |
-| Clean and Press | Barbell | Barbell |
-| Thruster | Barbell | Barbell |
+| Clean and Press | Barbell | Built |
+| Thruster | Barbell | Built |
 | Turkish Get-Up | Kettlebell | Technique |
 | Kettlebell Clean | Kettlebell | One hand |
 | Kettlebell Snatch | Kettlebell | One hand |

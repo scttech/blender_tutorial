@@ -1,0 +1,19 @@
+# Clean and press: from the floor, pull the bar up the body (the deadlift), whip the elbows under it so it lands on the front of the shoulders (the clean), then press it overhead; lower it back to the shoulders, to the hips and to the floor.
+# One path u from 0 to 3 and back; the torso hinges for the first part. Keyed every 3 frames, every 2 in the explosive clean.
+name = "CleanAndPress"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 31, 5], pose = "cp", set = { u = "=(1-cos(pi*(f-1)/30))/2" } },
+            { frames = [33, 43, 2], pose = "cp", set = { u = "=1+(1-cos(pi*(f-31)/12))/2" } },
+            { frames = [49, 73, 4], pose = "cp", set = { u = "=2+(1-cos(pi*(f-49)/24))/2" } },
+            { frames = [79, 79, 1], pose = "cp", set = { u = 3 } },
+            { frames = [85, 103, 6], pose = "cp", set = { u = "=3-(1-cos(pi*(f-79)/24))/2" } },
+            { frames = [105, 115, 2], pose = "cp", set = { u = "=2-(1-cos(pi*(f-103)/12))/2" } },
+            { frames = [121, 145, 6], pose = "cp", set = { u = "=1-(1-cos(pi*(f-115)/30))/2" } }]
+
+[params]
+u = 0
+
+[poses.cp]
+generator = "hinge_body"
+args = { t = "=max(0,1-u)", back = 0.30, drop = 0.40, pitch = 55, stance = 0.24 }
+post = [ { fn = "bb_clean_path", args = { u = "=u" } } ]

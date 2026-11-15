@@ -227,3 +227,11 @@ def pike_pushup(u, hand_y=-0.30, ankle_y=0.66, shoulder_z=0.55, drop=0.15, phi0=
     return {"Hips": {"move": (0, hy - 0.06, hz - 0.97), "rot": (math.degrees(phi), 0, 0)}, "Neck": {"rot": (30 * u + 10, 0, 0)}, "Head": {"rot": (25 * u + 10, 0, 0)},
             "Foot_IK.L": {"at": (0.12, ankle_y, 0.20), "wrot": (45, 0, 0)}, "Toes.L": {"rot": (-45, 0, 0)}, "Knee_Pole.L": {"at": (0.12, -0.2, 0.9)},
             "Hand_IK.L": {"at": (0.19, hand_y, 0.045), "wrot": (0, 0, -90), "props": {"fist": 0.0}}, "Elbow_Pole.L": {"at": (0.75, hand_y + 0.1, 0.5)}}
+
+
+def seated_body(hip_y=0.0, pitch=45.0, seat=0.475):
+    """sitting on the end of a bench (its pad `seat` metres up), thighs level and apart, the feet flat on the floor 30 cm either side of the middle, the torso pitched forward by `pitch` degrees"""
+    hz = seat + 0.10
+    p = {"Hips": {"move": (0, hip_y - 0.06, hz - 0.97), "rot": (pitch, 0, 0)}, "Neck": {"rot": (-0.4 * pitch, 0, 0)}, "Head": {"rot": (-0.5 * pitch, 0, 0)},
+         "Foot_IK.L": {"at": (0.30, hip_y - 0.42, 0.10), "wrot": (0, 0, 0)}, "Knee_Pole.L": {"at": (0.40, hip_y - 0.95, 0.55)}}
+    return p

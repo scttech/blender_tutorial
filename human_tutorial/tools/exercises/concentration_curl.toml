@@ -1,0 +1,14 @@
+# Concentration curl: sit on the end of a bench with the feet wide, lean forward, the back of the working (left) upper arm braced against the inside of the thigh and the dumbbell hanging between the knees. Curl it up toward the shoulder,
+# squeeze, and lower under control. The right hand rests on the right knee. 1.2 s up, 0.3 s hold, 1.5 s down.
+name = "ConcentrationCurl"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "curl", set = { k = "=10+125*(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "curl", set = { k = "=10+125*(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+k = 10
+
+[poses.curl]
+generator = "seated_body"
+args = { hip_y = 0.0, pitch = 45 }
+post = [ { fn = "db_concentration", args = { kappa = "=k" } } ]

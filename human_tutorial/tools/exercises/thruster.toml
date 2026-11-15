@@ -1,0 +1,17 @@
+# Thruster: the bar in the front rack (on the front of the shoulders), feet shoulder width. Squat to full depth, then use the upward drive to press the bar overhead in one continuous motion, lower it to the rack and
+# reset. The squat's body (moves.squat_body) with the bar riding on the chest; the press starts as the legs drive up. 3.6 s: 1.0 s down, 0.2 s pause, 0.6 s drive, 0.6 s press, 0.2 s lockout, 0.8 s lower, 0.2 s reset.
+name = "Thruster"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 31, 3], pose = "thrust", set = { t = "=(1-cos(pi*(f-1)/30))/2", h = 0 } },
+            { frames = [37, 55, 3], pose = "thrust", set = { t = "=(1+cos(pi*(f-37)/18))/2", h = 0 } },
+            { frames = [58, 73, 3], pose = "thrust", set = { t = 0, h = "=(1-cos(pi*(f-55)/18))/2" } },
+            { frames = [76, 97, 3], pose = "thrust", set = { t = 0, h = "=(1+cos(pi*(f-73)/24))/2" } }]
+
+[params]
+t = 0
+h = 0
+
+[poses.thrust]
+generator = "squat_body"
+args = { t = "=t", depth = 0.58, back = 0.14, lean = 0.5 }
+post = [ { fn = "bb_rack_press", args = { h = "=h" } } ]

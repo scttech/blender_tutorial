@@ -90,3 +90,11 @@ def bench_body(t=0.0, top=90.0, spine=(0.0, 0.0, 0.0), neck=0.0, head=0.0, pad=0
         FLOOR_Z = 0.0
     p["Foot_IK.L"] = {"at": (0.32, p["Foot_IK.L"]["at"][1] - 0.05, 0.10), "wrot": (0, 0, 0)}; p["Knee_Pole.L"] = {"at": (0.36, p["Knee_Pole.L"]["at"][1] - 0.3, 0.55)}
     return p
+
+
+def incline_body(phi=50.0, seat=0.475):
+    """sitting on an incline bench with the back reclined: the torso is `phi` degrees from vertical (50 = a back pad 40 degrees above the floor), the pelvis on the seat pad (`seat` metres up), the feet flat on the
+    floor wide apart. The bench itself is placed to touch the back by tools/place_incline_bench.py"""
+    p = body_pose(1.0, seat + 0.10, lay=90.0, top=phi, spine=(0.0, 0.0, 0.0), neck=0.0, head=0.0)
+    p["Foot_IK.L"] = {"at": (0.32, p["Foot_IK.L"]["at"][1] - 0.05, 0.10), "wrot": (0, 0, 0)}; p["Knee_Pole.L"] = {"at": (0.36, p["Knee_Pole.L"]["at"][1] - 0.3, 0.55)}
+    return p

@@ -71,6 +71,9 @@ def db_lying(pose, mode, h, spread=0.14):
     pressed from the chest (h = 0) to straight arms over the chest (h = 1). mode "fly": the arms nearly straight over the chest (h = 0) opening out to the sides until level with the chest (h = 1),
     palms facing each other, a slight bend in the elbows"""
     _apply_pose(pose); P = pose_bones(); S = P["UpperArm.L"].head.copy()
+    if mode == "incline":                       # pressed along the normal of the reclined torso (50 degrees from vertical)
+        ph = math.radians(50.0); n = Vector((0, -math.cos(ph), math.sin(ph)))
+        return hold(S + Vector((spread, 0, 0)) + n * (0.08 + 0.40 * h), n, Vector((0, -n.z, n.y)) * -1, pole=(S.x + 0.7, S.y, S.z + 0.1))
     if mode == "press":
         W = Vector((S.x + spread, S.y, S.z + 0.08 + 0.40 * h))
         return hold(W, (0, 0, 1), (0, -1, 0), pole=(S.x + 0.7, S.y, S.z + 0.1))
@@ -84,3 +87,15 @@ def db_bent_lateral(pose, a, arm=0.50):
     _apply_pose(pose); P = pose_bones(); S = P["UpperArm.L"].head.copy(); r = math.radians(a)
     d = Vector((math.sin(r), 0.0, -math.cos(r))); W = S + d * arm
     return hold(W, d, Vector((-math.cos(r), 0.0, -math.sin(r))), pole=(S.x + 0.3, S.y + 0.6, S.z))
+
+
+def db_concentration(pose, kappa):
+    """a POST HOOK for the concentration curl (sitting on a bench end, torso pitched forward): the LEFT upper arm hangs from the shoulder with the elbow braced against the inside of the thigh, the
+    dumbbell between the knees; the forearm swings from hanging (kappa = 0) up toward the shoulder (kappa = 140). The right hand rests on the right knee and holds nothing"""
+    _apply_pose(pose); P = pose_bones(); S = P["UpperArm.L"].head.copy(); k = math.radians(kappa)
+    E = S + Vector((-0.03, 0.05, -0.285)); f = Vector((0, -math.sin(k), -math.cos(k))); W = E + f * 0.24
+    out = hold(W, f, Vector((0, -math.cos(k), math.sin(k))), pole=(S.x + 0.45, S.y + 0.8, S.z - 0.2))
+    out["Dumbbell.R"] = {"at": (-0.30, -0.25, 0.07), "wrot": (0, 0, 0)}
+    out["Hand_IK.R"] = {"at": (-0.26, S.y - 0.02, 0.64), "wrot": (0, 0, -90), "props": {"fist": 0.0, "grab_dumbbell": 0.0}}
+    out["Elbow_Pole.R"] = {"at": (-0.55, S.y + 0.5, 0.8)}
+    return out

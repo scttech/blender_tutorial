@@ -71,3 +71,25 @@ def bb_lying(pose, mode, h, grip="wide"):
         return bar_for(Vector((0.0, S.y, S.z + (0.12 if grip == "wide" else 0.18) + (0.46 - (0.12 if grip == "wide" else 0.18)) * h)), (0, 0, 1), (0, -1, 0), grip, pole=(S.x + 0.8, S.y, S.z + 0.1))
     k = math.radians(95 * h); E = Vector((0.0, S.y, S.z + 0.27)); f = Vector((0, math.sin(k), math.cos(k)))
     return bar_for(E + f * 0.24, f, Vector((0, -math.cos(k), math.sin(k))), grip, pole=(S.x + 0.6, S.y, S.z + 0.25))
+
+
+def bb_rack_press(pose, h, grip="over"):
+    """a POST HOOK for the thruster and the clean and press: the bar at the front of the shoulders (h = 0) pressed up to lockout overhead (h = 1), RIDING on the chest so it follows the squat's lean.
+    The same hand positions as bb_press, but placed in the chest's frame (poselib.ride_prop)"""
+    p = bb_press(h, 0.28) if grip == "over" else bb_press(h, 0.28)
+    b = p["Barbell"]
+    return ride_prop(pose, "Barbell", at=b["at"], rot=b["wrot"], grab="grab_barbell", frame="Spine2", pole=p["Elbow_Pole.L"]["at"])
+
+
+def bb_clean_path(pose, u, y_floor=-0.15, y_top=-0.05, z_top=0.95, bulge=0.06):
+    """a POST HOOK for the clean and press. u runs 0 to 3 along one path: 0..1 the deadlift (bar from the floor to hanging at the hips, as bb_lift), 1..2 the CLEAN (the bar travels up the body to the front rack on the
+    shoulders, close to the body then out and over, while the wrists turn over: the hand points down at the hips and up in the rack), 2..3 the press from the rack to lockout overhead"""
+    ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, x)))
+    if u <= 1.0:
+        t = 1.0 - u; W = Vector((0.0, y_floor + (y_top - y_floor) * (1 - t), 0.316 + (z_top - 0.316) * (1 - t) + bulge * math.sin(math.pi * t))); th = 90.0
+    elif u <= 2.0:
+        c = ease(u - 1.0); W = Vector((0.0, y_top + (-0.05 - y_top) * c - 0.16 * math.sin(math.pi * c), z_top + (1.57 - z_top) * c)); th = 90.0 - 180.0 * c
+    else:
+        h = ease(u - 2.0); W = Vector((0.0, -0.05 + 0.05 * h, 1.57 + 0.34 * h)); th = -90.0
+    a = math.radians(th); f = Vector((0, -math.cos(a), -math.sin(a))); n = Vector((0, math.sin(a), -math.cos(a)))
+    return bar_for(W, f, n, "over", pole=(0.6, 0.5, 1.2) if u < 1.7 else (0.9 - 0.35 * ease(u - 2.0), 0.1, 1.35 + 0.15 * ease(u - 2.0)))
