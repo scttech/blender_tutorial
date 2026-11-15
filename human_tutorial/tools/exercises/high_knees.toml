@@ -1,0 +1,12 @@
+# High knees: run on the spot, driving each knee up to hip height, the elbows bent 90 degrees and pumping, a small bounce. Two steps make the loop: 0.6 s.
+name = "HighKnees"
+python = ["poselib.py", "carry.py"]
+timeline = [{ frames = [1, 19, 1], pose = "hk", set = { s = "=(f-1)/9" } }]
+
+[params]
+s = 0
+
+[poses.hk]
+generator = "march"
+args = { s = "=s", alpha = 88, bob = 0.04 }
+post = [ { fn = "arm_swing", args = { s = "=s - 0.5", amp = 38, bend = 95, fist = 0.8 } } ]

@@ -1,0 +1,12 @@
+# Decline push-up: the toes on a bench, the hands on the floor, the body straight. Lower the chest toward the floor and push back up. Harder than a floor push-up. 1.0 s down, 0.2 s hold, 1.0 s up.
+name = "DeclinePushUp"
+python = ["moves.py", "pushup.py", "poselib.py", "pushup_var.py"]
+timeline = [{ frames = [1, 31, 3], pose = "p", set = { u = "=(1-cos(pi*(f-1)/30))/2" } },
+            { frames = [37, 67, 3], pose = "p", set = { u = "=(1+cos(pi*(f-37)/30))/2" } }]
+
+[params]
+u = 0
+
+[poses.p]
+generator = "pushup_variant"
+args = { kind = "decline", u = "=u" }

@@ -1,0 +1,11 @@
+# Stair climber: step on the two rising and falling steps in turn, the hips level, the hands resting on the rails. One loop is 48 frames (1.6 s). The machine is not modelled.
+name = "StairClimber"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 49, 1], pose = "m", set = { psi = "=(f-1)/48*2*pi" } }]
+
+[params]
+psi = 0
+
+[poses.m]
+generator = "stair_climber"
+args = { psi = "=psi" }

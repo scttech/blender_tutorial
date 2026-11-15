@@ -10,24 +10,21 @@ ex = re.findall(r'Exercise\(\s*name = "([^"]+)",\s*category = ExerciseCategory\.
 
 # status -> (meaning, list of names). "Goblet Squat" is in the app twice (dumbbell and kettlebell); one entry covers both.
 G = {
- "Built": ["Thruster", "Concentration Curl", "Clean and Press", "Dumbbell Bicep Curl", "Hammer Curl", "Lateral Raise", "Front Raise", "Dumbbell Shrug", "Dumbbell Shoulder Press", "Arnold Press", "Dumbbell Bench Press", "Dumbbell Fly", "Rear Delt Fly", "Barbell Curl", "Back Squat", "Front Squat", "Good Morning", "Overhead Press", "Upright Row", "Deadlift", "Romanian Deadlift", "Sumo Deadlift", "Bent-Over Row", "Pendlay Row", "Barbell Bench Press", "Close-Grip Bench Press", "Skull Crusher", "Burpee", "Pike Push-Up", "Pistol Squat", "Skater Hop", "Box Breathing", "Cat-Cow", "Thoracic Spine Rotation", "Hip Circles", "Hamstring Stretch", "Hip Flexor Stretch", "Neck and Shoulder Rolls", "Russian Twist", "Mountain Climber", "Superman", "Bird Dog", "Jump Squat", "Single-Leg Balance", "Heel Drop", "Chin Tuck", "Calf Raise", "Jumping Jack", "Standing Torso Twist", "Standing Hip Abduction", "Leg Raise", "Flutter Kicks", "Bicycle Crunch", "V-Up", "Plank", "Glute Bridge", "Dead Bug", "Kettlebell Russian Twist", "Mace Russian Twist", "Mace Overhead Press", "Mace Good Morning", "Mace Barbarian Squat", "Kettlebell Halo", "Diamond Push-Up", "Reverse Lunge", "Mace Reverse Lunge", "Kettlebell Lunge", "Mace Squat", "Crunch", "Hanging Leg Raise", "Goblet Squat", "Kettlebell Deadlift", "Push-Up", "Pull-Up", "Chin-Up", "Bodyweight Squat", "Air Squat", "Sit-Up", "Lunge", "Kettlebell Swing", "Mace 10-to-2 Swing"],
+ "Built": ["Machine Chest Press", "Pec Deck Fly", "Cable Crossover", "Seated Cable Row", "Lat Pulldown", "T-Bar Row", "Preacher Curl", "Tricep Pushdown", "Leg Press", "Leg Extension", "Leg Curl", "Row (Erg/Rower)", "Treadmill Run", "Stationary Cycling", "Assault Bike", "Stair Climber", "Elliptical", "Brisk Walk", "Outdoor Run", "Marching in Place", "High Knees", "Incline Push-Up", "Decline Push-Up", "Wall Push-Up", "Step-Up", "Bulgarian Split Squat", "Sit-to-Stand", "Farmer's Carry", "Walking Lunge", "Man Maker", "Devil's Press", "Incline Dumbbell Press", "Single-Arm Dumbbell Row", "Overhead Tricep Extension", "Incline Barbell Bench Press", "Thruster", "Concentration Curl", "Clean and Press", "Dumbbell Bicep Curl", "Hammer Curl", "Lateral Raise", "Front Raise", "Dumbbell Shrug", "Dumbbell Shoulder Press", "Arnold Press", "Dumbbell Bench Press", "Dumbbell Fly", "Rear Delt Fly", "Barbell Curl", "Back Squat", "Front Squat", "Good Morning", "Overhead Press", "Upright Row", "Deadlift", "Romanian Deadlift", "Sumo Deadlift", "Bent-Over Row", "Pendlay Row", "Barbell Bench Press", "Close-Grip Bench Press", "Skull Crusher", "Burpee", "Pike Push-Up", "Pistol Squat", "Skater Hop", "Box Breathing", "Cat-Cow", "Thoracic Spine Rotation", "Hip Circles", "Hamstring Stretch", "Hip Flexor Stretch", "Neck and Shoulder Rolls", "Russian Twist", "Mountain Climber", "Superman", "Bird Dog", "Jump Squat", "Single-Leg Balance", "Heel Drop", "Chin Tuck", "Calf Raise", "Jumping Jack", "Standing Torso Twist", "Standing Hip Abduction", "Leg Raise", "Flutter Kicks", "Bicycle Crunch", "V-Up", "Plank", "Glute Bridge", "Dead Bug", "Kettlebell Russian Twist", "Mace Russian Twist", "Mace Overhead Press", "Mace Good Morning", "Mace Barbarian Squat", "Kettlebell Halo", "Diamond Push-Up", "Reverse Lunge", "Mace Reverse Lunge", "Kettlebell Lunge", "Mace Squat", "Crunch", "Hanging Leg Raise", "Goblet Squat", "Kettlebell Deadlift", "Push-Up", "Pull-Up", "Chin-Up", "Bodyweight Squat", "Air Squat", "Sit-Up", "Lunge", "Kettlebell Swing", "Mace 10-to-2 Swing"],
  "Variant": [],
  "New": ["Side Plank",
          "World's Greatest Stretch", "90/90 Hip Stretch",
          "Child's Pose", "Stretching / Mobility Flow",
          "Pelvic Floor Contraction (Kegel)",
          "Mace 360 Swing", "Mace Front Raise (Around the World)", "Mace Uppercut", "Mace Shield Cast"],
- "Fixture": ["Wall Push-Up", "Incline Push-Up", "Decline Push-Up", "Wall Sit", "Wall Angel", "Doorway Chest Stretch", "Sit-to-Stand", "Inverted Row", "Dip",
-             "Box Jump", "Step-Up", "Bulgarian Split Squat", "Hip Thrust"],
+ "Fixture": ["Wall Sit", "Wall Angel", "Doorway Chest Stretch", "Inverted Row", "Dip",
+             "Box Jump", "Hip Thrust"],
  "One hand": ["Kettlebell Press", "Kettlebell Thruster", "Kettlebell Row", "Kettlebell Clean", "Kettlebell Clean and Press", "Kettlebell Snatch", "Mace Single-Arm Swing"],
- "Dumbbell": ["Farmer's Carry", "Incline Dumbbell Press", "Single-Arm Dumbbell Row",
-              "Overhead Tricep Extension", "Walking Lunge", "Man Maker", "Devil's Press"],
- "Barbell": ["Incline Barbell Bench Press",
-             ],
- "Machine": ["Machine Chest Press", "Pec Deck Fly", "Cable Crossover", "Seated Cable Row", "Lat Pulldown", "T-Bar Row", "Preacher Curl", "Tricep Pushdown", "Leg Press",
-             "Leg Extension", "Leg Curl", "Row (Erg/Rower)", "Treadmill Run", "Stationary Cycling", "Assault Bike", "Stair Climber", "Elliptical"],
+ "Dumbbell": [],
+ "Barbell": [],
+ "Machine": [],
  "Small prop": ["Face Pull", "Band Pull-Apart", "Band Curl", "Band Shoulder Dislocate", "Pallof Press", "Jump Rope", "Ab Wheel Rollout", "Wall Ball", "Battle Ropes", "Foam Rolling"],
- "Technique": ["Bear Crawl", "Handstand Push-Up", "Turkish Get-Up", "Kettlebell Farmer's Carry", "Outdoor Run", "Brisk Walk", "Shuttle Runs", "High Knees", "Marching in Place",
+ "Technique": ["Bear Crawl", "Handstand Push-Up", "Turkish Get-Up", "Kettlebell Farmer's Carry", "Shuttle Runs",
                "Tandem Walk", "Hip Escape (Shrimp)", "Technical Stand-Up", "Bridge and Roll (Upa)", "Granby Roll", "Forward and Backward Break-Fall Roll", "Guard Walk Sit-Up"],
  "Partner": ["Leg Pummeling"],   # plus every GRAPPLING_DUMMY exercise, added below
 }

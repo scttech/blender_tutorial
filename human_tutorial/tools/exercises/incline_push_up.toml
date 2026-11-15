@@ -1,0 +1,12 @@
+# Incline push-up: the hands on a bench (the pad is 47.5 cm up), the body straight from the head to the heels, the toes on the floor. Lower the chest to the bench and push back up. Easier than a floor push-up. 1.0 s down, 0.2 s hold, 1.0 s up.
+name = "InclinePushUp"
+python = ["moves.py", "pushup.py", "poselib.py", "pushup_var.py"]
+timeline = [{ frames = [1, 31, 3], pose = "p", set = { u = "=(1-cos(pi*(f-1)/30))/2" } },
+            { frames = [37, 67, 3], pose = "p", set = { u = "=(1+cos(pi*(f-37)/30))/2" } }]
+
+[params]
+u = 0
+
+[poses.p]
+generator = "pushup_variant"
+args = { kind = "incline", u = "=u" }

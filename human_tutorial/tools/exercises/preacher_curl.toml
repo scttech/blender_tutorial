@@ -1,0 +1,12 @@
+# Preacher curl: sit at the preacher bench with the upper arms on the sloping pad; curl the weight up toward the shoulders and lower it. 1.2 s up, 0.3 s hold, 1.5 s down. The machine is not modelled.
+name = "PreacherCurl"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 3], pose = "m", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "m", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.m]
+generator = "preacher_curl"
+args = { h = "=h" }

@@ -1,0 +1,12 @@
+# Pec deck fly: sit against the back pad, the forearms against the pads, the elbows at shoulder height; sweep the arms together in front of the chest and return. 1.2 s up, 0.3 s hold, 1.5 s down. The machine is not modelled.
+name = "PecDeckFly"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 3], pose = "m", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "m", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.m]
+generator = "pec_deck"
+args = { h = "=h" }

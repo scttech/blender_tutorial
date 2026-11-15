@@ -32,8 +32,9 @@ BABYLON.SceneLoader.ImportMeshAsync("", "../exports/", "human_all_animations.glb
   res.animationGroups.forEach(g => g.stop());
   // the props are separate meshes named Kettlebell, Mace and PullupBar: switch off the ones an exercise does not use (or all of them)
   const PROPS = { Kettlebell: /kettlebell|kbswing|goblet(?!squat$)|halo/i, Mace: /mace/i, PullupBar: /pullup|chinup|hangingleg/i,
-                  "Dumbbell.L": /dumbbell|hammer|lateral|front ?raise|arnold|reardelt|fly/i, "Dumbbell.R": /dumbbell|hammer|lateral|front ?raise|arnold|reardelt|fly/i,
-                  Barbell: /barbell|backsquat|frontsquat|goodmorning|overheadpress|uprightrow|deadlift|row|bench|skull/i, Bench: /(?<!incline)bench|fly|skull/i, InclineBench: /incline/i };
+                  "Dumbbell.L": /dumbbell|hammer|lateral|front ?raise|arnold|reardelt|fly|concentration|tricep|manmaker|devilspress|walkinglunge|farmerscarry/i, "Dumbbell.R": /dumbbell|hammer|lateral|front ?raise|arnold|reardelt|fly|concentration|tricep|manmaker|devilspress|walkinglunge|farmerscarry/i,
+                  Barbell: /^(?!.*(dumbbell|kettlebell|mace)).*(barbell|backsquat|frontsquat|goodmorning|overheadpress|uprightrow|deadlift|row|bench|skull)|thruster|cleanandpress/i,
+                  Bench: /^(?!incline(dumbbell|barbell)).*(bench|fly|skull)|stepup|bulgarian|sittostand|inclinepushup|declinepushup|singlearmdumbbellrow/i, InclineBench: /incline(dumbbell|barbell)/i };
   let showProps = true;
   const updateProps = () => { for (const [name, re] of Object.entries(PROPS)) { const m = scene.getMeshByName(name); if (m) m.setEnabled(showProps && !!current && re.test(current.name)); } };
   const box = document.createElement("label"); box.innerHTML = '<input type="checkbox" checked> props'; box.firstChild.onchange = e => { showProps = e.target.checked; updateProps(); }; bar.appendChild(box);

@@ -1,0 +1,12 @@
+# Brisk walk: a purposeful walk, the arms swinging opposite to the legs, the elbows slightly bent. Shown in place (the body does not travel; the planted foot slides back). Two steps make the loop: 1.2 s.
+name = "BriskWalk"
+python = ["poselib.py", "carry.py"]
+timeline = [{ frames = [1, 37, 1], pose = "walk", set = { s = "=(f-1)/18" } }]
+
+[params]
+s = 0
+
+[poses.walk]
+generator = "walk_cycle"
+args = { s = "=s", stride = 0.66, lift = 0.12, lean = 2 }
+post = [ { fn = "arm_swing", args = { s = "=s", amp = 32, bend = 18 } } ]

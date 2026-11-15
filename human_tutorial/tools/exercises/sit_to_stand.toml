@@ -1,0 +1,14 @@
+# Sit-to-stand: sit on a bench (the seat), the hands together in front of the chest, the feet flat. Lean forward and stand up without using the hands, then sit back down. 1.2 s up, 0.3 s hold, 1.5 s down.
+# The body is the squat's (moves.squat_body) at the height of the seat; the hips go back to the bench at the bottom.
+name = "SitToStand"
+python = ["moves.py", "poselib.py"]
+timeline = [{ frames = [1, 37, 3], pose = "s", set = { t = "=(1+cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "s", set = { t = "=(1-cos(pi*(f-46)/45))/2" } }]
+
+[params]
+t = 1
+
+[poses.s]
+generator = "squat_body"
+args = { t = "=t", depth = 0.40, back = 0.20, lean = 1.4 }
+post = [ { fn = "ride_arms", args = { style = "hands_together" } } ]

@@ -88,3 +88,45 @@ def hip_flexor(u, knee=95.0, shift=0.05, tuck=10.0):
     p = lunge_at_knee(knee); mv = p["Hips"]["move"]
     p["Hips"] = {"move": (mv[0], mv[1] - shift * u, mv[2]), "rot": (-tuck * u, 0, 0)}
     return p
+
+
+def _mirror_pose(p):
+    """the same pose with the left and right swapped (x negated; the y and z rotations negated)"""
+    out = {}
+    for k, v in p.items():
+        n = k[:-2] + (".R" if k.endswith(".L") else ".L") if k[-2:] in (".L", ".R") else k
+        o = dict(v)
+        if "at" in o: o["at"] = (-o["at"][0], o["at"][1], o["at"][2])
+        if "move" in o: o["move"] = (-o["move"][0], o["move"][1], o["move"][2])
+        for r in ("rot", "wrot"):
+            if r in o: o[r] = (o[r][0], -o[r][1], -o[r][2])
+        out[n] = o
+    return out
+
+_WL_BOTTOM = None
+def walking_lunge(s, rise=0.93, lift=0.16):
+    """the walking lunge in place: s runs 0..2. s = 0 the LEFT foot forward at the bottom of a lunge, s = 1 the RIGHT foot forward at the bottom, s = 2 back to the first. Between the bottoms the hips rise to
+    `rise` (the legs nearly straight, the feet passing under the hips) while the front foot slides back and the rear foot swings forward (lifted `lift` metres); the weight then drops into the next lunge.
+    No arms. (A treadmill-style loop: the body does not travel, the planted foot slides back as the body would move over it.)"""
+    global _WL_BOTTOM
+    if _WL_BOTTOM is None: _WL_BOTTOM = lunge_pose(Z_BOTTOM); [_WL_BOTTOM.pop(k) for k in ("Hand_IK.L", "Elbow_Pole.L")]
+    A = _WL_BOTTOM; B = _mirror_pose(A)
+    side = int(s) % 2; p = s - int(s); e = 0.5 - 0.5 * math.cos(math.pi * p)
+    if side: A, B = B, A
+    out = {}
+    for k in dict.fromkeys(list(A) + list(B)):
+        a, b = A.get(k), B.get(k); o = {}
+        if a is None: a = {f: ((0.0, 0.0, 0.0) if f != "at" else b[f]) for f in b}
+        if b is None: b = {f: ((0.0, 0.0, 0.0) if f != "at" else a[f]) for f in a}
+        for f in ("at", "move", "rot", "wrot"):
+            if f in a: o[f] = tuple(x + (y - x) * e for x, y in zip(a[f], b[f]))
+        out[k] = o
+    z = Z_BOTTOM + (rise - Z_BOTTOM) * math.sin(math.pi * p); out["Hips"]["move"] = (out["Hips"]["move"][0], out["Hips"]["move"][1], z - _H0.z)
+    # the feet: each foot is placed from the BALL (which stays on the floor) and its heel angle, so the toes never sink while it changes from the rear position (heel up) to the front (flat)
+    ball_front = _BALL0R.y + (FRONT_ANKLE_Y - _A0R.y)
+    for side_name, going_front in (("L", side == 1), ("R", side == 0)):
+        sg = 1 if side_name == "L" else -1; t = e if going_front else 1 - e                   # t = 0 at the rear, 1 at the front
+        by = REAR_BALL.y + (ball_front - REAR_BALL.y) * t; bz = REAR_BALL.z + (_BALL0R.z - REAR_BALL.z) * t + (lift * 4 * t * (1 - t) if going_front else 0.0)
+        ang = REAR_HEEL * (1 - t); ank = rigid(_BALL0R, Vector((sg * FOOT_X, by, bz)), ang)(_A0R); ank = Vector((sg * FOOT_X, ank.y, ank.z))
+        out["Foot_IK." + side_name] = {"at": tuple(ank), "wrot": (ang, 0, 0)}; out["Toes." + side_name] = {"rot": (-ang, 0, 0)}
+    return out

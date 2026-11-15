@@ -1,0 +1,13 @@
+# Leg press: reclined on the sled with the feet on the platform; push from a deep knee bend to nearly straight legs and return. 1.2 s up, 0.3 s hold, 1.5 s down. The machine is not modelled.
+name = "LegPress"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 3], pose = "m", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "m", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.m]
+generator = "leg_press"
+args = { h = "=h" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides" } } ]

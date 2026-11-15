@@ -1,0 +1,13 @@
+# Outdoor run: a steady run, the body leaning a little forward, the elbows bent about 90 degrees and pumping opposite to the legs, a short flight between steps. Shown in place (treadmill-style).
+# Two steps make the loop: 0.7 s.
+name = "OutdoorRun"
+python = ["poselib.py", "carry.py"]
+timeline = [{ frames = [1, 22, 1], pose = "run", set = { s = "=(f-1)/10.5" } }]
+
+[params]
+s = 0
+
+[poses.run]
+generator = "walk_cycle"
+args = { s = "=s", stride = 0.80, lift = 0.26, heel = 55, bend = 0.96, stance = 0.40, lean = 8, bob = 0.05 }
+post = [ { fn = "arm_swing", args = { s = "=s", amp = 45, bend = 95, fist = 0.8 } } ]

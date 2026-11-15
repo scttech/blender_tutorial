@@ -1,0 +1,13 @@
+# Leg extension: sit with the pad on the shins; straighten the knees until the legs are level and lower. 1.2 s up, 0.3 s hold, 1.5 s down. The machine is not modelled.
+name = "LegExtension"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 3], pose = "m", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "m", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.m]
+generator = "leg_extension"
+args = { h = "=h" }
+post = [ { fn = "ride_arms", args = { style = "arms_sides" } } ]

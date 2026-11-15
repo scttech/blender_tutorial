@@ -1,0 +1,12 @@
+# Marching in place: stand tall and lift each knee to hip height in turn, the opposite arm swinging forward. Two steps make the loop: 2.0 s.
+name = "MarchingInPlace"
+python = ["poselib.py", "carry.py"]
+timeline = [{ frames = [1, 61, 1], pose = "march", set = { s = "=(f-1)/30" } }]
+
+[params]
+s = 0
+
+[poses.march]
+generator = "march"
+args = { s = "=s", alpha = 80 }
+post = [ { fn = "arm_swing", args = { s = "=s - 0.5", amp = 28, bend = 70 } } ]

@@ -1,0 +1,13 @@
+# Walking lunge: a dumbbell in each hand hanging at the sides. Step forward into a lunge, drive up through the front foot as the back leg swings through, and step into the next lunge on the other side.
+# Shown in place: the body does not travel, the planted foot slides back as the body would move over it. Two lunges (one on each leg) make the loop: 1.6 s each.
+name = "WalkingLunge"
+python = ["lunge.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 97, 4], pose = "walk", set = { s = "=(f-1)/48" } }]
+
+[params]
+s = 0
+
+[poses.walk]
+generator = "walking_lunge"
+args = { s = "=s" }
+post = [ { fn = "db_hang", args = {} } ]

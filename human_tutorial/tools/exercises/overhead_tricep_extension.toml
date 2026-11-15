@@ -1,0 +1,12 @@
+# Overhead triceps extension: one dumbbell held in both hands overhead. Keep the elbows pointing up and lower the weight behind the head by bending the elbows, then straighten the arms. 1.2 s down, 0.3 s hold, 1.5 s up.
+name = "OverheadTricepExtension"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "press", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "press", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.press]
+generator = "db_tricep"
+args = { h = "=h" }

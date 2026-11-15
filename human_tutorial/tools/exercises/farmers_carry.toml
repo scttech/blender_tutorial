@@ -1,0 +1,13 @@
+# Farmer's carry: walk tall with a heavy dumbbell hanging from each hand, the shoulders back, the arms straight down. Shown in place (the body does not travel; the planted foot slides back).
+# One loop is two steps: 2.0 s (a brisk walk).
+name = "FarmersCarry"
+python = ["poselib.py", "dumbbell.py", "carry.py"]
+timeline = [{ frames = [1, 61, 1], pose = "walk", set = { s = "=(f-1)/30" } }]
+
+[params]
+s = 0
+
+[poses.walk]
+generator = "walk_cycle"
+args = { s = "=s" }
+post = [ { fn = "db_hang", args = {} } ]

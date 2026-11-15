@@ -8,16 +8,16 @@ The name, category and equipment come from the app. **The status column is our j
 
 | Status | Count | Meaning |
 |---|---|---|
-| **Built** | 82 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
+| **Built** | 117 | done: an action exists in the Blender file and passes the checks (from the text files in tools/exercises/ or the earlier Python tables) |
 | **Variant** | 0 | an existing table with changed numbers or one changed grab; no new technique |
 | **New** | 10 | a new table, using techniques and props we already have |
-| **Fixture** | 13 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
+| **Fixture** | 7 | the motion is easy; it needs a bench, box, wall, chair or parallel bars modelled first (a static prop with no bones) |
 | **One hand** | 7 | needs a one-handed grip on the prop: the grab sliders drive BOTH hands, so a single-arm press, row, clean or snatch needs a per-hand grab added to the rig first |
-| **Dumbbell** | 7 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
-| **Barbell** | 1 | needs a barbell prop with a two-hand grip, plus a rack or bench for most |
-| **Machine** | 17 | needs a machine or cable fixture modelled; the person mostly sits or stands still |
+| **Dumbbell** | 0 | needs a dumbbell prop with grips (two hands, or one), and a bench for some |
+| **Barbell** | 0 | needs a barbell prop with a two-hand grip, plus a rack or bench for most |
+| **Machine** | 0 | needs a machine or cable fixture modelled; the person mostly sits or stands still |
 | **Small prop** | 10 | needs a band, rope, wheel, ball or roller; bands and ropes bend, which a rigid prop bone cannot do |
-| **Technique** | 16 | needs something the animation library cannot do yet: travel across the floor (root motion), a gait cycle, inversion, or rolling and floor-to-standing transitions |
+| **Technique** | 12 | needs something the animation library cannot do yet: travel across the floor (root motion), a gait cycle, inversion, or rolling and floor-to-standing transitions |
 | **Partner** | 16 | needs a second figure (a grappling dummy or a training partner), which means a second rig |
 
 Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it counts twice here and shares one classification.
@@ -37,17 +37,17 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 |---|---|---|
 | Push-Up | Bodyweight | Built |
 | Dumbbell Bench Press | Dumbbell | Built |
-| Incline Push-Up | Bodyweight | Fixture |
-| Decline Push-Up | Bodyweight | Fixture |
+| Incline Push-Up | Bodyweight | Built |
+| Decline Push-Up | Bodyweight | Built |
 | Diamond Push-Up | Bodyweight | Built |
 | Barbell Bench Press | Barbell | Built |
-| Incline Barbell Bench Press | Barbell | Barbell |
-| Incline Dumbbell Press | Dumbbell | Dumbbell |
+| Incline Barbell Bench Press | Barbell | Built |
+| Incline Dumbbell Press | Dumbbell | Built |
 | Dumbbell Fly | Dumbbell | Built |
-| Machine Chest Press | Machine | Machine |
-| Pec Deck Fly | Machine | Machine |
-| Cable Crossover | Machine | Machine |
-| Wall Push-Up | Bodyweight | Fixture |
+| Machine Chest Press | Machine | Built |
+| Pec Deck Fly | Machine | Built |
+| Cable Crossover | Machine | Built |
+| Wall Push-Up | Bodyweight | Built |
 | Doorway Chest Stretch | Bodyweight | Fixture |
 
 ## Back (19)
@@ -62,11 +62,11 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Romanian Deadlift | Barbell | Built |
 | Sumo Deadlift | Barbell | Built |
 | Pendlay Row | Barbell | Built |
-| Single-Arm Dumbbell Row | Dumbbell | Dumbbell |
-| Seated Cable Row | Machine | Machine |
-| Lat Pulldown | Machine | Machine |
+| Single-Arm Dumbbell Row | Dumbbell | Built |
+| Seated Cable Row | Machine | Built |
+| Lat Pulldown | Machine | Built |
 | Inverted Row | Bodyweight | Fixture |
-| T-Bar Row | Machine | Machine |
+| T-Bar Row | Machine | Built |
 | Good Morning | Barbell | Built |
 | Superman | Bodyweight | Built |
 | Kettlebell Deadlift | Kettlebell | Built |
@@ -107,10 +107,10 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Dumbbell Bicep Curl | Dumbbell | Built |
 | Hammer Curl | Dumbbell | Built |
 | Concentration Curl | Dumbbell | Built |
-| Preacher Curl | Machine | Machine |
-| Tricep Pushdown | Machine | Machine |
+| Preacher Curl | Machine | Built |
+| Tricep Pushdown | Machine | Built |
 | Skull Crusher | Barbell | Built |
-| Overhead Tricep Extension | Dumbbell | Dumbbell |
+| Overhead Tricep Extension | Dumbbell | Built |
 | Close-Grip Bench Press | Barbell | Built |
 | Band Curl | Band | Small prop |
 
@@ -127,13 +127,13 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Mace Reverse Lunge | Mace | Built |
 | Front Squat | Barbell | Built |
 | Goblet Squat | Dumbbell | Built |
-| Bulgarian Split Squat | Dumbbell | Fixture |
-| Walking Lunge | Dumbbell | Dumbbell |
+| Bulgarian Split Squat | Dumbbell | Built |
+| Walking Lunge | Dumbbell | Built |
 | Reverse Lunge | Bodyweight | Built |
-| Step-Up | Dumbbell | Fixture |
-| Leg Press | Machine | Machine |
-| Leg Extension | Machine | Machine |
-| Leg Curl | Machine | Machine |
+| Step-Up | Dumbbell | Built |
+| Leg Press | Machine | Built |
+| Leg Extension | Machine | Built |
+| Leg Curl | Machine | Built |
 | Hip Thrust | Barbell | Fixture |
 | Glute Bridge | Bodyweight | Built |
 | Calf Raise | Bodyweight | Built |
@@ -145,7 +145,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Heel Drop | Bodyweight | Built |
 | Jump Squat | Bodyweight | Built |
 | Skater Hop | Bodyweight | Built |
-| Sit-to-Stand | Bodyweight | Fixture |
+| Sit-to-Stand | Bodyweight | Built |
 | Standing Hip Abduction | Bodyweight | Built |
 | Single-Leg Balance | Bodyweight | Built |
 | Tandem Walk | Bodyweight | Technique |
@@ -183,7 +183,7 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 |---|---|---|
 | Kettlebell Swing | Kettlebell | Built |
 | Burpee | Bodyweight | Built |
-| Farmer's Carry | Dumbbell | Dumbbell |
+| Farmer's Carry | Dumbbell | Built |
 | Mace 360 Swing | Mace | New |
 | Mace Uppercut | Mace | New |
 | Mace Single-Arm Swing | Mace | One hand |
@@ -194,29 +194,29 @@ Total 179. The app lists *Goblet Squat* twice (dumbbell and kettlebell), so it c
 | Kettlebell Snatch | Kettlebell | One hand |
 | Kettlebell Clean and Press | Kettlebell | One hand |
 | Kettlebell Thruster | Kettlebell | One hand |
-| Man Maker | Dumbbell | Dumbbell |
+| Man Maker | Dumbbell | Built |
 | Wall Ball | Other | Small prop |
 | Battle Ropes | Other | Small prop |
-| Devil's Press | Dumbbell | Dumbbell |
+| Devil's Press | Dumbbell | Built |
 | Bear Crawl | Bodyweight | Technique |
 
 ## Cardio (13)
 
 | Exercise | Equipment | Status |
 |---|---|---|
-| Row (Erg/Rower) | Cardio Machine | Machine |
+| Row (Erg/Rower) | Cardio Machine | Built |
 | Jumping Jack | Bodyweight | Built |
 | Jump Rope | Other | Small prop |
-| Outdoor Run | Other | Technique |
-| Treadmill Run | Cardio Machine | Machine |
-| Stationary Cycling | Cardio Machine | Machine |
-| Assault Bike | Cardio Machine | Machine |
-| Stair Climber | Cardio Machine | Machine |
-| Elliptical | Cardio Machine | Machine |
-| High Knees | Bodyweight | Technique |
+| Outdoor Run | Other | Built |
+| Treadmill Run | Cardio Machine | Built |
+| Stationary Cycling | Cardio Machine | Built |
+| Assault Bike | Cardio Machine | Built |
+| Stair Climber | Cardio Machine | Built |
+| Elliptical | Cardio Machine | Built |
+| High Knees | Bodyweight | Built |
 | Shuttle Runs | Bodyweight | Technique |
-| Marching in Place | Bodyweight | Technique |
-| Brisk Walk | Bodyweight | Technique |
+| Marching in Place | Bodyweight | Built |
+| Brisk Walk | Bodyweight | Built |
 
 ## Mobility (10)
 

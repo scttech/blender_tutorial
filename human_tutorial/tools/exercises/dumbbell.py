@@ -99,3 +99,41 @@ def db_concentration(pose, kappa):
     out["Hand_IK.R"] = {"at": (-0.26, S.y - 0.02, 0.64), "wrot": (0, 0, -90), "props": {"fist": 0.0, "grab_dumbbell": 0.0}}
     out["Elbow_Pole.R"] = {"at": (-0.55, S.y + 0.5, 0.8)}
     return out
+
+
+def db_tricep(h):
+    """the overhead triceps extension: ONE dumbbell held in both hands, vertical, behind the head. The hands are 6.8 cm apart, the handle between them (fingers point back, palms face each other, so the
+    two dumbbell bones land on the same spot and look like one). The upper arms stay up beside the ears; the forearms swing about the elbows from straight up (h = 0) to folded back behind the head (h = 1)"""
+    k = math.radians(135 * h)
+    return hold(Vector((0.034, -0.02 + 0.24 * math.sin(k), 1.67 + 0.24 * math.cos(k))), (0, 1, 0), (-1, 0, 0), pole=(0.5, 0.0, 1.95))
+
+
+def row_body(hip_y=0.22, hip_z=0.88, dx=0.20, pitch=80.0, neck=-30.0, head=-30.0):
+    """the one-arm dumbbell row's body, the bench at x = 0 (Bench: pad 47.5 cm up, y -0.2 to 0.9). The body stands beside the bench (shifted `dx` to the LEFT), the LEFT foot planted on the floor, the
+    RIGHT knee on the pad under the hips with the shin along the bench and the top of the foot on it; the torso is hinged nearly level, the head looking down and ahead.
+    The right hand (the support) is placed by db_row_arms once the body is posed"""
+    b = rig.data.bones; T0 = b["Thigh.L"].head_local; A0 = b["Foot_IK.L"].head_local
+    p = {"Hips": {"move": (dx, hip_y - T0.y, hip_z - T0.z), "rot": (pitch, 0, 0)}, "Spine": {"rot": (4, 0, 0)}, "Spine1": {"rot": (3, 0, 0)}, "Spine2": {"rot": (3, 0, 0)},
+         "Neck": {"rot": (neck, 0, 0)}, "Head": {"rot": (head, 0, 0)}}
+    p["Foot_IK.L"] = {"at": (A0.x + dx + 0.12, hip_y - 0.05, A0.z), "wrot": (0, 0, 0)}; p["Knee_Pole.L"] = {"at": (A0.x + dx + 0.2, hip_y - 0.9, 0.6)}
+    Hr = Vector((-T0.x + dx, hip_y, hip_z)); kz = 0.53
+    ky = Hr.y + math.sqrt(max(0.0, 0.43 ** 2 - (Hr.z - kz) ** 2))                  # the knee on the pad, the thigh 43 cm
+    az = 0.60; ay = ky + math.sqrt(0.45 ** 2 - (kz - az) ** 2)                     # the ankle on the pad's far side of the knee, the shin 45 cm, the toes dropping to the pad
+    p["Foot_IK.R"] = {"at": (Hr.x, ay, az), "wrot": (150, 0, 0)}; p["Knee_Pole.R"] = {"at": (Hr.x, ky - 0.3, kz + 0.1)}
+    return p
+
+def db_row(pose, h, back=75.0):
+    """a POST HOOK for the one-arm row: the LEFT arm holds a dumbbell hanging below the shoulder, palm facing the bench (h = 0) and rows it up: the elbow rises backward (the upper arm swings `back`
+    degrees toward the hips) with the forearm staying vertical (h = 1). The RIGHT hand rests flat on the front of the bench, directly below the right shoulder"""
+    _apply_pose(pose); P = pose_bones(); S = P["UpperArm.L"].head.copy(); SR = P["UpperArm.R"].head.copy(); a = math.radians(back * h)
+    E = S + Vector((0.0, 0.285 * math.sin(a), -0.285 * math.cos(a))); W = E + Vector((0, 0, -0.24))
+    out = hold(W, (0, 0, -1), (-1, 0, 0), pole=(S.x + 0.5, S.y + 0.5, S.z))
+    out["Dumbbell.R"] = dict(out["Dumbbell.L"])                                     # the right dumbbell sits exactly on the left one (it is not used)
+    out["Hand_IK.R"] = {"at": (SR.x, SR.y + 0.04, 0.475 + 0.04), "wrot": (0, 0, -90), "props": {"fist": 0.0, "grab_dumbbell": 0.0}}; out["Elbow_Pole.R"] = {"at": (SR.x - 0.4, SR.y + 0.3, SR.z)}
+    return out
+
+
+def db_hang(pose, spread=0.065):
+    """a POST HOOK: a dumbbell hangs in each hand at the sides, the arm straight down from the shoulder, the palms facing the body; it follows the shoulders wherever the body goes (a walking lunge)"""
+    _apply_pose(pose); S = pose_bones()["UpperArm.L"].head.copy()
+    return hold(S + Vector((spread, 0.0, -0.52)), (0, 0, -1), (-1, 0, 0), pole=(S.x + 0.3, S.y + 0.6, S.z - 0.15))

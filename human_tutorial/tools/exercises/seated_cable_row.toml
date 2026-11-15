@@ -1,0 +1,12 @@
+# Seated cable row: sit with the legs forward and slightly bent, lean forward with straight arms, then pull the handle to the stomach while sitting upright; return. 1.2 s up, 0.3 s hold, 1.5 s down. The machine is not modelled.
+name = "SeatedCableRow"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 3], pose = "m", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "m", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.m]
+generator = "seated_cable_row"
+args = { h = "=h" }

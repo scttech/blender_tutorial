@@ -1,0 +1,11 @@
+# Elliptical trainer: glide the feet forward and back on a flat oval while the handles swing with the opposite foot. One loop is 36 frames (1.2 s). The machine is not modelled.
+name = "Elliptical"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 1], pose = "m", set = { psi = "=(f-1)/36*2*pi" } }]
+
+[params]
+psi = 0
+
+[poses.m]
+generator = "elliptical"
+args = { psi = "=psi" }

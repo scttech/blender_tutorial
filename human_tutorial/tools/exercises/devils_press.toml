@@ -1,0 +1,11 @@
+# Devil's Press: a dumbbell in each hand. Drop to the dumbbells, kick the feet back, put the chest on the floor, push up, jump the feet in, then stand up swinging both dumbbells forward and up in one motion
+# until the arms are straight overhead; lower them to the hang. 113 frames (3.8 s). The arms are placed from the shoulders (manmaker.py).
+name = "DevilsPress"
+python = ["moves.py", "pushup.py", "poselib.py", "dumbbell.py", "manmaker.py"]
+timeline = [{ frames = [1, 113, 2], pose = "dp" }]
+
+[params]
+
+[poses.dp]
+generator = "devils_press"
+args = { f = "=f" }

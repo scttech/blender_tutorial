@@ -1,0 +1,13 @@
+# Rowing machine (erg): one stroke. The drive (0.8 s): the legs push, then the torso swings back, then the arms pull the handle to the ribs; the recovery (1.2 s): the arms go out, the torso swings forward, the
+# knees bend and the seat slides forward. The machine is not modelled.
+name = "RowErg"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 25, 2], pose = "m", set = { t = "=(f-1)/24" } },
+            { frames = [27, 61, 2], pose = "m", set = { t = "=1+(f-25)/36" } }]
+
+[params]
+t = 0
+
+[poses.m]
+generator = "rower"
+args = { t = "=t" }

@@ -1,0 +1,20 @@
+# Bulgarian split squat: the right foot rests on a bench behind you, the left foot forward on the floor, hands on the hips. Lower until the front knee is bent about 95 degrees, then stand. 0.83 s down, 0.27 s
+# pause, 0.8 s up.
+name = "BulgarianSplitSquat"
+python = ["lunge.py", "poselib.py", "bench.py"]
+timeline = [[1, "top"], [25, "bottom"], [33, "bottom"], [57, "top"]]
+
+[params]
+knee_top = 18.0
+knee_bottom = 95.0
+
+[poses.hands_on_hips]
+post = [ { fn = "ride_arms", args = { style = "hips_fists" } } ]
+[poses.top]
+extends = "hands_on_hips"
+generator = "bulgarian"
+args = { knee = "=knee_top" }
+[poses.bottom]
+extends = "hands_on_hips"
+generator = "bulgarian"
+args = { knee = "=knee_bottom" }

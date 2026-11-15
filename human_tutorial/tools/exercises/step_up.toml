@@ -1,0 +1,14 @@
+# Step-up: stand beside a bench with the left foot on it. Drive up through the left leg until you stand tall on the bench, the right knee lifted; lower the right foot back to the floor. The right foot rests on the floor
+# until the rising hips lift it. 1.2 s up, 0.3 s hold, 1.5 s down. (A lateral step-up; one leg shown.)
+name = "StepUp"
+python = ["lunge.py", "poselib.py", "bench.py"]
+timeline = [{ frames = [1, 37, 3], pose = "su", set = { u = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "su", set = { u = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+u = 0
+
+[poses.su]
+generator = "step_up"
+args = { u = "=u" }
+post = [ { fn = "ride_arms", args = { style = "hips_fists" } } ]

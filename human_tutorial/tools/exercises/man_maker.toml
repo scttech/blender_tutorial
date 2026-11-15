@@ -1,0 +1,11 @@
+# Man Maker: a dumbbell in each hand. Drop to the dumbbells, kick the feet back to a plank, do a push-up, row one dumbbell, then the other, jump the feet in, stand up, clean the dumbbells to the shoulders
+# and press them overhead; lower them back to the hang. 160 frames (5.3 s). The arms are placed from the shoulders (manmaker.py), so only the body's proportions matter.
+name = "ManMaker"
+python = ["moves.py", "pushup.py", "poselib.py", "dumbbell.py", "manmaker.py"]
+timeline = [{ frames = [1, 160, 3], pose = "mm" }]
+
+[params]
+
+[poses.mm]
+generator = "man_maker"
+args = { f = "=f" }

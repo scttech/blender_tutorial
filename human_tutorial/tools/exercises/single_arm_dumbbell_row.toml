@@ -1,0 +1,14 @@
+# Single-arm dumbbell row: one knee and the same-side hand on a flat bench, the other foot on the floor, the back flat. The free hand lets a dumbbell hang straight down, then rows it up to the hip by driving the
+# elbow back past the ribs, and lowers it. 1.2 s up, 0.3 s hold, 1.5 s down. (The working arm is the left; the bench is the Bench object.)
+name = "SingleArmDumbbellRow"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "row", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "row", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.row]
+generator = "row_body"
+args = {}
+post = [ { fn = "db_row", args = { h = "=h" } } ]

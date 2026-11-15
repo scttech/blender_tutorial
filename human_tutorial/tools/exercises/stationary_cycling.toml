@@ -1,0 +1,11 @@
+# Stationary cycling: sit on the upright bike, the hands on the bars, the torso leaning forward; pedal at a steady cadence. One loop is 36 frames (1.2 s). The machine is not modelled.
+name = "StationaryCycling"
+python = ["moves.py", "poselib.py", "machines.py"]
+timeline = [{ frames = [1, 37, 1], pose = "m", set = { psi = "=(f-1)/36*2*pi" } }]
+
+[params]
+psi = 0
+
+[poses.m]
+generator = "cycling"
+args = { psi = "=psi" }
