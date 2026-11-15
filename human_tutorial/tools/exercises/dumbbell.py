@@ -73,7 +73,7 @@ def db_lying(pose, mode, h, spread=0.14):
     _apply_pose(pose); P = pose_bones(); S = P["UpperArm.L"].head.copy()
     if mode == "incline":                       # pressed along the normal of the reclined torso (50 degrees from vertical)
         ph = math.radians(50.0); n = Vector((0, -math.cos(ph), math.sin(ph)))
-        return hold(S + Vector((spread, 0, 0)) + n * (0.08 + 0.40 * h), n, Vector((0, -n.z, n.y)) * -1, pole=(S.x + 0.7, S.y, S.z + 0.1))
+        return hold(S + Vector((spread, 0, 0)) + n * (0.08 + 0.40 * h), n, Vector((0, -n.z, n.y)), pole=(S.x + 0.7, S.y, S.z + 0.1))
     if mode == "press":
         W = Vector((S.x + spread, S.y, S.z + 0.08 + 0.40 * h))
         return hold(W, (0, 0, 1), (0, -1, 0), pole=(S.x + 0.7, S.y, S.z + 0.1))

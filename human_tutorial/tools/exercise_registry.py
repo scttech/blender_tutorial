@@ -102,6 +102,7 @@ EXERCISES = [
     dict(name="ArnoldPress", file="arnold_press.toml", keys=[1, 37, 46, 91], extra=None, checks=["ankles", "balance"], clearance=[], notes="a dumbbell in each hand; the weights are not in the balance check"),
     dict(name="DumbbellBenchPress", file="dumbbell_bench_press.toml", keys=[1, 37, 46, 91], extra=None, checks=[], clearance=[], notes="lying on a bench (Bench); the feet are on the floor"),
     dict(name="InclineDumbbellPress", file="incline_dumbbell_press.toml", keys=[1, 37, 46, 91], extra=None, checks=[], clearance=[], notes="reclined on the InclineBench; the feet are on the floor"),
+    dict(name="InclineBarbellBenchPress", file="incline_barbell_bench_press.toml", keys=[1, 37, 46, 91], extra=None, checks=[], clearance=[], notes="reclined on the InclineBench; the feet are on the floor"),
     dict(name="DumbbellFly", file="dumbbell_fly.toml", keys=[1, 37, 46, 91], extra=None, checks=[], clearance=[], notes="lying on a bench (Bench); the feet are on the floor"),
     dict(name="RearDeltFly", file="rear_delt_fly.toml", keys=[1, 37, 46, 91], extra=None, checks=["ankles", "balance"], clearance=[], notes="hinged forward; the weights are not in the balance check"),
     dict(name="BarbellCurl", file="barbell_curl.toml", keys=[1, 37, 46, 91], extra=None, checks=["ankles", "balance"], clearance=[], notes="the bar's weight is not in the balance check"),

@@ -67,6 +67,9 @@ def bb_lying(pose, mode, h, grip="wide"):
     """a POST HOOK for barbell work lying on a bench (situp.bench_body). mode "press": the bar from the chest (h = 0) to straight arms over the chest (h = 1), the hand pointing up with the palm toward the feet.
     mode "skull": the elbows stay over the shoulders, the bar swings from over the face... h = 0 the arms straight up, h = 1 the bar lowered to the forehead"""
     _apply_pose(pose); P = pose_bones(); S = (P["UpperArm.L"].head + P["UpperArm.R"].head) / 2
+    if mode == "incline":                       # pressed along the normal of the torso reclined 50 degrees from vertical (situp.incline_body)
+        ph = math.radians(50.0); n = Vector((0, -math.cos(ph), math.sin(ph)))
+        return bar_for(Vector((0.0, S.y, S.z)) + n * (0.12 + 0.34 * h), n, Vector((0, -n.z, n.y)), grip, pole=(S.x + 0.8, S.y, S.z + 0.1))
     if mode == "press":
         return bar_for(Vector((0.0, S.y, S.z + (0.12 if grip == "wide" else 0.18) + (0.46 - (0.12 if grip == "wide" else 0.18)) * h)), (0, 0, 1), (0, -1, 0), grip, pole=(S.x + 0.8, S.y, S.z + 0.1))
     k = math.radians(95 * h); E = Vector((0.0, S.y, S.z + 0.27)); f = Vector((0, math.sin(k), math.cos(k)))
