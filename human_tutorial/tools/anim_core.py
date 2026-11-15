@@ -27,7 +27,7 @@ from mathutils import Vector, Euler
 
 rig, body, scene = bpy.data.objects["Rig"], bpy.data.objects["Body"], bpy.context.scene
 FPS = 30
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet", "grab_mace_swap")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet", "grab_mace_swap", "grab_dumbbell", "grab_barbell", "grab_barbell_close", "grab_barbell_wide", "grab_barbell_under")
 
 def mirror_name(n): return n[:-2] + ".R" if n.endswith(".L") else n
 def rest_head(bone): return rig.data.bones[bone].head_local.copy()
@@ -76,7 +76,7 @@ def base_pose():
     pose["Foot_IK.L"] = {"at": at("Foot_IK.L"), "wrot": (0, 0, 0)}
     pose["Hand_IK.L"] = {"at": at("Hand_IK.L"), "wrot": (0, 0, 0), "props": {k: 0.0 for k in SLIDERS}}
     pose["Knee_Pole.L"] = {"at": at("Knee_Pole.L")}; pose["Elbow_Pole.L"] = {"at": at("Elbow_Pole.L")}
-    for n in ("Kettlebell", "Mace", "PullupBar"): pose[n] = {"at": at(n), "rot": (0, 0, 0)}
+    for n in ("Kettlebell", "Mace", "PullupBar", "Dumbbell.L", "Barbell"): pose[n] = {"at": at(n), "rot": (0, 0, 0)}         # Dumbbell.L mirrors to Dumbbell.R
     return pose
 
 def merge(base, pose):

@@ -1,0 +1,15 @@
+# Front squat: the bar racked across the front of the shoulders, hands under it (palms up, elbows high), feet shoulder width. Squat to at least parallel keeping the torso upright, then stand.
+name = "FrontSquat"
+extends = "Squat"
+python = ["poselib.py", "barbell.py"]
+
+[poses.arms_stand]
+post = [ { fn = "ride_prop", args = { prop = "Barbell", at = [0, -0.19, 1.50], grab = "grab_barbell_under", pole = [0.40, -0.55, 1.45] } } ]
+[poses.arms_bottom]
+post = [ { fn = "ride_prop", args = { prop = "Barbell", at = [0, -0.19, 1.50], grab = "grab_barbell_under", pole = [0.40, -0.55, 1.45] } } ]
+[poses.body_bottom]
+Spine = { rot = [8, 0, 0] }
+Spine1 = { rot = [6, 0, 0] }
+Spine2 = { rot = [4, 0, 0] }
+Neck = { rot = [-5, 0, 0] }
+Head = { rot = [-8, 0, 0] }

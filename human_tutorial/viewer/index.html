@@ -16,15 +16,30 @@ const ground = BABYLON.MeshBuilder.CreateGround("floor", { width: 6, height: 6 }
 BABYLON.SceneLoader.ImportMeshAsync("", "../exports/", "human_all_animations.glb", scene).then(res => {
   const root = res.meshes[0];                       // glTF is right-handed, Babylon left-handed: the loader adds a mirror on __root__; the model faces the camera we set up
   const bar = document.getElementById("bar"); let current = null;
+  // skin tone: the body has two materials, "Skin" and "ClothesHairEyes"; setting the Skin material's albedoColor tints the skin (the texture is grey) and leaves the clothes, hair and eyes alone.
+  // These are the albedoColor values (LINEAR numbers, like the GLB's baseColorFactor) that give each average skin colour: see exports/skin_tones.json
+  const TONES = {
+    Original: [0.7169, 0.3594, 0.2301],
+    Light: [0.9378, 0.5751, 0.412],
+    Fair: [0.7947, 0.4398, 0.2796],
+    Medium: [0.602, 0.2542, 0.1302],
+    Tan: [0.4398, 0.1727, 0.075],
+    Brown: [0.2301, 0.0855, 0.0366],
+    Dark: [0.0992, 0.0366, 0.0188] };      // the Skin material's albedoColor, in LINEAR light (the same numbers as the GLB's baseColorFactor)
+  const sel = document.createElement("select"); sel.style.cssText = "padding:6px;border-radius:6px;background:#2a2e36;color:#eee;border:1px solid #556";
+  for (const k of Object.keys(TONES)) { const o = document.createElement("option"); o.value = JSON.stringify(TONES[k]); o.textContent = "skin: " + k; sel.appendChild(o); }
+  sel.onchange = () => { const m = scene.getMaterialByName("Skin"); if (m) { const c = JSON.parse(sel.value); m.albedoColor = new BABYLON.Color3(c[0], c[1], c[2]); } }; bar.appendChild(sel);
   res.animationGroups.forEach(g => g.stop());
   // the props are separate meshes named Kettlebell, Mace and PullupBar: switch off the ones an exercise does not use (or all of them)
-  const PROPS = { Kettlebell: /kettlebell|kbswing|goblet/i, Mace: /mace/i, PullupBar: /pullup|chinup|hangingleg/i };
+  const PROPS = { Kettlebell: /kettlebell|kbswing|goblet(?!squat$)|halo/i, Mace: /mace/i, PullupBar: /pullup|chinup|hangingleg/i,
+                  "Dumbbell.L": /dumbbell|hammer|lateral|front ?raise|arnold|reardelt|fly/i, "Dumbbell.R": /dumbbell|hammer|lateral|front ?raise|arnold|reardelt|fly/i,
+                  Barbell: /barbell|backsquat|frontsquat|goodmorning|overheadpress|uprightrow|deadlift|row|bench|skull/i, Bench: /bench|fly|skull/i };
   let showProps = true;
   const updateProps = () => { for (const [name, re] of Object.entries(PROPS)) { const m = scene.getMeshByName(name); if (m) m.setEnabled(showProps && !!current && re.test(current.name)); } };
   const box = document.createElement("label"); box.innerHTML = '<input type="checkbox" checked> props'; box.firstChild.onchange = e => { showProps = e.target.checked; updateProps(); }; bar.appendChild(box);
   const show = (g, b) => { if (current) current.stop(); current = g; g.start(true); [...bar.children].forEach(x => x.classList.toggle("on", x === b)); updateProps(); };
   res.animationGroups.forEach(g => { const b = document.createElement("button"); b.textContent = g.name; b.onclick = () => show(g, b); bar.appendChild(b); });
-  if (res.animationGroups.length) bar.children[1].click();
+  if (res.animationGroups.length) bar.children[2].click();
 });
 engine.runRenderLoop(() => scene.render()); addEventListener("resize", () => engine.resize());
 </script></body></html>

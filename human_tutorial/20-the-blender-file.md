@@ -8,7 +8,8 @@
 |---|---|
 | `Body` | the 7,770-vertex low-poly mesh, parented to `Rig` with automatic weights plus the Step 8 finger fixes; one material with the Step 18 **web** textures |
 | `Rig` | 74 bones: 52 deform bones, the Root, the IK and pole controls, the finger and grab sliders, the hidden Grips collection, and the three prop bones; 18 constraints and 42 drivers |
-| `Kettlebell`, `Mace`, `PullupBar` | the props, each parented to its own bone on `Rig` |
+| `Kettlebell`, `Mace`, `PullupBar`, `Dumbbell.L`, `Dumbbell.R`, `Barbell` | the props, each parented to its own bone on `Rig`. The two dumbbells are a pair (one in each hand). `Bench` is a plain fixture with no bone |
+| materials | the body has two: `Skin` (a grey texture times a colour: the app sets the colour to change the skin tone) and `ClothesHairEyes`; see [skin-tones.md](skin-tones.md) |
 | `Body_HighPoly` | the 94,690-vertex original, hidden, in the `Reference` collection, kept for re-running Step 3 |
 | `CS_Box`, `CS_Diamond` | the control-shape meshes, in the `Widgets` collection (excluded from the view layer) |
 | 8 actions | Chinup, Kbswing, Lunge, Mace10to2, Pullup, Pushup, Situp, Squat. Each has a **fake user** and **none is assigned**, so the rig opens in the T-pose |

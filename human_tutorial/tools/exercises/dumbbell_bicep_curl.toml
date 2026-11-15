@@ -1,0 +1,13 @@
+# Dumbbell biceps curl: stand tall with a dumbbell in each hand, palms forward. Curl both up by bending the elbows, the upper arms staying at the sides, squeeze at the top, and lower under control.
+# The dumbbells lead and the hands follow (dumbbell.py). 1.2 s up, 0.3 s hold, 1.5 s down.
+name = "DumbbellBicepCurl"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "curl", set = { k = "=12+128*(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "curl", set = { k = "=12+128*(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+k = 12
+
+[poses.curl]
+generator = "db_curl"
+args = { kappa = "=k", hammer = 0 }

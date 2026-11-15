@@ -1,0 +1,13 @@
+# Dumbbell shrug: arms hanging straight with a dumbbell in each hand, palms in. Lift the shoulders straight up toward the ears, hold, and lower slowly.
+name = "DumbbellShrug"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 19, 3], pose = "shrug", set = { h = "=(1-cos(pi*(f-1)/18))/2" } },
+            { frames = [22, 28, 3], pose = "shrug", set = { h = 1 } },
+            { frames = [34, 64, 5], pose = "shrug", set = { h = "=(1+cos(pi*(f-34)/30))/2" } }]
+
+[params]
+h = 0
+
+[poses.shrug]
+generator = "db_shrug"
+args = { h = "=h" }

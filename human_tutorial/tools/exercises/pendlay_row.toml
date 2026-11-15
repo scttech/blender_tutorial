@@ -1,0 +1,14 @@
+# Pendlay row: the torso level with the floor, the bar resting on the floor between reps. Explode the bar up to the lower chest, then lower it back to the floor and reset.
+name = "PendlayRow"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 19, 3], pose = "row", set = { h = "=(1-cos(pi*(f-1)/18))/2" } },
+            { frames = [22, 28, 3], pose = "row", set = { h = 1 } },
+            { frames = [31, 61, 5], pose = "row", set = { h = "=(1+cos(pi*(f-31)/30))/2" } }]
+
+[params]
+h = 0
+
+[poses.row]
+generator = "hinge_body"
+args = { t = 1, back = 0.30, drop = 0.32, pitch = 78, stance = 0.24 }
+post = [ { fn = "bb_row", args = { h = "=h", drop = 0.50, pull = 0.20 } } ]

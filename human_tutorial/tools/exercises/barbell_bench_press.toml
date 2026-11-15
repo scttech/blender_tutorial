@@ -1,0 +1,13 @@
+# Barbell bench press: lie on a flat bench, feet on the floor, hands wider than the shoulders. Lower the bar to the middle of the chest, then press it up to straight arms over the chest.
+name = "BarbellBenchPress"
+python = ["situp.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "bench", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "bench", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.bench]
+generator = "bench_body"
+args = { t = 0 }
+post = [ { fn = "bb_lying", args = { mode = "press", h = "=h", grip = "wide" } } ]

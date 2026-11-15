@@ -1,0 +1,15 @@
+# Romanian deadlift: stand holding the bar at the hips, a slight bend in the knees. Push the hips back, lowering the bar down the thighs with a flat back until you feel the hamstrings stretch (about mid-shin), then drive the hips forward.
+name = "RomanianDeadlift"
+extends = "Deadlift"
+
+[params]
+back = 0.32
+drop = 0.15
+pitch = 62.0
+stance = 0.20
+z_bot = 0.52
+
+[poses.lift]
+generator = "hinge_body"
+args = { t = "=t", back = "=back", drop = "=drop", pitch = "=pitch", stance = "=stance" }
+post = [ { fn = "bb_lift_hook", args = { t = "=t", bulge = "=bulge", y_floor = "=y_floor", y_top = "=y_top", z_top = "=z_top", z_bot = "=z_bot" } } ]

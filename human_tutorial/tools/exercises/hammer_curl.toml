@@ -1,0 +1,7 @@
+# Hammer curl: the biceps curl with the palms facing each other (a neutral grip) the whole way up and down.
+name = "HammerCurl"
+extends = "DumbbellBicepCurl"
+
+[poses.curl]
+generator = "db_curl"
+args = { kappa = "=k", hammer = 1 }

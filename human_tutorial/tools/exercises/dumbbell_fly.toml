@@ -1,0 +1,8 @@
+# Dumbbell fly: lie on a flat bench with the dumbbells over the chest, palms facing, elbows slightly bent. Open the arms out to the sides in a wide arc until level with the chest, then bring them back together.
+name = "DumbbellFly"
+extends = "DumbbellBenchPress"
+
+[poses.press]
+generator = "bench_body"
+args = { t = 0 }
+post = [ { fn = "db_lying", args = { mode = "fly", h = "=h" } } ]

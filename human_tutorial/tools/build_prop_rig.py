@@ -6,7 +6,7 @@ Safe to re-run.
   1. MEASURE the grip. In the hand's own coordinates, find where a handle should sit in the palm and how far the fingers and
      thumb should close, so the finger bones wrap the handle (each runs one finger-radius outside its surface).
   2. Add prop control bones  Kettlebell, Mace, PullupBar  (props are parented to them) and grip bones  KB_Grip.L/R, Mace_Grip.L/R,
-     BarOver_Grip.L/R, BarUnder_Grip.L/R, KBSwing_Grip.L/R, KBGoblet_Grip.L/R, MaceSwap_Grip.L/R  (children of the prop bones; each is the exact frame of the hand that holds it).
+     BarOver_Grip.L/R, BarUnder_Grip.L/R, KBSwing_Grip.L/R, KBGoblet_Grip.L/R, MaceSwap_Grip.L/R, DB_Grip.L/R, BB_Grip.L/R, BBClose_Grip.L/R, BBWide_Grip.L/R, BBUnder_Grip.L/R  (children of the prop bones; each is the exact frame of the hand that holds it).
   3. On Hand_IK.L / R: sliders  grab_kettlebell, grab_mace, grab_bar_over, grab_bar_under, grab_kb_swing  (0 to 1) and a Copy Transforms per grip
      whose influence is the slider.
   4. Re-run build_finger_controls.py so the same slider also closes the hand to the measured grip.
@@ -17,13 +17,18 @@ import bpy, math
 from mathutils import Vector, Matrix
 
 rig = bpy.data.objects["Rig"]; arm = rig.data
+# the parent-inverse of every prop mesh is computed from the bone's pose, so the rig must be at REST: no action assigned and nothing posed (a leftover pose put the dumbbells in the wrong place)
+if rig.animation_data: rig.animation_data.action = None
+for _pb in rig.pose.bones:
+    _pb.location = (0, 0, 0); _pb.rotation_mode = 'XYZ'; _pb.rotation_euler = (0, 0, 0); _pb.scale = (1, 1, 1)
+bpy.context.view_layer.update()
 KB_HEAD, MACE_HEAD = Vector((0.0, -0.40, 0.0)), Vector((0.65, -0.10, 0.0))     # rest positions of the prop bones (on the floor)
 BAR_HEAD = Vector((0.0, -0.17, 0.0))                                           # the pull-up frame stands 17 cm in front of the origin
 KB_R, MACE_R, BAR_R, FINGER_R, THUMB_R = 0.0175, 0.0165, 0.016, 0.0095, 0.012
 BAR_Z = 2.30
 kb_mesh = bpy.data.objects["Kettlebell"]
 KB_GRIP_Z = max(v.co.z for v in kb_mesh.data.vertices) - KB_R                  # centre line of the handle's top bar
-SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet", "grab_mace_swap")
+SLIDERS = ("fist", "index", "middle", "ring", "pinky", "thumb", "thumb_oppose", "grab_kettlebell", "grab_mace", "grab_bar_over", "grab_bar_under", "grab_kb_swing", "grab_kb_goblet", "grab_mace_swap", "grab_dumbbell", "grab_barbell", "grab_barbell_close", "grab_barbell_wide", "grab_barbell_under")
 
 if rig.animation_data:
     for fc in list(rig.animation_data.drivers):
@@ -97,7 +102,7 @@ for label, radius, fit in (("kettlebell", KB_R, kb_fit), ("mace", MACE_R, mace_f
 setprops(side)
 
 # ---------------------------------------------------------------- 2. bones
-Y_FWD, Z_DN = Vector((0, -1, 0)), Vector((0, 0, -1))
+Y_FWD, Z_DN = Vector((0, -1, 0)), Vector((0, 0, -1)); Z_UP = Vector((0, 0, 1))
 GRIPS = {   # bone: (prop, handle centre in prop space, fingers direction, palm direction, handle axis)
     "KB_Grip.L":   ("Kettlebell", Vector(( 0.045, 0, KB_GRIP_Z)), Y_FWD, Z_DN, Vector((1, 0, 0))),
     "KB_Grip.R":   ("Kettlebell", Vector((-0.045, 0, KB_GRIP_Z)), Y_FWD, Z_DN, Vector((1, 0, 0))),
@@ -121,8 +126,21 @@ GRIPS = {   # bone: (prop, handle centre in prop space, fingers direction, palm 
     # would otherwise end up to the left of the left hand and the arms would pass through each other
     "MaceSwap_Grip.L": ("Mace", Vector((0, 0, 0.34)), Y_FWD, Vector((-1, 0, 0)), Vector((0, 0, 1))),
     "MaceSwap_Grip.R": ("Mace", Vector((0, 0, 0.20)), Y_FWD, Vector(( 1, 0, 0)), Vector((0, 0, 1))),
+    # the dumbbells (one in each hand, centre of the handle) and the barbell (overhand, hands 56 cm apart; and a close grip, 28 cm apart). All with the palm DOWN and the fingers FORWARD, handle along X,
+    # like the kettlebell's top bar; other hand orientations come from turning the weight
+    "DB_Grip.L": ("Dumbbell.L", Vector((0, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "DB_Grip.R": ("Dumbbell.R", Vector((0, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "BB_Grip.L": ("Barbell", Vector((0.28, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "BB_Grip.R": ("Barbell", Vector((-0.28, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "BBClose_Grip.L": ("Barbell", Vector((0.14, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "BBClose_Grip.R": ("Barbell", Vector((-0.14, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "BBWide_Grip.L": ("Barbell", Vector((0.45, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),          # a wide overhand grip (back squat, good morning: the hands behind the shoulders)
+    "BBWide_Grip.R": ("Barbell", Vector((-0.45, 0, 0)), Y_FWD, Z_DN, Vector((1, 0, 0))),
+    "BBUnder_Grip.L": ("Barbell", Vector((0.28, 0, 0)), Y_FWD, Z_UP, Vector((1, 0, 0))),         # underhand (palms up): the same hand with the forearm turned over
+    "BBUnder_Grip.R": ("Barbell", Vector((-0.28, 0, 0)), Y_FWD, Z_UP, Vector((1, 0, 0))),
 }
-PROP_BONES = {"Kettlebell": KB_HEAD, "Mace": MACE_HEAD, "PullupBar": BAR_HEAD}
+PROP_BONES = {"Kettlebell": KB_HEAD, "Mace": MACE_HEAD, "PullupBar": BAR_HEAD,
+              "Dumbbell.L": Vector((0.30, -0.25, 0.07)), "Dumbbell.R": Vector((-0.30, -0.25, 0.07)), "Barbell": Vector((0.0, -0.45, 0.225))}
 NEW = list(PROP_BONES) + list(GRIPS)
 for pb in rig.pose.bones:
     if pb.name in NEW: pb.location = (0, 0, 0)
@@ -146,7 +164,7 @@ for n in GRIPS: arm.collections_all["Grips"].assign(arm.bones[n])
 arm.collections_all["Grips"].is_visible = False
 box = bpy.data.objects.get("CS_Box")
 if box:
-    for n, scale in (("Kettlebell", (0.24, 0.24, 0.02)), ("Mace", (0.14, 0.14, 0.02)), ("PullupBar", (0.30, 0.30, 0.02))):
+    for n, scale in (("Kettlebell", (0.24, 0.24, 0.02)), ("Mace", (0.14, 0.14, 0.02)), ("PullupBar", (0.30, 0.30, 0.02)), ("Dumbbell.L", (0.16, 0.16, 0.02)), ("Dumbbell.R", (0.16, 0.16, 0.02)), ("Barbell", (0.34, 0.34, 0.02))):
         pb = rig.pose.bones[n]; pb.custom_shape = box; pb.use_custom_shape_bone_size = False; pb.custom_shape_scale_xyz = scale
 
 # parent the meshes to their bones, keeping them where they stand
@@ -166,23 +184,36 @@ for prop, head in PROP_BONES.items():
 GRAB_ORDER = (("grab_kettlebell", "KB_Grip", "Grab_Kettlebell"), ("grab_mace", "Mace_Grip", "Grab_Mace"),
               ("grab_bar_over", "BarOver_Grip", "Grab_BarOver"), ("grab_bar_under", "BarUnder_Grip", "Grab_BarUnder"),
               ("grab_kb_swing", "KBSwing_Grip", "Grab_KBSwing"), ("grab_kb_goblet", "KBGoblet_Grip", "Grab_KBGoblet"),
-              ("grab_mace_swap", "MaceSwap_Grip", "Grab_MaceSwap"))
+              ("grab_mace_swap", "MaceSwap_Grip", "Grab_MaceSwap"), ("grab_dumbbell", "DB_Grip", "Grab_Dumbbell"), ("grab_barbell", "BB_Grip", "Grab_Barbell"),
+              ("grab_barbell_close", "BBClose_Grip", "Grab_BarbellClose"), ("grab_barbell_wide", "BBWide_Grip", "Grab_BarbellWide"),
+              ("grab_barbell_under", "BBUnder_Grip", "Grab_BarbellUnder"))
 bpy.ops.object.mode_set(mode='POSE')
+# The influence of constraint k is  w_k / (1 - the weights of the later constraints)  with  w_j = s_j * min(1, T) / T,  T = the sum of all the sliders. Written out in one expression that is
+# far too long for Blender's driver engine once there are a dozen sliders (the first constraints silently stopped working). So the two sums are their own drivers (type SUM, any length)
+# on hidden properties of the hand control, and each influence driver only uses three variables:  its own slider, T (gsum) and the sum of the later sliders (gafter<k>).
 for s in "LR":
     hc = rig.pose.bones[f"Hand_IK.{s}"]
+    def prop_var(d, name, prop):
+        v = d.variables.new(); v.name = name; v.type = 'SINGLE_PROP'; v.targets[0].id = rig; v.targets[0].data_path = f'pose.bones["Hand_IK.{s}"]["{prop}"]'
     for k, (slider, grip_prefix, cname) in enumerate(GRAB_ORDER):
         hc[slider] = 0.0
         hc.id_properties_ui(slider).update(min=0.0, max=1.0, soft_min=0.0, soft_max=1.0, description=f"Snap this hand to the {cname[5:]} grip and close it around it")
+    def sum_prop(name, sliders):
+        hc[name] = 0.0; fc = hc.driver_add(f'["{name}"]'); d = fc.driver; d.type = 'SUM'
+        for j, sl in enumerate(sliders): prop_var(d, f"v{j}", sl)
+    names = [g[0] for g in GRAB_ORDER]
+    sum_prop("gsum", names)
+    for k in range(len(GRAB_ORDER)): sum_prop(f"gafter{k}", names[k + 1:] or [names[0]]) if k + 1 < len(GRAB_ORDER) else None
+    for k, (slider, grip_prefix, cname) in enumerate(GRAB_ORDER):
         con = hc.constraints.new('COPY_TRANSFORMS'); con.name = cname
         con.target = rig; con.subtarget = f"{grip_prefix}.{s}"; con.target_space = 'WORLD'; con.owner_space = 'WORLD'
-        S = "(" + "+".join(f"s{j}" for j in range(len(GRAB_ORDER))) + ")"
-        later = "+".join(f"s{j}" for j in range(k + 1, len(GRAB_ORDER))) or "0"
-        share = lambda terms: f"(({terms})*min(1,{S})/max({S},0.000001))"
         d = con.driver_add("influence").driver; d.type = 'SCRIPTED'
-        d.expression = f"{share(f's{k}')} / max(0.000001, 1 - {share(later)})"
-        for j, (sl, _, _) in enumerate(GRAB_ORDER):
-            v = d.variables.new(); v.name = f"s{j}"; v.type = 'SINGLE_PROP'; v.targets[0].id = rig
-            v.targets[0].data_path = f'pose.bones["Hand_IK.{s}"]["{sl}"]'
+        share = "(s*min(1,T)/max(T,0.000001))"
+        if k + 1 < len(GRAB_ORDER):
+            d.expression = f"{share} / max(0.000001, 1 - (L*min(1,T)/max(T,0.000001)))"; prop_var(d, "L", f"gafter{k}")
+        else:
+            d.expression = share
+        prop_var(d, "s", slider); prop_var(d, "T", "gsum")
 bpy.ops.object.mode_set(mode='OBJECT')
 
 # ---------------------------------------------------------------- 4. let the same slider close the hand
@@ -192,6 +223,11 @@ GRABS = {"grab_kettlebell": {"fist": kb_fit[1], "thumb": thumb_best["kettlebell"
          "grab_bar_under":  {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]},
          "grab_kb_swing":   {"fist": kb_fit[1], "thumb": thumb_best["kettlebell"][1], "oppose": thumb_best["kettlebell"][2]},
          "grab_kb_goblet":  {"fist": kb_fit[1], "thumb": thumb_best["kettlebell"][1], "oppose": thumb_best["kettlebell"][2]},
-         "grab_mace_swap":  {"fist": mace_fit[1], "thumb": thumb_best["mace"][1], "oppose": thumb_best["mace"][2]}}
+         "grab_mace_swap":  {"fist": mace_fit[1], "thumb": thumb_best["mace"][1], "oppose": thumb_best["mace"][2]},
+         "grab_dumbbell":   {"fist": kb_fit[1], "thumb": thumb_best["kettlebell"][1], "oppose": thumb_best["kettlebell"][2]},
+         "grab_barbell":    {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]},
+         "grab_barbell_close": {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]},
+         "grab_barbell_wide": {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]},
+         "grab_barbell_under": {"fist": bar_fit[1], "thumb": thumb_best["pull-up bar"][1], "oppose": thumb_best["pull-up bar"][2]}}
 exec(open("/Users/chris/blender_tutorial/human_tutorial/tools/build_finger_controls.py").read(), {"GRABS": GRABS})
 print("grab sliders drive the fingers:", {k: {a: round(b, 2) for a, b in v.items()} for k, v in GRABS.items()})

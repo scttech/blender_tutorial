@@ -1,0 +1,16 @@
+# Back squat: the bar racked across the upper traps, hands wide on the bar, feet shoulder width. Brace, break at the hips and knees together and squat to at least parallel, then drive back up.
+# The squat's body (squat.toml) with the bar riding on the upper back; the torso more upright than the bodyweight squat.
+name = "BackSquat"
+extends = "Squat"
+python = ["poselib.py", "barbell.py"]
+
+[poses.arms_stand]
+post = [ { fn = "ride_prop", args = { prop = "Barbell", at = [0, 0.13, 1.50], grab = "grab_barbell_wide", pole = [0.65, 0.35, 1.55] } } ]
+[poses.arms_bottom]
+post = [ { fn = "ride_prop", args = { prop = "Barbell", at = [0, 0.13, 1.50], grab = "grab_barbell_wide", pole = [0.65, 0.35, 1.55] } } ]
+[poses.body_bottom]
+Spine = { rot = [10, 0, 0] }
+Spine1 = { rot = [8, 0, 0] }
+Spine2 = { rot = [5, 0, 0] }
+Neck = { rot = [-6, 0, 0] }
+Head = { rot = [-9, 0, 0] }

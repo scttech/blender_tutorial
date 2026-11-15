@@ -38,12 +38,13 @@ def body_pose(t, hips_z, lay=LAY_PHI, top=TOP_PHI, spine=SPINE_TOP, neck=NECK_TO
             "Foot_IK.L": {"at": (0.19, Y_HIP - FOOT_DY, 0.10), "wrot": (0, 0, 0)},
             "Knee_Pole.L": {"at": (0.14, Y_HIP - FOOT_DY / 2, 1.0)}}
 
+FLOOR_Z = 0.0               # the height of the surface the back lies on: 0 = the floor, 0.475 = a flat bench (bench_body)
 def settle(t, hips_z=0.11, **kw):
-    """lower or raise the pelvis until the lowest vertex of the body just touches the floor"""
-    reg_body = regions() == "body"
+    """lower or raise the pelvis until the lowest vertex of the body just touches the floor (or, on a bench, until the lowest vertex of the BACK touches the pad)"""
+    reg_body = regions() == "body" if FLOOR_Z == 0.0 else torso_masks()[0]
     for _ in range(3):
         _apply(body_pose(t, hips_z, **kw)); v, _ = mesh_state()
-        hips_z -= float(v[reg_body, 2].min())
+        hips_z -= float(v[reg_body, 2].min()) - FLOOR_Z
     return hips_z
 
 def hand_frame(side):
@@ -77,3 +78,15 @@ def curl_body(t, top=90.0, spine=(12.0, 10.0, 8.0), neck=8.0, head=6.0):
     The pelvis height is settled against the mesh so the body lies ON the floor"""
     kw = dict(top=top, spine=tuple(spine), neck=neck, head=head)
     return body_pose(t, settle(t, **kw), **kw)
+
+
+def bench_body(t=0.0, top=90.0, spine=(0.0, 0.0, 0.0), neck=0.0, head=0.0, pad=0.475):
+    """lying on a flat bench (its pad `pad` metres up), knees bent, feet on the floor wide apart; t and top as in curl_body. The back is settled on the pad, the feet stay on the floor"""
+    global FLOOR_Z
+    FLOOR_Z = pad
+    try:
+        kw = dict(top=top, spine=tuple(spine), neck=neck, head=head); p = body_pose(t, settle(t, **kw), **kw)
+    finally:
+        FLOOR_Z = 0.0
+    p["Foot_IK.L"] = {"at": (0.32, p["Foot_IK.L"]["at"][1] - 0.05, 0.10), "wrot": (0, 0, 0)}; p["Knee_Pole.L"] = {"at": (0.36, p["Knee_Pole.L"]["at"][1] - 0.3, 0.55)}
+    return p

@@ -1,0 +1,8 @@
+# Close-grip bench press: the bench press with the hands shoulder width or narrower and the elbows tucked, so the triceps do more of the work.
+name = "CloseGripBenchPress"
+extends = "BarbellBenchPress"
+
+[poses.bench]
+generator = "bench_body"
+args = { t = 0 }
+post = [ { fn = "bb_lying", args = { mode = "press", h = "=h", grip = "close" } } ]

@@ -1,0 +1,7 @@
+# Arnold press: start with the dumbbells in front of the shoulders, palms facing you, and rotate the palms to face forward as you press overhead; reverse on the way down.
+name = "ArnoldPress"
+extends = "DumbbellShoulderPress"
+
+[poses.press]
+generator = "db_press"
+args = { h = "=h", turn = "=h" }

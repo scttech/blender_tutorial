@@ -1,0 +1,13 @@
+# Barbell good morning: the bar across the upper back, hands wide, soft knees. Hinge at the hips with a flat back until the torso is near parallel to the floor, then drive the hips forward to stand.
+name = "GoodMorning"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 31, 5], pose = "hinge", set = { t = "=(1-cos(pi*(f-1)/30))/2" } }, { frame = 41, pose = "hinge", set = { t = 1 } },
+            { frames = [46, 71, 5], pose = "hinge", set = { t = "=(1+cos(pi*(f-41)/30))/2" } }]
+
+[params]
+t = 0
+
+[poses.hinge]
+generator = "hinge_body"
+args = { t = "=t", back = 0.30, drop = 0.20, pitch = 60, spine = [0, 0, 0], neck = -30, head = -30 }
+post = [ { fn = "ride_prop", args = { prop = "Barbell", at = [0, 0.13, 1.50], grab = "grab_barbell_wide", pole = [0.65, 0.35, 1.55] } } ]

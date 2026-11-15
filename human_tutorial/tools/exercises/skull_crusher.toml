@@ -1,0 +1,8 @@
+# Skull crusher: lie on a bench holding the bar over the chest with straight arms, close grip. Bend only at the elbows to lower the bar toward the forehead, then extend the arms to return.
+name = "SkullCrusher"
+extends = "BarbellBenchPress"
+
+[poses.bench]
+generator = "bench_body"
+args = { t = 0 }
+post = [ { fn = "bb_lying", args = { mode = "skull", h = "=h", grip = "close" } } ]

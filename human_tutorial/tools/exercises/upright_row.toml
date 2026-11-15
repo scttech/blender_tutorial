@@ -1,0 +1,12 @@
+# Upright row: hold the bar with a close overhand grip at arm's length against the thighs. Pull it straight up the front of the body to chest height with the elbows leading and out, then lower.
+name = "UprightRow"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "row", set = { h = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "row", set = { h = "=(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+h = 0
+
+[poses.row]
+generator = "bb_upright"
+args = { h = "=h" }

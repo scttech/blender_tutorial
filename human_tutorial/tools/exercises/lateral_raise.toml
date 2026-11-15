@@ -1,0 +1,13 @@
+# Lateral raise: stand holding a dumbbell in each hand, arms nearly straight. Raise them out to the sides to shoulder height (a little in front of the body), then lower slowly.
+# 1.2 s up, 0.3 s hold, 1.5 s down.
+name = "LateralRaise"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "raise", set = { a = "=6+84*(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "raise", set = { a = "=6+84*(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+a = 6
+
+[poses.raise]
+generator = "db_lateral"
+args = { a = "=a", forward = 12 }

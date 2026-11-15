@@ -1,0 +1,12 @@
+# Front raise: a dumbbell in each hand, arms nearly straight, palms toward the thighs. Raise them in front of you to shoulder height, then lower slowly.
+name = "FrontRaise"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "raise", set = { a = "=6+84*(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "raise", set = { a = "=6+84*(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+a = 6
+
+[poses.raise]
+generator = "db_front"
+args = { a = "=a" }

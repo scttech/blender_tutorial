@@ -145,3 +145,85 @@ def skater_hop(s, jump=0.10, spread=0.30, dip=0.14):
     return {"Hips": {"move": (hx, 0.06 * (1 - abs(1 - 2 * s)), hz), "rot": (8 * (1 - fl), 0, 0)}, "Spine": {"rot": (6 * (1 - fl), 0, 0)}, "Spine1": {"rot": (6 * (1 - fl), 0, 0)},
             "Foot_IK.L": {"at": (lx, ly, lz), "wrot": (0, 0, 0)}, "Knee_Pole.L": {"at": (lx + 0.04, -0.55, 0.55)},
             "Foot_IK.R": {"at": (rx, ry, rz), "wrot": (0, 0, 0)}, "Knee_Pole.R": {"at": (rx - 0.04, -0.55, 0.55)}}
+
+
+# ------------------------------------------------------------------ the burpee: five poses, blended
+def _lerp_val(a, b, w):
+    if isinstance(a, dict): return {k: _lerp_val(a[k], b.get(k, a[k]), w) for k in a}
+    if isinstance(a, (list, tuple)): return tuple(x + (y - x) * w for x, y in zip(a, b))
+    return a + (b - a) * w
+
+def blend_pose(A, B, w):
+    """the pose between A and B (w = 0 .. 1), bone by bone and entry by entry; an entry only one of them has is kept as it is"""
+    out = {}
+    for bone in set(A) | set(B):
+        ea, eb = A.get(bone), B.get(bone)
+        if ea is None: out[bone] = dict(eb); continue
+        if eb is None: out[bone] = dict(ea); continue
+        out[bone] = {k: (_lerp_val(ea[k], eb[k], w) if k in eb else ea[k]) for k in ea}
+        for k in eb:
+            if k not in ea: out[bone][k] = eb[k]
+    return out
+
+def _stand_pose(air=0.0, arms=0.0):
+    """standing tall (every entry the burpee blends): arms hang at the sides (arms = 0) or are overhead (arms = 1, the wrist swinging on an arc about the shoulder); air lifts the hips and both feet"""
+    b = rig.data.bones; A0 = b["Foot_IK.L"].head_local; S0 = b["UpperArm.L"].head_local; a = math.radians(170 * arms)
+    w = Vector((S0.x + 0.50 * math.sin(a), S0.y, S0.z + air - 0.50 * math.cos(a)))
+    return {"Hips": {"move": (0, 0, air), "rot": (0, 0, 0)}, "Spine": {"rot": (0, 0, 0)}, "Spine1": {"rot": (0, 0, 0)}, "Spine2": {"rot": (0, 0, 0)}, "Neck": {"rot": (0, 0, 0)}, "Head": {"rot": (0, 0, 0)},
+            "Foot_IK.L": {"at": (A0.x, A0.y, A0.z + air), "wrot": (0, 0, 0)}, "Knee_Pole.L": {"at": (0.134, -0.55, 0.55 + air)}, "Toes.L": {"rot": (0, 0, 0)},
+            "Hand_IK.L": {"at": tuple(w), "wrot": (0, 90 - 170 * arms, 0), "props": {"fist": 0.0}}, "Elbow_Pole.L": {"at": (S0.x + 0.15, S0.y + 0.6, S0.z + air)}}
+
+def _crouch_pose(pitch=75.0, arm=0.48):
+    """the burpee's low position: the hands planted where the plank's hands are, the feet at rest, the hips back and low over the feet with the torso pitched forward"""
+    ph = math.radians(pitch); hand = pushup_pose(PHI_UP)["Hand_IK.L"]["at"]; sy = hand[1]
+    hy = sy + 0.48 * math.sin(ph); hz = 0.045 + arm - 0.48 * math.cos(ph)
+    p = _stand_pose()
+    p["Hips"] = {"move": (0, hy - 0.06, hz - 0.97), "rot": (pitch, 0, 0)}
+    p["Neck"] = {"rot": (-18, 0, 0)}; p["Head"] = {"rot": (-28, 0, 0)}
+    p["Hand_IK.L"] = {"at": tuple(hand), "wrot": (0, 0, -90), "props": {"fist": 0.0}}; p["Elbow_Pole.L"] = {"at": (hand[0] + 0.45, hand[1] + 0.3, hand[2] + 0.35)}
+    return p
+
+HIP_LIFT = 0.0165
+def burpee(f, jump=0.30, hand_pow=1.0, z_pow=1.0, bulge_y=0.0, bulge_z=0.0):
+    """one burpee over 85 frames: stand (1), drop to a crouch with the hands on the floor (13), kick the feet back to a plank (25), a push-up (31 down, 37 hold, 43 up), jump the feet back
+    in (51), stand (59), jump with the arms overhead (59-79), land (79), settle (85)"""
+    ease = lambda x: 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, x)))
+    STAND, CROUCH, PLANK, DOWN = _stand_pose(), _crouch_pose(), pushup_pose(PHI_UP), pushup_pose(PHI_DN)
+    for p in (PLANK, DOWN):                                                       # fill in what the push-up pose does not say
+        p.setdefault("Spine", {"rot": (0, 0, 0)}); p.setdefault("Spine1", {"rot": (0, 0, 0)}); p.setdefault("Spine2", {"rot": (0, 0, 0)}); p.setdefault("Elbow_Pole.L", CROUCH["Elbow_Pole.L"])
+    def seg(a, b, A, B, air=0.0, hp=1.0):
+        w = ease((f - a) / (b - a)); p = blend_pose(A, B, w)
+        if hp != 1.0:                                                             # the hands travel on their own schedule: they lead (hp < 1) or lag (hp > 1) the body
+            for k in ("Hand_IK.L", "Elbow_Pole.L"): p[k] = _lerp_val(A[k], B[k], w ** hp)
+        if (hp != 1.0 or z_pow != 1.0 or bulge_y or bulge_z) and A is not B and "Hand_IK.L" in A and a in (1, 51):
+            ha, hb = A["Hand_IK.L"]["at"], B["Hand_IK.L"]["at"]; h = p["Hand_IK.L"]["at"]
+            m_ = math.sin(math.pi * w)
+            p["Hand_IK.L"] = {**p["Hand_IK.L"], "at": (h[0], h[1] + bulge_y * m_, ha[2] + (hb[2] - ha[2]) * w ** z_pow + bulge_z * m_)}      # the hand's path bulges in/up halfway so it stays within reach of the shoulder
+        if air:
+            m = math.sin(math.pi * w)
+            for k in ("Foot_IK.L",): p[k]["at"] = (p[k]["at"][0], p[k]["at"][1], p[k]["at"][2] + air * m)
+            mv = p["Hips"]["move"]; p["Hips"]["move"] = (mv[0], mv[1], mv[2] + HIP_LIFT * m)         # the hips rise a little as the feet kick, so the thighs clear the floor
+        return p
+    if f <= 13: return seg(1, 13, STAND, CROUCH, 0.0, 1.0001)
+    if f <= 19: return CROUCH
+    if f <= 25: return seg(19, 25, CROUCH, PLANK, 0.18)
+    if f <= 31: return seg(25, 31, PLANK, DOWN)
+    if f <= 37: return DOWN
+    if f <= 43: return seg(37, 43, DOWN, PLANK)
+    if f <= 51: return seg(43, 51, PLANK, CROUCH, 0.18)
+    if f <= 59: return seg(51, 59, CROUCH, STAND, 0.0, 1.0001)
+    if f <= 79:
+        x = (f - 59) / 20.0; air = jump * math.sin(math.pi * x); arms = math.sin(math.pi * min(1.0, x * 1.1)) if x < 0.9 else 0.0
+        return _stand_pose(air, arms)
+    return STAND
+
+
+def pike_pushup(u, hand_y=-0.30, ankle_y=0.66, shoulder_z=0.55, drop=0.15, phi0=127.0, phi1=140.0, torso=0.48):
+    """a pike push-up: the legs straight and the hips high in an inverted V, the hands flat under the shoulders. u: 0 the top, 1 the head lowered between the hands. The shoulders stay over
+    the hands and drop by `drop` metres; the torso (a 0.48 m rod) tips from phi0 to phi1 degrees from vertical (pointing down and forward), which moves the hips back and up a little. The
+    drop is limited by the legs: the feet are planted, so the hips cannot go further from the ankles than the legs are long"""
+    phi = math.radians(phi0 + (phi1 - phi0) * u); sz = shoulder_z - drop * u
+    hy, hz = hand_y + torso * math.sin(phi), sz - torso * math.cos(phi)            # the hips, from the shoulders and the torso angle
+    return {"Hips": {"move": (0, hy - 0.06, hz - 0.97), "rot": (math.degrees(phi), 0, 0)}, "Neck": {"rot": (30 * u + 10, 0, 0)}, "Head": {"rot": (25 * u + 10, 0, 0)},
+            "Foot_IK.L": {"at": (0.12, ankle_y, 0.20), "wrot": (45, 0, 0)}, "Toes.L": {"rot": (-45, 0, 0)}, "Knee_Pole.L": {"at": (0.12, -0.2, 0.9)},
+            "Hand_IK.L": {"at": (0.19, hand_y, 0.045), "wrot": (0, 0, -90), "props": {"fist": 0.0}}, "Elbow_Pole.L": {"at": (0.75, hand_y + 0.1, 0.5)}}

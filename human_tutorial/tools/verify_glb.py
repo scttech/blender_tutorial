@@ -80,7 +80,7 @@ def skinned(an, t):
     M = (W[:,:,None,None]*mats[J]).sum(1)
     P4 = np.concatenate([POS,np.ones((len(POS),1))],1)
     return np.einsum("nij,nj->ni",M,P4)[:,:3]
-props = {n:next(i for i,nd in enumerate(nodes) if nd.get("name")==n and "mesh" in nd) for n in ("Kettlebell","Mace","PullupBar")}
+props = {n:next(i for i,nd in enumerate(nodes) if nd.get("name")==n and "mesh" in nd) for n in ("Kettlebell","Mace","PullupBar","Dumbbell.L","Dumbbell.R","Barbell")}
 res = {}; REF = {}
 for act in sorted(bpy.data.actions, key=lambda a:a.name):
     an = act.name; f0,f1 = act.frame_range; rig.animation_data_create(); rig.animation_data.action = act

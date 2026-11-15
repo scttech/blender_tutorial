@@ -1,0 +1,13 @@
+# Pike push-up: hips high in an inverted V, hands shoulder width. Lower the head toward the floor between the hands, then press back up (a step toward a handstand push-up).
+# 1.2 s down, 0.3 s pause, 1.1 s up. Keyed every 3 frames.
+name = "PikePushup"
+python = "moves.py"
+timeline = [{ frames = [1, 37, 3], pose = "pike", set = { u = "=(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [43, 79, 3], pose = "pike", set = { u = "=(1+cos(pi*(f-43)/36))/2" } }]
+
+[params]
+u = 0
+
+[poses.pike]
+generator = "pike_pushup"
+args = { u = "=u" }

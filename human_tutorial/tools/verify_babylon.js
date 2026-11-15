@@ -10,8 +10,9 @@ const ref = JSON.parse(fs.readFileSync(process.argv[3]));
   const data = fs.readFileSync(process.argv[2]);
   const res = await BABYLON.SceneLoader.ImportMeshAsync("", "", "data:application/octet-stream;base64," + data.toString("base64"), scene, null, ".glb");
   console.log("meshes", res.meshes.length, "skeletons", res.skeletons.length, "bones", res.skeletons[0].bones.length, "animationGroups", res.animationGroups.map(a=>`${a.name}[${a.from.toFixed(3)}..${a.to.toFixed(3)}]`).join(" "));
-  const body = res.meshes.find(m => m.skeleton && m.getTotalVertices() > 5000);
-  console.log("body verts", body.getTotalVertices(), "culling/doubleSided:", body.material && body.material.backFaceCulling, "textures:", body.material.getActiveTextures().length);
+  const bodies = res.meshes.filter(m => m.skeleton && m.getTotalVertices() > 500);        // the body has one mesh per material (Skin, ClothesHairEyes), in glTF primitive order
+  const body = bodies[0];
+  console.log("body meshes", bodies.length, "verts", bodies.map(b => b.getTotalVertices()).join("+"), "culling/doubleSided:", body.material && body.material.backFaceCulling, "textures:", body.material.getActiveTextures().length);
   for (const g of res.animationGroups) g.stop();
   const FPS = 30;
   for (const g of res.animationGroups) {
@@ -21,10 +22,11 @@ const ref = JSON.parse(fs.readFileSync(process.argv[3]));
       g.start(false, 1.0, g.from, g.to); g.goToFrame(t * 60); 
       scene.render();
       body.skeleton.prepare(true);
-      const p = body.getPositionData(true, true);
-      const R = ref[name][fs_]; let w = 0;
-      for (let i = 0; i < R.length; i++) {
-        const dx = p[3*i]-R[i][0], dy = p[3*i+1]-R[i][1], dz = p[3*i+2]-R[i][2]; w = Math.max(w, Math.hypot(dx,dy,dz));
+      let w = 0, off = 0; const R = ref[name][fs_];
+      for (const b of bodies) {
+        const p = b.getPositionData(true, true), n = p.length / 3;
+        for (let i = 0; i < n; i++) { const r = R[off + i]; w = Math.max(w, Math.hypot(p[3*i]-r[0], p[3*i+1]-r[1], p[3*i+2]-r[2])); }
+        off += n;
       }
       worst = Math.max(worst, w);
       g.stop();

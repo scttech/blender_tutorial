@@ -1,0 +1,15 @@
+# Burpee: drop to a plank, perform a push-up, jump the feet back to the hands, then explode upward into a jump with arms overhead. One burpee is 85 frames (2.8 s). Five poses are blended
+# (moves.py: stand, crouch with the hands on the floor, plank, push-up bottom, jump), keyed every 2 frames; the feet travel in an arc as they kick back and jump in.
+name = "Burpee"
+python = ["moves.py", "pushup.py", "poselib.py"]
+timeline = [{ frames = [1, 85, 2], pose = "b" }]
+
+[params]
+hand_pow = 1.0      # 1 = the hands travel with the body; below 1 they reach the floor early, above 1 late
+z_pow = 1.0         # the hand's height follows the body's drop with this exponent (1 = in step; above 1 it lags: the shoulders are still high halfway down)
+bulge_y = 0.0
+bulge_z = 0.2
+
+[poses.b]
+generator = "burpee"
+args = { f = "=f", hand_pow = "=hand_pow", z_pow = "=z_pow", bulge_y = "=bulge_y", bulge_z = "=bulge_z" }

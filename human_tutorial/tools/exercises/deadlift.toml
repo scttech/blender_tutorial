@@ -1,0 +1,21 @@
+# Deadlift: the bar over the middle of the feet, shins near the bar, hips back, flat back, hands just outside the knees. Drive through the floor, lock out hips and knees together with the bar close to the legs, then lower it back down.
+name = "Deadlift"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 31, 5], pose = "lift", set = { t = "=(1-cos(pi*(f-1)/30))/2" } }, { frame = 41, pose = "lift", set = { t = 1 } },
+            { frames = [46, 71, 5], pose = "lift", set = { t = "=(1+cos(pi*(f-41)/30))/2" } }]
+
+[params]
+t = 0
+back = 0.30
+drop = 0.40
+pitch = 55.0
+stance = 0.24
+bulge = 0.06
+y_floor = -0.15
+y_top = -0.05
+z_top = 0.95
+
+[poses.lift]
+generator = "hinge_body"
+args = { t = "=t", back = "=back", drop = "=drop", pitch = "=pitch", stance = "=stance" }
+post = [ { fn = "bb_lift_hook", args = { t = "=t", bulge = "=bulge", y_floor = "=y_floor", y_top = "=y_top", z_top = "=z_top" } } ]

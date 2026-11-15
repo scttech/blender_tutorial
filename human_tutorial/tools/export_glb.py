@@ -19,7 +19,7 @@ import bpy, os, json, struct
 
 HOME = "/Users/chris/blender_tutorial/human_tutorial"
 OUT = globals().get("OUT", f"{HOME}/exports/human_all_animations.glb")
-PROPS = ("Kettlebell", "Mace", "PullupBar")
+PROPS = ("Kettlebell", "Mace", "PullupBar", "Dumbbell.L", "Dumbbell.R", "Barbell")      # the prop bones; the Bench is a plain object with no bone
 rig, body = bpy.data.objects["Rig"], bpy.data.objects["Body"]
 
 # the actions must not be assigned (an assigned action would be exported as the "active" pose too), and the scene must be at rest
@@ -27,14 +27,14 @@ if rig.animation_data: rig.animation_data.action = None
 for pb in rig.pose.bones:
     pb.location = (0, 0, 0); pb.rotation_mode = 'XYZ'; pb.rotation_euler = (0, 0, 0)
 bpy.context.scene.frame_set(1)
-for n in ("Body", "Rig") + PROPS: bpy.data.objects[n].hide_set(False)
+for n in ("Body", "Rig", "Bench") + PROPS: bpy.data.objects[n].hide_set(False)
 mat = body.data.materials[0]; culling_before = mat.use_backface_culling; mat.use_backface_culling = True
 
 deform_before = {n: rig.data.bones[n].use_deform for n in PROPS}
 for n in PROPS: rig.data.bones[n].use_deform = True
 try:
     bpy.ops.object.select_all(action='DESELECT')
-    for n in ("Body", "Rig") + PROPS: bpy.data.objects[n].select_set(True)
+    for n in ("Body", "Rig", "Bench") + PROPS: bpy.data.objects[n].select_set(True)
     bpy.context.view_layer.objects.active = rig
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     bpy.ops.export_scene.gltf(filepath=OUT, export_format='GLB', use_selection=True,

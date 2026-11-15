@@ -1,0 +1,100 @@
+[
+ {
+  "name": "Original",
+  "average_skin_srgb": [
+   214,
+   157,
+   128
+  ],
+  "baseColorFactor_linear": [
+   0.7169,
+   0.3594,
+   0.2301
+  ],
+  "swatch_srgb_hex": "#d69d80"
+ },
+ {
+  "name": "Light",
+  "average_skin_srgb": [
+   241,
+   194,
+   167
+  ],
+  "baseColorFactor_linear": [
+   0.9378,
+   0.5751,
+   0.412
+  ],
+  "swatch_srgb_hex": "#f1c2a7"
+ },
+ {
+  "name": "Fair",
+  "average_skin_srgb": [
+   224,
+   172,
+   140
+  ],
+  "baseColorFactor_linear": [
+   0.7947,
+   0.4398,
+   0.2796
+  ],
+  "swatch_srgb_hex": "#e0ac8c"
+ },
+ {
+  "name": "Medium",
+  "average_skin_srgb": [
+   198,
+   134,
+   98
+  ],
+  "baseColorFactor_linear": [
+   0.602,
+   0.2542,
+   0.1302
+  ],
+  "swatch_srgb_hex": "#c68662"
+ },
+ {
+  "name": "Tan",
+  "average_skin_srgb": [
+   172,
+   112,
+   75
+  ],
+  "baseColorFactor_linear": [
+   0.4398,
+   0.1727,
+   0.075
+  ],
+  "swatch_srgb_hex": "#ac704b"
+ },
+ {
+  "name": "Brown",
+  "average_skin_srgb": [
+   128,
+   80,
+   52
+  ],
+  "baseColorFactor_linear": [
+   0.2301,
+   0.0855,
+   0.0366
+  ],
+  "swatch_srgb_hex": "#805034"
+ },
+ {
+  "name": "Dark",
+  "average_skin_srgb": [
+   86,
+   52,
+   36
+  ],
+  "baseColorFactor_linear": [
+   0.0992,
+   0.0366,
+   0.0188
+  ],
+  "swatch_srgb_hex": "#563424"
+ }
+]

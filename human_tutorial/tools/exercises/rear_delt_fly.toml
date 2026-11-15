@@ -1,0 +1,14 @@
+# Rear delt fly: hinge forward from the hips with a flat back, a dumbbell in each hand hanging below the shoulders. Raise the arms out to the sides, a slight bend in the elbows, squeezing the shoulder blades,
+# then lower. 1.2 s up, 0.3 s hold, 1.5 s down.
+name = "RearDeltFly"
+python = ["moves.py", "poselib.py", "dumbbell.py"]
+timeline = [{ frames = [1, 37, 3], pose = "fly", set = { a = "=8+72*(1-cos(pi*(f-1)/36))/2" } },
+            { frames = [46, 91, 3], pose = "fly", set = { a = "=8+72*(1+cos(pi*(f-46)/45))/2" } }]
+
+[params]
+a = 8
+
+[poses.fly]
+generator = "hinge_body"
+args = { t = 1, back = 0.25, drop = 0.18, pitch = 50, stance = 0.24 }
+post = [ { fn = "db_bent_lateral", args = { a = "=a" } } ]

@@ -1,0 +1,13 @@
+# Bent-over row: hinge forward until the torso is about 45 degrees from the floor, flat back, the bar hanging at arm's length. Row it to the lower ribs, elbows back, squeeze, and lower under control.
+name = "BentOverRow"
+python = ["moves.py", "poselib.py", "barbell.py"]
+timeline = [{ frames = [1, 31, 3], pose = "row", set = { h = "=(1-cos(pi*(f-1)/30))/2" } },
+            { frames = [37, 67, 3], pose = "row", set = { h = "=(1+cos(pi*(f-37)/30))/2" } }]
+
+[params]
+h = 0
+
+[poses.row]
+generator = "hinge_body"
+args = { t = 1, back = 0.25, drop = 0.18, pitch = 50, stance = 0.22 }
+post = [ { fn = "bb_row", args = { h = "=h" } } ]
